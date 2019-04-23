@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="pt_BR">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{asset("css/bootstrap.min.css")}}">
+
+    <!-- SB Admin Panel -->
+    <link rel="stylesheet" href="{{asset("css/sb-admin-2.min.css")}}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{asset("vendor/fontawesome-free/css/all.css")}}">
+
+    <!-- MEU CSS -->
+    <link rel="stylesheet" href="{{asset("css/main.css")}}">
+
+    <!-- VIS.JS -->
+    <link rel="stylesheet" href="{{asset("css/vis.min.css")}}">
+
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="{{asset("images/paad_logo.ico")}}" type="image/x-icon"/>
+
+    @csrf
+
+    <title>PAAD - Grafos</title>
+  </head>
+  <body>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <img src="images/paad_logo.png" class="logo_img">
+            </div>
+            <div class="sidebar-brand-text mx-3">PAAD Grafos<sup></div>
+        </a>
+
+        {{-- <!- Divider ->
+        <hr class="sidebar-divider my-0">
+
+        <!- Nav Item - Dashboard ->
+        <li class="nav-item active">
+            <a class="nav-link" href="index.html">
+            <i class="fas fa-home"></i>
+            <span>Início</span></a>
+        </li>
+
+        <!- Divider ->
+        <hr class="sidebar-divider"> --}}
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Grafo
+        </div>
+
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link" onClick="enableGraphContext()" id="graphMenu">
+            <i class="far fa-circle"></i>
+            <span>Grafo</span>
+            </a>
+            <!-- <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="far fa-circle"></i>
+            <span>Gafo</span>
+            </a>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Editar Grafo:</h6>
+                    <a class="collapse-item" href="#" onclick="">Ativar edição</a>
+                    <a class="collapse-item" href="#" onclick="">Desativar edição</a>
+                </div>
+            </div> -->
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
+
+            <!-- Sidebar Toggle (Topbar) -->
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                <i class="fa fa-bars"></i>
+            </button>
+
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto" id="context">
+                
+            </ul>
+
+            </nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid" id="mynetwork">
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+            <div class="copyright text-center my-auto" id="footer">
+                <span>Copyright &copy; Lucas Carvalho 2019</span>
+            </div>
+            <div id="contents" style="display: none;">
+            </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{{asset("js/jquery-3.3.1.min.js")}}"></script>
+    <script src="{{asset("js/popper.js")}}"></script>
+    <script src="{{asset("js/bootstrap.min.js")}}"></script>
+
+    <!-- SB Admin Panel -->
+    <script src="{{asset("js/sb-admin-2.min.js")}}"></script>
+
+    <!-- VIS.JS -->
+    <script src="{{asset("js/vis.min.js")}}"></script>
+
+    <!-- MEU JAVASCRIPT -->
+    <script src="{{asset("js/main.js")}}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $("#filegrafo").change(function(event){
+            event.preventDefault();
+                var formData = new FormData($("#abraArquivo")[0]);    
+                $.ajax({
+                    headers: {
+                        'X-CSRF-Token': $('input[name="_token"]').val()
+                    },
+                    type: 'post',
+                    url: "{{url('/abreArquivo')}}",
+                    data: formData,
+                    dataType: 'json',
+                    contentType : false,
+                    processData : false,
+                    success: function(data){
+                        $('#ModalImportacao').modal('hide');
+                        var obj = JSON.parse(data.data);
+                        abreNovoGrafo(obj.data, obj.options, obj.ordenado, obj.ponderado);
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });
+        });
+    });
+    </script>
+    <!-- Modal -->
+    <div class="modal fade" id="editNodeModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Vértice</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="editNodeBody">
+                </div>
+                <div class="modal-footer" id="editNodeFooter">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editArestaModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Aresta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="editEdgeBody">
+                </div>
+                <div class="modal-footer" id="editEdgeFooter">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalImportacao" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Abrir grafo </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="abraArquivo" enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" class="form-control-file" id="filegrafo" name="filegrafo" accept=".json">    
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
