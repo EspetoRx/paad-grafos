@@ -66,6 +66,10 @@
             <i class="far fa-circle"></i>
             <span>Grafo</span>
             </a>
+            <a class="nav-link" onClick="habilitarPropriedades()">
+            <i class="fas fa-ellipsis-v"></i>
+            <span>Propriedades</span>
+            </a>
             <!-- <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="far fa-circle"></i>
             <span>Gafo</span>
@@ -113,8 +117,10 @@
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
-            <div class="container-fluid" id="mynetwork">
+            <div class="container-fluid mynetwork" id="conteudo">
+                <div class="mynetwork" id="mynetwork">
 
+                </div>
             </div>
             <!-- /.container-fluid -->
 

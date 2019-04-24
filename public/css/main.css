@@ -4,9 +4,22 @@
 }
 
 /*NETWORK*/
-#mynetwork {
+.mynetwork {
     width: 100%;
     height: 76vh;
+    padding: 0px !important;
+    background-color: #767676;
+}
+
+.mynetwork2 {
+    width: 100%;
+    height: 76vh;
+    padding: 0px !important;
+}
+
+.propriedades {
+    width: 100%;
+    height: 38vh;
     padding: 0px !important;
     background-color: #767676;
 }

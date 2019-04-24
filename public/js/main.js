@@ -32,6 +32,11 @@ var ponderado = false;
 var EditarVertice = false;
 var EditarAresta = false;
 
+var GrafoCompleto;
+
+var GraphContext = false;
+var Propriedades = false;
+
 // create a network
 var container = document.getElementById('mynetwork');
 
@@ -87,6 +92,9 @@ var network = new vis.Network(container, data, options);
 
 /*CONTEXTO DO GRAFO*/
 function enableGraphContext(){
+    if(Propriedades){
+        desabilitarPropriedades();
+    }
     $('#context').html("<div class=\"dropdown\">" + 
                     "<button class=\"btn btn-primary btn-sm dropdown-toggle\" type=\"button\" id=\"dropdownMenuButtonVertice\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">"+
                         "<i class=\"fas fa-circle\"></i>"+
@@ -123,7 +131,8 @@ function enableGraphContext(){
                     "<i class=\"fas fa-times\"></i>"+
                 "</button>");
     $('#graphMenu').attr('onClick', 'disableGraphContext()');
-    $('#footer').html("<spam>Use <i class=\"fas fa-circle\"></i> para os vértices e <i class=\"fas fa-code-branch\"></i> para as arestas.</spam>")
+    $('#footer').html("<spam>Use <i class=\"fas fa-circle\"></i> para os vértices e <i class=\"fas fa-code-branch\"></i> para as arestas.</spam>");
+    GraphContext = true;
 }
 
 function disableGraphContext(){
@@ -131,7 +140,7 @@ function disableGraphContext(){
     $('#context').html("");
     $('#graphMenu').attr('onClick', 'enableGraphContext()');
     $('#footer').html("<span>Copyright &copy; Lucas Carvalho 2019</span>");
-
+    GraphContext = false;
 }
 
 function normalizeGraph(){
@@ -358,9 +367,7 @@ function cancelEditAresta(){
 }
 
 
-
 /*CONFIGURAÇÕES DO GRAFO*/
-
 
 
 /*ORDENADO*/
@@ -440,12 +447,6 @@ function DesabilitarPonderado(){
 
 function exportNetwork() {
 
-    //var nodes = objectToArray(network.getPositions());
-
-    //nodes.forEach(addConnections);
-
-    // pretty print node data
-
     var exportar = {
         data: data,
         options: options,
@@ -454,7 +455,6 @@ function exportNetwork() {
     };
 
     var exportValue = JSON.stringify(exportar);
-    //console.log(exportValue);
 
     var a = document.createElement("a");
 
@@ -505,4 +505,34 @@ function abreNovoGrafo(newdata, newoptions, newordenado, newponderado){
     if(newponderado == true){
         HabilitarPonderado();
     }
+}
+
+/*PROPRIEDADES DO GRAFO*/
+
+function habilitarPropriedades(){
+    if(GraphContext){
+        disableGraphContext();    
+    }
+    Propriedades = true;
+    $('#conteudo').removeClass('mynetwork');
+    $('#conteudo').addClass('mynetwork2');
+    GrafoCompleto = $('#mynetwork');
+    $('#conteudo').html("<div class=\"row\">"+
+        "<div class=\"col-md-6\" id=\"minigrafo\"></div>"+
+        "<div class=\"col-md-6\" id=\"propriedades1\">"+
+        "<p><b>Tipo do grafo: </b></p>"+
+        "</div>"
+        +"</div>");
+    $('#minigrafo').html(GrafoCompleto);
+    $('#mynetwork').removeClass('mynetwork');
+    $('#mynetwork').addClass('propriedades');
+}
+
+function desabilitarPropriedades(){
+    Propriedades = false;
+    $('#conteudo').addClass('mynetwork');
+    $('#conteudo').removeClass('mynetwork2');
+    $('#conteudo').html(GrafoCompleto);
+    $('#mynetwork').addClass('mynetwork');
+    $('#mynetwork').removeClass('propriedades');
 }
