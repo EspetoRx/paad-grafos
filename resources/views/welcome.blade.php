@@ -56,6 +56,7 @@
         <hr class="sidebar-divider"> --}}
 
         <!-- Heading -->
+        <hr class="sidebar-divider">
         <div class="sidebar-heading">
             Grafo
         </div>
@@ -243,6 +244,21 @@
                         @csrf
                         <input type="file" class="form-control-file" id="filegrafo" name="filegrafo" accept=".json">    
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalLimpeza" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tem certeza que deseja limpar o grafo?</h5>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-danger" onclick="Limpar()">Limpar</button>
                 </div>
             </div>
         </div>

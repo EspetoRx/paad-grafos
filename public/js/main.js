@@ -120,8 +120,10 @@ function enableGraphContext(){
                         "<i class=\"fas fa-cog\"></i>"+
                     "</button>"+
                     "<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownMenuButtonAresta\">"+
-                        "<button class=\"dropdown-item\" onClick=\"HabilitarOrdenado()\" id=\"ordenacao\"><input type=\"checkbox\" id=\"check_ordenado\"> <i class=\"fas fa-arrow-up\"></i> Ordenado</button>"+
+                        "<button class=\"dropdown-item\" onClick=\"HabilitarOrdenado()\" id=\"ordenacao\"><input type=\"checkbox\" id=\"check_ordenado\" > <i class=\"fas fa-arrow-up\"></i> Orientado</button>"+
                         "<button class=\"dropdown-item\" onClick=\"HabilitarPonderado()\" id=\"ponderacao\"><input type=\"checkbox\" id=\"check_ponderado\"> <i class=\"fas fa-sort-numeric-up\"></i> Ponderado</button>"+
+                        "<div class=\"dropdown-divider\"></div>"+
+                        "<button class=\"dropdown-item\" onClick=\"ShowLimparGrafo()\"><i class=\"fas fa-skull\"></i> Limpar Grafo</button>"+
                         "<div class=\"dropdown-divider\"></div>"+
                         "<button class=\"dropdown-item\" onClick=\"exportNetwork()\"><i class=\"far fa-save\"></i> Salvar</button>"+
                         "<button class=\"dropdown-item\" onClick=\"abrirModalImportacao()\"><i class=\"far fa-file\"></i> Abrir</button>"+
@@ -134,6 +136,12 @@ function enableGraphContext(){
     $('#footer').html("<spam>Use <i class=\"fas fa-circle\"></i> para os vértices e <i class=\"fas fa-code-branch\"></i> para as arestas.</spam>");
     GraphContext = true;
     $('#accordionSidebar').addClass("toggled");
+    if(ordenado){
+        $('#check_ordenado').attr('checked', 'checked');
+    }
+    if(ponderado){
+        $('#check_ponderado').attr('checked', 'checked');
+    }
 }
 
 function disableGraphContext(){
@@ -176,14 +184,14 @@ function disableCreateNode(){
 /*REMOVE NODES*/
 function removeNode(){
     normalizeGraph();
-
+    network.unselectAll();
     $('#mynetwork').css('height', '74vh');
-    $('#footer').html("<span>Selecione um Vértice para exclusão. "+
+    $('#footer').html("<span>"+
         "<button class=\"btn btn-primary btn-sm\" type=\"button\" onClick=\"removeN()\">"+
-            "<i class=\"far fa-minus-square\"></i>"+
+            "<i class=\"far fa-minus-square\"></i> Excluir"+
         "</button>&nbsp;"+
         "<button class=\"btn btn-danger btn-sm\" type=\"button\" onClick=\"cancelRemove()\">"+
-            "<i class=\"fas fa-times\"></i>"+
+            "<i class=\"fas fa-times\"></i> Cancelar"+
         "</button>"+
         "</span>");
 
@@ -262,7 +270,7 @@ function editNodeLabel(id){
 /*ARESTAS*/
 function adicionarAresta(){
     normalizeGraph();
-
+    network.unselectAll();
     network.addEdgeMode();
     $('#footer').html("<span>Clique e arraste de um vértice a outro. "+
         "<button class=\"btn btn-danger btn-sm\" type=\"button\" onClick=\"cancelaAdicionarAresta()\">"+
@@ -282,12 +290,12 @@ function removeEdge(){
 
     network.off('click');
     $('#mynetwork').css('height', '74vh');
-    $('#footer').html("<span>Selecione uma Aresta para exclusão. "+
+    $('#footer').html("<span>"+
         "<button class=\"btn btn-primary btn-sm\" type=\"button\" onClick=\"removeAresta()\">"+
-            "<i class=\"far fa-minus-square\"></i>"+
+            "<i class=\"far fa-minus-square\"></i> Excluir"+
         "</button>&nbsp;"+
         "<button class=\"btn btn-danger btn-sm\" type=\"button\" onClick=\"cancelRemoveAresta()\">"+
-            "<i class=\"fas fa-times\"></i>"+
+            "<i class=\"fas fa-times\"></i> Cancelar"+
         "</button>"+
         "</span>");
     network.unselectAll();
@@ -508,6 +516,20 @@ function abreNovoGrafo(newdata, newoptions, newordenado, newponderado){
     }
 }
 
+/*LIMPEZA DO GRAFO*/
+function ShowLimparGrafo(){
+    $('#ModalLimpeza').modal('show');
+}
+
+function Limpar(){
+    nodes = new vis.DataSet([]);
+    edges = new vis.DataSet([]);
+    network.setData({nodes, edges});
+    id = 1;
+    edgeid = 1;
+    $('#ModalLimpeza').modal('hide');
+}
+
 /*PROPRIEDADES DO GRAFO*/
 
 function habilitarPropriedades(){
@@ -516,19 +538,37 @@ function habilitarPropriedades(){
     }
     $('#accordionSidebar').addClass("toggled");
     Propriedades = true;
+    var tipo = tipoDoGrafo();
     $('#conteudo').removeClass('mynetwork');
     $('#conteudo').addClass('mynetwork2');
     GrafoCompleto = $('#mynetwork');
     $('#conteudo').html("<div class=\"row\">"+
         "<div class=\"col-md-6\" id=\"minigrafo\"></div>"+
         "<div class=\"col-md-6\" id=\"propriedades1\">"+
-        "<p><b>Tipo do grafo:</b> "+tipoDoGrafo()+"<br>"+
+        "<p><b>Tipo do grafo:</b> "+tipo+"<br>"+
         "<b>Número de vértices (Ordem - |V|):</b> "+nodes.length+"<br>"+
         "<b>Número de arestas (Tamanho - |A|):</b> "+edges.length+"</br>"+
-        "<b>Multiplicidade de arestas:</b> <br>"+
+        "<b>Multiplicidade de arestas:</b> <br>"+multiplicidadeGeral()+
         "</div>"+
-        "<div class='col-md-12'></div>"
+        "<div class='col-md-12' id='propriedades2'>"+
+        "</div>"
         +"</div>");
+    $('#propriedades2').append("<b>Orientação:</b> ");
+    if(ordenado){
+        if(tipo == "Simples"){
+            $('#propriedades2').append("Dígrafo simples<br>");
+        }else{
+            $('#propriedades2').append("Multigrafo orientado<br>");
+        }
+
+    }else{
+        $('#propriedades2').append("Não orientado<br>");
+    }
+    if(ponderado){
+        $('#propriedades2').append("<b>Ponderação:</b> Ponderado<br>");
+    }else{
+        $('#propriedades2').append("<b>Ponderação:</b> Não ponderado<br>");
+    }
     $('#minigrafo').html(GrafoCompleto);
     $('#mynetwork').removeClass('mynetwork');
     $('#mynetwork').addClass('propriedades');
@@ -543,6 +583,8 @@ function desabilitarPropriedades(){
     $('#mynetwork').removeClass('propriedades');
     $('#mynetwork').addClass('mynetwork');
 }
+
+/*TIPO DO GRAFO*/
 
 function tipoDoGrafo(){
     var laco = false;
@@ -573,3 +615,112 @@ function tipoDoGrafo(){
         return "Simples";
     }
 }
+
+/*MULTIPLICIDADE DE ARESTAS*/
+
+function multiplicidade(id1, id2){
+    var mul = 0;
+    for(var k in edges._data){
+        if(edges._data[k].from == id1 && edges._data[k].to == id2){
+            mul++;
+        }
+        if(edges._data[k].from == id2 && edges._data[k].to == id1){
+            mul++;
+        }
+    }
+    return mul;
+}
+
+function multiplicidadeOr(id1, id2){
+    var mul = 0;
+    for(var k in edges._data){
+        if(edges._data[k].from == id1 && edges._data[k].to == id2){
+            mul++;
+        }
+    }
+    return mul;
+}
+
+function multStartNOrientado() {
+    var multi = [];
+    var i = 1;
+    var string = "";
+    for(var k in nodes._data){
+        if(nodes._data[k].label == undefined || nodes._data[k].label == '' || nodes._data[k].label == ' '){
+            nodes.update([{id: nodes._data[k].id, label: ""+nodes._data[k].id}]);
+        }
+    }
+    for(var k in nodes._data){
+        for(var l in nodes._data){
+            if(nodes._data[k].id<=nodes._data[l].id){
+                if(k==l){
+                    multi[i] = [nodes._data[k].id, nodes._data[l].id, multiplicidade(nodes._data[k].id, nodes._data[l].id)/2];
+                }else{
+                    multi[i] = [nodes._data[k].id, nodes._data[l].id, multiplicidade(nodes._data[k].id, nodes._data[l].id)];
+                }
+            }
+            i++;
+        }
+    }
+    string += "<table class='table table-responsive'>";
+    string += "<thead><tr>";
+    for(var k in multi){
+        string += "<td>";
+        string += "{"+nodes._data[multi[k][0]].label+","+nodes._data[multi[k][1]].label+"}";
+        string += "</td>";
+    }
+    string += "</tr></thead>";
+    string += "<tr>";
+    for(var k in multi){
+        string += "<td class='text-center'>";
+        string += multi[k][2];
+        string += "</td>";
+    }
+    string += "</tr>";
+    string += "</table>";
+    return string;
+}
+
+function multStartOrientado() {
+    var multi = [];
+    var i = 1;
+    var string = "";
+    for(var k in nodes._data){
+        if(nodes._data[k].label == undefined || nodes._data[k].label == '' || nodes._data[k].label == ' '){
+            nodes.update([{id: nodes._data[k].id, label: ""+nodes._data[k].id}]);
+        }
+    }
+    for(var k in nodes._data){
+        for(var l in nodes._data){
+            multi[i] = [nodes._data[k].id, nodes._data[l].id, multiplicidadeOr(nodes._data[k].id, nodes._data[l].id)];
+            i++;
+        }
+    }
+    string += "<table class='table table-responsive'>";
+    string += "<thead><tr>";
+    for(var k in multi){
+        string += "<td>";
+        string += "{"+nodes._data[multi[k][0]].label+","+nodes._data[multi[k][1]].label+"}";
+        string += "</td>";
+    }
+    string += "</tr></thead>";
+    string += "<tr>";
+    for(var k in multi){
+        string += "<td class='text-center'>";
+        string += multi[k][2];
+        string += "</td>";
+    }
+    string += "</tr>";
+    string += "</table>";
+    return string;
+}
+
+function multiplicidadeGeral() {
+    if(ordenado){
+        return multStartOrientado();
+    }else{
+        return multStartNOrientado();
+    }
+}
+
+/*GRAFO SUBJACENTE*/
