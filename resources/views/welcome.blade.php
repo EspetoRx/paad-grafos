@@ -162,6 +162,7 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
+        $(window).scrollTop(0);
         $("#filegrafo").change(function(event){
             event.preventDefault();
                 var formData = new FormData($("#abraArquivo")[0]);    

@@ -133,6 +133,7 @@ function enableGraphContext(){
     $('#graphMenu').attr('onClick', 'disableGraphContext()');
     $('#footer').html("<spam>Use <i class=\"fas fa-circle\"></i> para os vértices e <i class=\"fas fa-code-branch\"></i> para as arestas.</spam>");
     GraphContext = true;
+    $('#accordionSidebar').addClass("toggled");
 }
 
 function disableGraphContext(){
@@ -513,6 +514,7 @@ function habilitarPropriedades(){
     if(GraphContext){
         disableGraphContext();    
     }
+    $('#accordionSidebar').addClass("toggled");
     Propriedades = true;
     $('#conteudo').removeClass('mynetwork');
     $('#conteudo').addClass('mynetwork2');
@@ -520,19 +522,54 @@ function habilitarPropriedades(){
     $('#conteudo').html("<div class=\"row\">"+
         "<div class=\"col-md-6\" id=\"minigrafo\"></div>"+
         "<div class=\"col-md-6\" id=\"propriedades1\">"+
-        "<p><b>Tipo do grafo: </b></p>"+
-        "</div>"
+        "<p><b>Tipo do grafo:</b> "+tipoDoGrafo()+"<br>"+
+        "<b>Número de vértices (Ordem - |V|):</b> "+nodes.length+"<br>"+
+        "<b>Número de arestas (Tamanho - |A|):</b> "+edges.length+"</br>"+
+        "<b>Multiplicidade de arestas:</b> <br>"+
+        "</div>"+
+        "<div class='col-md-12'></div>"
         +"</div>");
     $('#minigrafo').html(GrafoCompleto);
     $('#mynetwork').removeClass('mynetwork');
     $('#mynetwork').addClass('propriedades');
+    $('#mynetwork').removeAttr('style');
 }
 
 function desabilitarPropriedades(){
     Propriedades = false;
-    $('#conteudo').addClass('mynetwork');
     $('#conteudo').removeClass('mynetwork2');
+    $('#conteudo').addClass('mynetwork');
     $('#conteudo').html(GrafoCompleto);
-    $('#mynetwork').addClass('mynetwork');
     $('#mynetwork').removeClass('propriedades');
+    $('#mynetwork').addClass('mynetwork');
+}
+
+function tipoDoGrafo(){
+    var laco = false;
+    var idaevolta = false;
+    for(var k in edges._data){
+        if(edges._data[k].from == edges._data[k].to){
+            laco = true;
+        }
+        for (var l in edges._data){
+            if(k != l && edges._data[k].from == edges._data[l].from){
+                if(edges._data[k].to == edges._data[l].to){
+                    idaevolta = true;
+                }
+            }
+            if(k != l && edges._data[k].from == edges._data[l].to){
+                if(edges._data[k].to == edges._data[l].from){
+                    idaevolta = true;
+                }
+            }
+        }
+    }
+
+    if(laco){
+        return "Pseudografo";
+    }else if(idaevolta){
+        return "Multigrafo";
+    }else{
+        return "Simples";
+    }
 }
