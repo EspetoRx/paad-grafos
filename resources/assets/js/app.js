@@ -18,6 +18,3 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
-
-require ('../scripts/sb-admin-2.min.js');
-require ('../scripts/vis.min.js');
