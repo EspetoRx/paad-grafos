@@ -4,21 +4,12 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{asset("css/bootstrap.min.css")}}">
-
-    <!-- SB Admin Panel -->
-    <link rel="stylesheet" href="{{asset("css/sb-admin-2.min.css")}}">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{asset("css/app.css")}}">
 
     <!-- MEU CSS -->
     <link rel="stylesheet" href="{{asset("css/main.css")}}">
-
-    <!-- VIS.JS -->
-    <link rel="stylesheet" href="{{asset("css/vis.min.css")}}">
 
     <!-- FAVICON -->
     <link rel="shortcut icon" href="{{asset("images/paad_logo.ico")}}" type="image/x-icon"/>
@@ -148,9 +139,7 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="{{asset("js/jquery-3.3.1.min.js")}}"></script>
-    <script src="{{asset("js/popper.js")}}"></script>
-    <script src="{{asset("js/bootstrap.min.js")}}"></script>
+    <script src="{{asset("js/app.js")}}"></script>
 
     <!-- SB Admin Panel -->
     <script src="{{asset("js/sb-admin-2.min.js")}}"></script>
