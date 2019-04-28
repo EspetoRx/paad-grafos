@@ -188,7 +188,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default dismiss" data-dismiss="modal"></button>
-                <button type="button" class="btn btn-primary confirm" data-dismiss="modal"></button>
+                <button type="button" class="btn btn-success confirm" data-dismiss="modal"></button>
               </div>
             </div>
         </div>
@@ -208,7 +208,7 @@
                 </div>
                 <div class="modal-footer" id="editNodeFooter">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-success">Salvar</button>
                 </div>
             </div>
         </div>
@@ -228,7 +228,7 @@
                 </div>
                 <div class="modal-footer" id="editEdgeFooter">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-success">Salvar</button>
                 </div>
             </div>
         </div>
@@ -240,7 +240,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Abrir grafo </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button btn btn-success" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
