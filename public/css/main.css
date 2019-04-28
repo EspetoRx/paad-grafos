@@ -3,12 +3,33 @@
     width: 70px;
 }
 
+/*SIDEBAR*/
+.sidebar-tog{
+    background-color: #458B74;
+    color: white;
+}
+.sidebar-brand{
+    color: white;
+}
+.sidebar-brand:hover{
+    color: white;
+}
+.nav-link{
+    cursor: pointer;
+}
+.rounded-circle:hover{
+    background-color: white;
+}
+.collapse-item{
+    cursor: pointer;
+}
+
 /*NETWORK*/
 .mynetwork {
     width: 100%;
     height: 76vh;
     padding: 0px !important;
-    background-color: #767676;
+    background-color: #CFCFCF;
 }
 
 .mynetwork2 {
@@ -20,11 +41,12 @@
     width: 100%;
     height: 38vh;
     padding: 0px !important;
-    background-color: #767676;
+    background-color: #a0a0a0;
 }
 
 .networkGS {
     width: 100%;
     height: 325px;
     padding: 0px !important;
+    background-color: #CFCFCF;
 }

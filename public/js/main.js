@@ -125,7 +125,17 @@ var options = {
             strokeWidth: 0,
             size: 18
         }
-    }
+    },
+    nodes:{
+        color: {
+            border: '#698B69',
+            background: '#458B74',
+            highlight: {
+                border: '#698B69',
+                background: '#B4EEB4'
+            },
+        },
+    },
 };
 
 // initialize your network!
@@ -799,7 +809,18 @@ function grafoSubjacente (){
     };
     var width = $('#networkGrafoSubjacente').width();
     var height = $('#networkGrafoSubjacente').height();
-    var newoptions = {};
+    var newoptions = {
+        nodes:{
+        color: {
+            border: '#698B69',
+            background: '#458B74',
+            highlight: {
+                border: '#698B69',
+                background: '#458B74'
+            },
+        },
+    },
+    };
     var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
     
 }

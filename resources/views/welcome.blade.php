@@ -23,14 +23,14 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav sidebar sidebar-tog accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
-            <div class="sidebar-brand-icon rotate-n-15">
+            <div class="sidebar-brand-icon">
                 <img src="images/paad_logo.png" class="logo_img">
             </div>
-            <div class="sidebar-brand-text mx-3">PAAD Grafos<sup></div>
+            <div class="sidebar-brand-text">PAAD Grafos</div>
         </a>
 
         {{-- <!- Divider ->
