@@ -240,14 +240,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Abrir grafo </h5>
-                    <button type="button btn btn-success" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form method="post" id="abraArquivo" enctype="multipart/form-data">
                         @csrf
-                        <input type="file" class="form-control-file" id="filegrafo" name="filegrafo" accept=".json">    
+                        <label for="filegrafo" class="btn btn-success">Abrir grafo JSON</label>
+                        <input type="file" id="filegrafo" name="filegrafo" accept=".json" style="display: none">    
                     </form>
                 </div>
             </div>
