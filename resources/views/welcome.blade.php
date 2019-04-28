@@ -151,7 +151,6 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-        $("html, body").animate({ scrollTop: $(document).height() }, 1000);
         $("#filegrafo").change(function(event){
             event.preventDefault();
                 var formData = new FormData($("#abraArquivo")[0]);    
