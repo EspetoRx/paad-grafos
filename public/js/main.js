@@ -724,3 +724,46 @@ function multiplicidadeGeral() {
 }
 
 /*GRAFO SUBJACENTE*/
+function grafoSubjacente (){
+    var newnodes = new vis.DataSet([]);
+    var newedges = new vis.DataSet([]);
+    var token;
+    console.log(newedges);
+    for(var k in edges._data){
+        if(edges._data[k].from != edges._data[k].to){
+            token = 0;
+            for(var l in newedges._data){
+                if(edges._data[k].from == newedges._data[l].from && 
+                    edges._data[k].to == newedges._data[l].to ||
+                    edges._data[k].from == newedges._data[l].to &&
+                    edges._data[k].to == newedges._data[l].from){
+                    token = 1;
+                }
+            }
+            if(!token){
+                newedges.add(edges._data[k]);
+                newedges.update([{id: newedges._data[k].id, label: ' '}])
+            }
+        }
+    }
+    console.log(newedges);
+    for(var k in nodes._data){
+        newnodes.add(nodes._data[k]);
+    }
+    console.log(newedges);
+    var newcontainer = document.getElementById('networkGrafoSubjacente');
+    var newdata = {
+        nodes: newnodes,
+        edges: newedges
+    };
+    var newoptions = {
+        autoResize: true,
+    };
+    var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
+    newnetwork.fit();
+}
+
+$(document).on('show.bs.modal','#GrafoSubjacenteModal', function () {
+  grafoSubjacente();
+  $('#collapseTwo').removeClass('show');
+})

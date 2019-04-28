@@ -62,17 +62,16 @@
             <i class="fas fa-ellipsis-v"></i>
             <span>Propriedades</span>
             </a>
-            <!-- <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+            <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="far fa-circle"></i>
-            <span>Gafo</span>
+            <span>Derivações</span>
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Editar Grafo:</h6>
-                    <a class="collapse-item" href="#" onclick="">Ativar edição</a>
-                    <a class="collapse-item" href="#" onclick="">Desativar edição</a>
+                    <a class="collapse-item" data-toggle="modal" data-target="#GrafoSubjacenteModal">Grafo subjacente</a>
+                    {{--<a class="collapse-item" href="#" onclick="">Desativar edição</a>--}}
                 </div>
-            </div> -->
+            </div>
         </li>
 
         <!-- Divider -->
@@ -152,7 +151,7 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-        $(window).scrollTop(0);
+        $(window).scrollTop($(document).height());
         $("#filegrafo").change(function(event){
             event.preventDefault();
                 var formData = new FormData($("#abraArquivo")[0]);    
@@ -245,9 +244,28 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Tem certeza que deseja limpar o grafo?</h5>
                 </div>
-                <div class="modal-body">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                     <button type="button" class="btn btn-danger" onclick="Limpar()">Limpar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="GrafoSubjacenteModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Grafo Subjacente</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="networkGrafoSubjacente" class="networkGS">
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
