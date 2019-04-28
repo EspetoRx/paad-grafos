@@ -151,7 +151,12 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-        $(window).scrollTop($(document).height());
+        window.addEventListener("load",function() {
+            setTimeout(function(){
+                // This hides the address bar:
+                window.scrollTo(0, 1);
+            }, 0);
+        });
         $("#filegrafo").change(function(event){
             event.preventDefault();
                 var formData = new FormData($("#abraArquivo")[0]);    
