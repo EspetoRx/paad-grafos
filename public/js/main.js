@@ -4,7 +4,42 @@ $('.nav a').on('click', function(){
     $('.navbar-toggler').click(); //bootstrap 4.x
 });
 
+$.fn.confirm = function (options) {
+  var settings = $.extend({}, $.fn.confirm.defaults, options);
 
+  return this.each(function () {
+    var element = this;
+
+    $('.modal-title', this).html(settings.title);
+    $('.message', this).html(settings.message);
+    $('.confirm', this).html(settings.confirm);
+    $('.dismiss', this).html(settings.dismiss);
+
+    $(this).on('click', '.confirm', function (event) {
+      $(element).data('confirm', true);
+    });
+
+    $(this).on('hide.bs.modal', function (event) {
+      if ($(this).data('confirm')) {
+        $(this).trigger('confirm', event);
+        $(this).removeData('confirm');
+      } else {
+        $(this).trigger('dismiss', event);
+      }
+
+      $(this).off('confirm dismiss');
+    });
+
+    $(this).modal('show');
+  });
+};
+
+$.fn.confirm.defaults = {
+  title: 'Confirmação de laço',
+  message: 'Deseja conectar o vértice a ele mesmo?',
+  confirm: 'Sim',
+  dismiss: 'Não'
+};
 
 // create an array with nodes
 var nodes = new vis.DataSet([
@@ -52,21 +87,27 @@ var options = {
         enabled: false,
         addEdge: function (data, callback) {
             if (data.from == data.to) {
-                var r = confirm("Tem certeza que quer conectar o vértice à ele mesmo?");
-                if (r === true) {
-                    if(ponderado) data.label = '1';
-                    else data.label = ' ';
-                    data.id = edgeid++;
-                    callback(data);
-                }
+                $('#confirm').confirm().on({
+                    confirm: function () {
+                        if(ponderado) data.label = '1';
+                        else data.label = ' ';
+                        data.id = edgeid++;
+                        callback(data);
+                        network.addEdgeMode();
+                    },
+                    dismiss: function () {
+                        network.addEdgeMode();
+                    }
+                })
             }else{
                 if(ponderado) data.label = '1';
                 else data.label = ' ';
                 data.id = edgeid++;
                 callback(data);
+                network.addEdgeMode();
             }
             // after each adding you will be back to addEdge mode
-            network.addEdgeMode();
+            
         },
         addNode: function (data, callback){
             data.label = '';
@@ -756,14 +797,14 @@ function grafoSubjacente (){
         nodes: newnodes,
         edges: newedges
     };
-    var newoptions = {
-        autoResize: true,
-    };
+    var width = $('#networkGrafoSubjacente').width();
+    var height = $('#networkGrafoSubjacente').height();
+    var newoptions = {};
     var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
-    newnetwork.fit();
+    
 }
 
-$(document).on('show.bs.modal','#GrafoSubjacenteModal', function () {
+$(document).on('shown.bs.modal','#GrafoSubjacenteModal', function () {
   grafoSubjacente();
   $('#collapseTwo').removeClass('show');
 })

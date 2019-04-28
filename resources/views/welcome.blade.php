@@ -177,6 +177,24 @@
         });
     });
     </script>
+
+    <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="confirm-label"></h4>
+              </div>
+              <div class="modal-body">
+                <p class="message"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default dismiss" data-dismiss="modal"></button>
+                <button type="button" class="btn btn-primary confirm" data-dismiss="modal"></button>
+              </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal -->
     <div class="modal fade" id="editNodeModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
