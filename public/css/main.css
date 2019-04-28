@@ -1,3 +1,8 @@
+p{
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
 /*HEADER*/
 .logo_img{
     width: 70px;
@@ -49,4 +54,12 @@
     height: 325px;
     padding: 0px !important;
     background-color: #CFCFCF;
+}
+
+.btn-success{
+    background-color: #458B74;
+}
+
+.btn-success:hover, .btn-success:active, .btn-success:visited, .btn-success:focus {
+    background-color: #296c56;
 }

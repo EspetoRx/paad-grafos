@@ -96,7 +96,7 @@
 
             <!-- Sidebar Toggle (Topbar) -->
             <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                <i class="fa fa-bars"></i>
+                <i class="fa fa-bars" style="color: #458B74;"></i>
             </button>
 
             <!-- Topbar Navbar -->
@@ -280,6 +280,9 @@
                     <div id="networkGrafoSubjacente" class="networkGS">
                         
                     </div>
+                    <p class="text-justify">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Se retirarmos os laços e todas as múltiplas arestas entre cada par de vértices, mantendo apenas uma, trasformaresmos um pseudografo ou multigrafo (aplica-se a dígrafos) em um grafo simples.
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>

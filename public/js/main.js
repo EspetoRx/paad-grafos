@@ -147,7 +147,7 @@ function enableGraphContext(){
         desabilitarPropriedades();
     }
     $('#context').html("<div class=\"dropdown\">" + 
-                    "<button class=\"btn btn-primary btn-sm dropdown-toggle\" type=\"button\" id=\"dropdownMenuButtonVertice\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">"+
+                    "<button class=\"btn btn-sm dropdown-toggle btn-success\" type=\"button\" id=\"dropdownMenuButtonVertice\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">"+
                         "<i class=\"fas fa-circle\"></i>"+
                     "</button>"+
                     "<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownMenuButtonVertice\">"+
@@ -157,7 +157,7 @@ function enableGraphContext(){
                     "</div>"+
                 "</div>&nbsp;"+
                 "<div class=\"dropdown\">"+
-                    "<button class=\"btn btn-primary btn-sm dropdown-toggle\" type=\"button\" id=\"dropdownMenuButtonAresta\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">"+
+                    "<button class=\"btn  btn-sm dropdown-toggle btn-success\" type=\"button\" id=\"dropdownMenuButtonAresta\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">"+
                         "<i class=\"fas fa-code-branch\"></i>"+
                     "</button>"+
                     "<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownMenuButtonAresta\">"+
@@ -167,7 +167,7 @@ function enableGraphContext(){
                     "</div>"+
                 "</div>&nbsp;"+
                 "<div class=\"dropdown\">"+
-                    "<button class=\"btn btn-primary btn-sm dropdown-toggle\" type=\"button\" id=\"dropdownMenuButtonAresta\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">"+
+                    "<button class=\"btn btn-sm dropdown-toggle btn-success\" type=\"button\" id=\"dropdownMenuButtonAresta\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">"+
                         "<i class=\"fas fa-cog\"></i>"+
                     "</button>"+
                     "<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownMenuButtonAresta\">"+
@@ -238,7 +238,7 @@ function removeNode(){
     network.unselectAll();
     $('#mynetwork').css('height', '74vh');
     $('#footer').html("<span>"+
-        "<button class=\"btn btn-primary btn-sm\" type=\"button\" onClick=\"removeN()\">"+
+        "<button class=\"btn btn-success btn-sm\" type=\"button\" onClick=\"removeN()\">"+
             "<i class=\"far fa-minus-square\"></i> Excluir"+
         "</button>&nbsp;"+
         "<button class=\"btn btn-danger btn-sm\" type=\"button\" onClick=\"cancelRemove()\">"+
@@ -342,7 +342,7 @@ function removeEdge(){
     network.off('click');
     $('#mynetwork').css('height', '74vh');
     $('#footer').html("<span>"+
-        "<button class=\"btn btn-primary btn-sm\" type=\"button\" onClick=\"removeAresta()\">"+
+        "<button class=\"btn btn-success btn-sm\" type=\"button\" onClick=\"removeAresta()\">"+
             "<i class=\"far fa-minus-square\"></i> Excluir"+
         "</button>&nbsp;"+
         "<button class=\"btn btn-danger btn-sm\" type=\"button\" onClick=\"cancelRemoveAresta()\">"+
