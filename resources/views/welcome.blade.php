@@ -150,8 +150,10 @@
     <script src="{{asset("js/main.js")}}"></script>
 
     <script type="text/javascript">
+        $(window).load(function() {
+            $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+        });
         $(document).ready(function(){
-        $(document).scrollTop($(document).height());
         $("#filegrafo").change(function(event){
             event.preventDefault();
                 var formData = new FormData($("#abraArquivo")[0]);    
