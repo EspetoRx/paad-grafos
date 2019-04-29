@@ -72,3 +72,12 @@ p{
     color: white;
     background-color: #458B74;
 }
+
+#arestasAInduzir, #verticesAInduzir{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#btnindver, #btnindar{
+    padding-bottom: 10px;
+}

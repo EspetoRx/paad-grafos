@@ -70,6 +70,8 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" data-toggle="modal" data-target="#GrafoSubjacenteModal">Grafo subjacente</a>
                     <a class="collapse-item" data-toggle="modal" data-target="#SubgrafoEspalhamento">Subgrafo / Subdígrafo <br> de espalhamento</a>
+                    <a class="collapse-item" data-toggle="modal" data-target="#SubgrafoInducaoVertice">Subgrafo por indução<br> de vértice</a>
+                    <a class="collapse-item" data-toggle="modal" data-target="#SubgrafoInducaoAresta">Subgrafo por indução<br> de aresta</a>
                     {{--<a class="collapse-item" href="#" onclick="">Desativar edição</a>--}}
                 </div>
             </div>
@@ -188,7 +190,7 @@
                 <p class="message"></p>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-warning dismiss" data-dismiss="modal"></button>
+                <button type="button" class="btn btn-danger dismiss" data-dismiss="modal"></button>
                 <button type="button" class="btn btn-success confirm" data-dismiss="modal"></button>
               </div>
             </div>
@@ -314,9 +316,71 @@
                         
                     </div>
                     <p class="text-justify">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Se G<SUB>1</SUB> é subgrafo de G<SUB>2</SUB>, então G<SUB>2</SUB> é supergrafo de G<SUB>1</SUB>. Quando G<SUB>1</SUB> &ne; G<SUB>2</SUB>, então G<SUB>1</SUB> é um subgrafo próprio de G<SUB>2</SUB> . <br>&nbsp;&nbsp;&nbsp;&nbsp;Quando V(G<SUB>1</SUB>) = V(G<SUB>2</SUB>), então G<SUB>1</SUB> é <strong>chamado subgrafo gerador ou subgrafo de espalhamento</strong> de G<SUB>2</SUB>. Para um dı́grafo D<SUB>1</SUB>, um subdı́grafo D<SUB>2</SUB> que contém um conjunto de vértices igual ao conjunto de vértices do dı́grafo original é chamado de <strong>subdı́grafo de espalhamento ou fator do dı́grafo</strong>.
+                        &emsp;Se G<SUB>1</SUB> é subgrafo de G<SUB>2</SUB>, então G<SUB>2</SUB> é supergrafo de G<SUB>1</SUB>. Quando G<SUB>1</SUB> &ne; G<SUB>2</SUB>, então G<SUB>1</SUB> é um subgrafo próprio de G<SUB>2</SUB> . <br>&emsp;Quando V(G<SUB>1</SUB>) = V(G<SUB>2</SUB>), então G<SUB>1</SUB> é <strong>chamado subgrafo gerador ou subgrafo de espalhamento</strong> de G<SUB>2</SUB>. Para um dı́grafo D<SUB>1</SUB>, um subdı́grafo D<SUB>2</SUB> que contém um conjunto de vértices igual ao conjunto de vértices do dı́grafo original é chamado de <strong>subdı́grafo de espalhamento ou fator do dı́grafo</strong>.<br>&emsp;Estre grafo em exibição foi derivado com base no Grafo Subjacente dada 50% de chance de remoção de uma aresta pertencente ao conjunto A(G<SUB>S</SUB>).
 
                     </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="SubgrafoInducaoVertice" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Subgrafo por indução de vértices</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center" id="textindver">
+                        Escolha os vértices para ficar
+                    </p>
+                    <div class="row" id="verticesAInduzir">
+                        
+                    </div>
+                    <p class="text-center" id="btnindver">
+                        <button class="btn btn-success btn-sm" id="induzirVertices">Induzir Grafo</button>
+                    </p>
+                    <div id="networkSubIndVer" class="networkGS">
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="SubgrafoInducaoAresta" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Subgrafo por indução de arestas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center" id="textindar">
+                        Escolha as arestas para ficar
+                    </p>
+                    <div class="row" id="arestasAInduzir">
+                        
+                    </div>
+                    <p class="text-center" id="btnindar">
+                        <button class="btn btn-success btn-sm" id="induzirArestas">Induzir Grafo</button>
+                    </p>
+                    <div id="networkSubIndAre" class="networkGS">
+                        
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>
