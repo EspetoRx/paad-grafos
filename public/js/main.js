@@ -649,11 +649,11 @@ function habilitarPropriedades(){
         $('#vizinhancasimples').addClass('table-responsive');
     }
     if ((tipo=="Simples" || tipo == "Digrafo" || tipo == "Pseudografo") && ordenado){
-        $('#propriedades3').append("<b>Vizinhança Direta<i>&tau;</i><SUP>+</SUP>(<i>v</i>):<br/>");
+        $('#propriedades3').append("<b>Vizinhança Direta <i>&tau;</i><SUP>+</SUP>(<i>v</i>):<br/>");
         $('#propriedades3').append("<div id='vizinhancadireta'></div>");
         $('#vizinhancadireta').append(vizinhacaDireta());
         $('#vizinhancadireta').addClass('table-responsive');
-        $('#propriedades3').append("<b>Vizinhança Inversa<i>&tau;</i><SUP>-</SUP>(<i>v</i>):<br/>");
+        $('#propriedades3').append("<b>Vizinhança Inversa <i>&tau;</i><SUP>-</SUP>(<i>v</i>):<br/>");
         $('#propriedades3').append("<div id='vizinhancainversa'></div>");
         $('#vizinhancainversa').append(vizinhacaInversa());
         $('#vizinhancainversa').addClass('table-responsive');
