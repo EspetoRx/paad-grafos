@@ -69,6 +69,7 @@
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" data-toggle="modal" data-target="#GrafoSubjacenteModal">Grafo subjacente</a>
+                    <a class="collapse-item" data-toggle="modal" data-target="#SubgrafoEspalhamento">Subgrafo / Subdígrafo <br> de espalhamento</a>
                     {{--<a class="collapse-item" href="#" onclick="">Desativar edição</a>--}}
                 </div>
             </div>
@@ -187,7 +188,7 @@
                 <p class="message"></p>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default dismiss" data-dismiss="modal"></button>
+                <button type="button" class="btn btn-warning dismiss" data-dismiss="modal"></button>
                 <button type="button" class="btn btn-success confirm" data-dismiss="modal"></button>
               </div>
             </div>
@@ -276,6 +277,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Grafo Subjacente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div id="networkGrafoSubjacente" class="networkGS">
@@ -286,10 +290,40 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="SubgrafoEspalhamento" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Subgrafo / Subdígrafo de espalhamento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">
+                        Também chamados de <strong>Subgrafo Gerador</strong> ou <strong>Fator do Dígrafo</strong>
+                    </p>
+                    <div id="networkSubgrafoEspalhamento" class="networkGS">
+                        
+                    </div>
+                    <p class="text-justify">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Se G<SUB>1</SUB> é subgrafo de G<SUB>2</SUB>, então G<SUB>2</SUB> é supergrafo de G<SUB>1</SUB>. Quando G<SUB>1</SUB> &ne; G<SUB>2</SUB>, então G<SUB>1</SUB> é um subgrafo próprio de G<SUB>2</SUB> . <br>&nbsp;&nbsp;&nbsp;&nbsp;Quando V(G<SUB>1</SUB>) = V(G<SUB>2</SUB>), então G<SUB>1</SUB> é <strong>chamado subgrafo gerador ou subgrafo de espalhamento</strong> de G<SUB>2</SUB>. Para um dı́grafo D<SUB>1</SUB>, um subdı́grafo D<SUB>2</SUB> que contém um conjunto de vértices igual ao conjunto de vértices do dı́grafo original é chamado de <strong>subdı́grafo de espalhamento ou fator do dı́grafo</strong>.
+
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
   </body>
 </html>

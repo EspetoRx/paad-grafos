@@ -132,9 +132,12 @@ var options = {
             background: '#458B74',
             highlight: {
                 border: '#698B69',
-                background: '#B4EEB4'
+                background: '#4f6e4f'
             },
         },
+        font: {
+            color: 'white',
+        }
     },
 };
 
@@ -192,6 +195,9 @@ function enableGraphContext(){
     }
     if(ponderado){
         $('#check_ponderado').attr('checked', 'checked');
+    }
+    if($('#collapseTwo').hasClass('show')){
+        $('#collapseTwo').removeClass('show');
     }
 }
 
@@ -624,6 +630,9 @@ function habilitarPropriedades(){
     $('#mynetwork').removeClass('mynetwork');
     $('#mynetwork').addClass('propriedades');
     $('#mynetwork').removeAttr('style');
+    if($('#collapseTwo').hasClass('show')){
+        $('#collapseTwo').removeClass('show');
+    }
 }
 
 function desabilitarPropriedades(){
@@ -819,10 +828,13 @@ function grafoSubjacente (){
                 background: '#458B74'
             },
         },
+        font:{
+            color: 'white',
+        }
     },
     };
     var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
-    
+    return newdata;
 }
 
 $(document).on('shown.bs.modal','#GrafoSubjacenteModal', function () {

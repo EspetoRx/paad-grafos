@@ -63,3 +63,12 @@ p{
 .btn-success:hover, .btn-success:active, .btn-success:visited, .btn-success:focus {
     background-color: #296c56;
 }
+
+.dropdown-item{
+    color: #458B74;
+}
+
+.dropdown-item:hover{
+    color: white;
+    background-color: #458B74;
+}
