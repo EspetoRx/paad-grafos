@@ -191,10 +191,11 @@ function enableGraphContext(){
     GraphContext = true;
     $('#accordionSidebar').addClass("toggled");
     if(ordenado){
-        $('#check_ordenado').attr('checked', 'checked');
-    }
+        $('#ordenacao').html("<input type=\"checkbox\" checked=\"checked\" id=\"check_ordenado\"> <i class=\"fas fa-slash\"></i> Não ordenado");
+        $("#ordenacao").attr("onclick","DesabilitarOrdenado()");    }
     if(ponderado){
-        $('#check_ponderado').attr('checked', 'checked');
+        $('#ponderacao').html("<input type=\"checkbox\" id=\"check_ordenado\" checked=\"checked\"> <i class=\"fas fa-sort-numeric-down\"></i> Não Ponderado");
+        $("#ponderacao").attr("onclick","DesabilitarPonderado()");
     }
     if($('#collapseTwo').hasClass('show')){
         $('#collapseTwo').removeClass('show');
@@ -620,7 +621,9 @@ function habilitarPropriedades(){
         "<b>Número de arestas (Tamanho - |A|):</b> "+edges.length+"</br>"+
         "<b>Multiplicidade de arestas:</b> <br>"+multiplicidadeGeral()+
         "</div>"+
-        "<div class='col-md-12' id='propriedades2'>"+
+        "<div class='col-md-6' id='propriedades2'>"+
+        "</div>"+
+        "<div class='col-md-6' id='propriedades3'>"+
         "</div>"
         +"</div>");
     $('#propriedades2').append("<b>Orientação:</b> ");
@@ -639,6 +642,23 @@ function habilitarPropriedades(){
     }else{
         $('#propriedades2').append("<b>Ponderação:</b> Não ponderado<br>");
     }
+    if ((tipo == "Simples" || tipo == "Pseudografo") && !ordenado){
+        $('#propriedades3').append("<b>Vizinhança <i>&tau;</i>(<i>v</i>):<br/>");
+        $('#propriedades3').append("<div id='vizinhancasimples'></div>");
+        $('#vizinhancasimples').append(vizinhacaSimples());
+        $('#vizinhancasimples').addClass('table-responsive');
+    }
+    if ((tipo=="Simples" || tipo == "Digrafo" || tipo == "Pseudografo") && ordenado){
+        $('#propriedades3').append("<b>Vizinhança Direta<i>&tau;</i><SUP>+</SUP>(<i>v</i>):<br/>");
+        $('#propriedades3').append("<div id='vizinhancadireta'></div>");
+        $('#vizinhancadireta').append(vizinhacaDireta());
+        $('#vizinhancadireta').addClass('table-responsive');
+        $('#propriedades3').append("<b>Vizinhança Inversa<i>&tau;</i><SUP>-</SUP>(<i>v</i>):<br/>");
+        $('#propriedades3').append("<div id='vizinhancainversa'></div>");
+        $('#vizinhancainversa').append(vizinhacaInversa());
+        $('#vizinhancainversa').addClass('table-responsive');
+    }
+    
     $('#minigrafo').html(GrafoCompleto);
     $('#mynetwork').removeClass('mynetwork');
     $('#mynetwork').addClass('propriedades');
@@ -1042,3 +1062,125 @@ $(document).on('shown.bs.modal','#SubgrafoInducaoVertice', function () {
 $(document).on('shown.bs.modal','#SubgrafoInducaoAresta', function () {
     subIndAresta();
 });
+
+
+/*VIZINHANÇA DIRETA E INVERSA PARA GRAFOS SIMPLES E MULTIGRAFOS*/
+function vizinhacaSimples(){
+    var vectorVizinhos = [];
+    for(var n in nodes._data){
+        vectorVizinhos[nodes._data[n].id] = [];
+    }
+    for(var e in edges._data){
+        for(var k in vectorVizinhos){
+            console.log(k);
+            if(edges._data[e].from == k){
+                vectorVizinhos[k].push(edges._data[e].to);
+            }
+            if(edges._data[e].to == k){
+                vectorVizinhos[k].push(edges._data[e].from);
+            }
+        }
+    }
+    console.log(vectorVizinhos);
+    var string = '';
+    string += "<table class='table table-responsive'>";
+    string += "<thead class='text-center'>";
+    string += "<tr>";
+    for(var k in vectorVizinhos){
+        string += "<td>"+k+"</td>"
+        vectorVizinhos[k].sort();
+    }
+    string += "</tr>";
+    string += "</thead>"
+    string += "<tbody class='text-center'>";
+    string += "<tr>"
+    for(var k in vectorVizinhos){
+        string += "<td>{";
+        for(var m in vectorVizinhos[k]){
+            string += " "+vectorVizinhos[k][m];
+        }
+        string += " }</td>";
+    }
+    string += "</tr>"
+    string += "</tbody>";
+    string += "</table>";
+    return string;
+};
+
+function vizinhacaDireta(){
+    var vectorVizinhos = [];
+    for(var n in nodes._data){
+        vectorVizinhos[nodes._data[n].id] = [];
+    }
+    for(var e in edges._data){
+        for(var k in vectorVizinhos){
+            console.log(k);
+            if(edges._data[e].from == k){
+                vectorVizinhos[k].push(edges._data[e].to);
+            }
+        }
+    }
+    console.log(vectorVizinhos);
+    var string = '';
+    string += "<table class='table table-responsive'>";
+    string += "<thead class='text-center'>";
+    string += "<tr>";
+    for(var k in vectorVizinhos){
+        string += "<td>"+k+"</td>"
+        vectorVizinhos[k].sort();
+    }
+    string += "</tr>";
+    string += "</thead>"
+    string += "<tbody class='text-center'>";
+    string += "<tr>"
+    for(var k in vectorVizinhos){
+        string += "<td>{";
+        for(var m in vectorVizinhos[k]){
+            string += " "+vectorVizinhos[k][m];
+        }
+        string += " }</td>";
+    }
+    string += "</tr>"
+    string += "</tbody>";
+    string += "</table>";
+    return string;
+};
+
+function vizinhacaInversa(){
+    var vectorVizinhos = [];
+    for(var n in nodes._data){
+        vectorVizinhos[nodes._data[n].id] = [];
+    }
+    for(var e in edges._data){
+        for(var k in vectorVizinhos){
+            console.log(k);
+            if(edges._data[e].to == k){
+                vectorVizinhos[k].push(edges._data[e].from);
+            }
+        }
+    }
+    console.log(vectorVizinhos);
+    var string = '';
+    string += "<table class='table table-responsive'>";
+    string += "<thead class='text-center'>";
+    string += "<tr>";
+    for(var k in vectorVizinhos){
+        string += "<td>"+k+"</td>"
+        vectorVizinhos[k].sort();
+    }
+    string += "</tr>";
+    string += "</thead>"
+    string += "<tbody class='text-center'>";
+    string += "<tr>"
+    for(var k in vectorVizinhos){
+        string += "<td>{";
+        for(var m in vectorVizinhos[k]){
+            string += " "+vectorVizinhos[k][m];
+        }
+        string += " }</td>";
+    }
+    string += "</tr>"
+    string += "</tbody>";
+    string += "</table>";
+    return string;
+};
