@@ -545,7 +545,6 @@ function exportNetwork() {
     var json = exportValue,
         blob = new Blob([json], {type: "octet/stream"}),
         url = window.URL.createObjectURL(blob);
-    console.log(exportValue);
     a.href = url;
     a.download = "Grafo.json";
     a.click();
@@ -631,11 +630,11 @@ function habilitarPropriedades(){
         if(tipo == "Simples"){
             $('#propriedades2').append("Dígrafo simples<br>");
         }else{
-            $('#propriedades2').append("Multigrafo orientado<br>");
+            $('#propriedades2').append("Multigrafo direcionado<br>");
         }
 
     }else{
-        $('#propriedades2').append("Não orientado<br>");
+        $('#propriedades2').append("Não direcionado<br>");
     }
     if(ponderado){
         $('#propriedades2').append("<b>Ponderação:</b> Ponderado<br>");
@@ -643,20 +642,35 @@ function habilitarPropriedades(){
         $('#propriedades2').append("<b>Ponderação:</b> Não ponderado<br>");
     }
     if ((tipo == "Simples" || tipo == "Pseudografo") && !ordenado){
-        $('#propriedades3').append("<b>Vizinhança <i>&tau;</i>(<i>v</i>):<br/>");
+        var grado = grausSimples();
+        $('#propriedades3').append("<b>Vizinhança <i>&tau;</i>(<i>v</i>):</b><br/>");
         $('#propriedades3').append("<div id='vizinhancasimples'></div>");
         $('#vizinhancasimples').append(vizinhacaSimples());
         $('#vizinhancasimples').addClass('table-responsive');
+        $('#propriedades3').append("<b>Graus dos vértices:</b><br/>");
+        $('#propriedades3').append("<div id='grausSimples'></div>");
+        $('#grausSimples').append(grado[0]);
+        $('#grausSimples').addClass("table-responsive");
+        $('#propriedades2').append("<b>Maior Grau: </b>"+grado[1]+"<br/>");
+        $('#propriedades2').append("<b>Menor Grau: </b>"+grado[2]+"<br/>");
     }
-    if ((tipo=="Simples" || tipo == "Digrafo" || tipo == "Pseudografo") && ordenado){
-        $('#propriedades3').append("<b>Vizinhança Direta <i>&tau;</i><SUP>+</SUP>(<i>v</i>):<br/>");
+    if ((tipo=="Simples" || tipo == "Multigrafo" || tipo == "Pseudografo") && ordenado){
+        var grado = grausOrientados();
+        $('#propriedades3').append("<b>Vizinhança Direta <i>&tau;</i><SUP>+</SUP>(<i>v</i>):</b><br/>");
         $('#propriedades3').append("<div id='vizinhancadireta'></div>");
         $('#vizinhancadireta').append(vizinhacaDireta());
         $('#vizinhancadireta').addClass('table-responsive');
-        $('#propriedades3').append("<b>Vizinhança Inversa <i>&tau;</i><SUP>-</SUP>(<i>v</i>):<br/>");
+        $('#propriedades3').append("<b>Vizinhança Inversa <i>&tau;</i><SUP>-</SUP>(<i>v</i>):</b><br/>");
         $('#propriedades3').append("<div id='vizinhancainversa'></div>");
         $('#vizinhancainversa').append(vizinhacaInversa());
-        $('#vizinhancainversa').addClass('table-responsive');
+        $('#vizinhancainversa').addClass("table-responsive");
+        $('#propriedades2').append("<b>Maior Grau de Entrada: </b>"+grado[1]+"<br/>");
+        $('#propriedades2').append("<b>Menor Grau de Entrada: </b>"+grado[2]+"<br/>");
+        $('#propriedades2').append("<b>Maior Grau de Saída: </b>"+grado[3]+"<br/>");
+        $('#propriedades2').append("<b>Menor Grau de Saída: </b>"+grado[4]+"<br/>");
+        $('#propriedades2').append("<b>Graus dos vértices:</b><br/>");
+        $('#propriedades2').append("<div id='grausOrientados'></div>");
+        $('#grausOrientados').append(grado[0]);
     }
     
     $('#minigrafo').html(GrafoCompleto);
@@ -700,10 +714,10 @@ function tipoDoGrafo(){
         }
     }
 
-    if(laco){
-        return "Pseudografo";
-    }else if(idaevolta){
+    if(laco && idaevolta || idaevolta){
         return "Multigrafo";
+    }else if(laco){
+        return "Pseudografo";
     }else{
         return "Simples";
     }
@@ -757,6 +771,7 @@ function multStartNOrientado() {
     }
     string += "<table class='table table-responsive'>";
     string += "<thead><tr>";
+    string += "<td>Arestas</td>";
     for(var k in multi){
         string += "<td>";
         string += "{"+nodes._data[multi[k][0]].label+","+nodes._data[multi[k][1]].label+"}";
@@ -764,6 +779,7 @@ function multStartNOrientado() {
     }
     string += "</tr></thead>";
     string += "<tr>";
+    string += "<td>Multiplicidade</td>";
     for(var k in multi){
         string += "<td class='text-center'>";
         string += multi[k][2];
@@ -791,6 +807,7 @@ function multStartOrientado() {
     }
     string += "<table class='table table-responsive'>";
     string += "<thead><tr>";
+    string += "<td>Arestas</td>";
     for(var k in multi){
         string += "<td>";
         string += "{"+nodes._data[multi[k][0]].label+","+nodes._data[multi[k][1]].label+"}";
@@ -798,6 +815,7 @@ function multStartOrientado() {
     }
     string += "</tr></thead>";
     string += "<tr>";
+    string += "<td>Multiplicidade</td>";
     for(var k in multi){
         string += "<td class='text-center'>";
         string += multi[k][2];
@@ -979,7 +997,6 @@ function subIndVertice(){
 }
 
 function subIndAresta(){
-    console.log('entrei nessa porra');
     $('#textindar').show();
     $('#arestasAInduzir').html('');
     $('#arestasAInduzir').show();
@@ -1072,7 +1089,6 @@ function vizinhacaSimples(){
     }
     for(var e in edges._data){
         for(var k in vectorVizinhos){
-            console.log(k);
             if(edges._data[e].from == k){
                 vectorVizinhos[k].push(edges._data[e].to);
             }
@@ -1081,11 +1097,11 @@ function vizinhacaSimples(){
             }
         }
     }
-    console.log(vectorVizinhos);
     var string = '';
-    string += "<table class='table table-responsive'>";
+    string += "<table class='table'>";
     string += "<thead class='text-center'>";
     string += "<tr>";
+    string += "<td>Vértice</td>";
     for(var k in vectorVizinhos){
         string += "<td>"+k+"</td>"
         vectorVizinhos[k].sort();
@@ -1094,12 +1110,13 @@ function vizinhacaSimples(){
     string += "</thead>"
     string += "<tbody class='text-center'>";
     string += "<tr>"
+    string += "<td>Vizinhos</td>";
     for(var k in vectorVizinhos){
-        string += "<td>{";
+        string += "<td>";
         for(var m in vectorVizinhos[k]){
-            string += " "+vectorVizinhos[k][m];
+            string += vectorVizinhos[k][m]+" ";
         }
-        string += " }</td>";
+        string += "</td>";
     }
     string += "</tr>"
     string += "</tbody>";
@@ -1114,17 +1131,16 @@ function vizinhacaDireta(){
     }
     for(var e in edges._data){
         for(var k in vectorVizinhos){
-            console.log(k);
             if(edges._data[e].from == k){
                 vectorVizinhos[k].push(edges._data[e].to);
             }
         }
     }
-    console.log(vectorVizinhos);
     var string = '';
     string += "<table class='table table-responsive'>";
     string += "<thead class='text-center'>";
     string += "<tr>";
+    string += "<td>Vértice</td>";
     for(var k in vectorVizinhos){
         string += "<td>"+k+"</td>"
         vectorVizinhos[k].sort();
@@ -1133,12 +1149,13 @@ function vizinhacaDireta(){
     string += "</thead>"
     string += "<tbody class='text-center'>";
     string += "<tr>"
+    string += "<td>Vizinhos</td>";
     for(var k in vectorVizinhos){
-        string += "<td>{";
+        string += "<td>";
         for(var m in vectorVizinhos[k]){
-            string += " "+vectorVizinhos[k][m];
+            string += vectorVizinhos[k][m]+' ';
         }
-        string += " }</td>";
+        string += "</td>";
     }
     string += "</tr>"
     string += "</tbody>";
@@ -1153,17 +1170,16 @@ function vizinhacaInversa(){
     }
     for(var e in edges._data){
         for(var k in vectorVizinhos){
-            console.log(k);
             if(edges._data[e].to == k){
                 vectorVizinhos[k].push(edges._data[e].from);
             }
         }
     }
-    console.log(vectorVizinhos);
     var string = '';
     string += "<table class='table table-responsive'>";
     string += "<thead class='text-center'>";
     string += "<tr>";
+    string += "<td>Vértice</td>";
     for(var k in vectorVizinhos){
         string += "<td>"+k+"</td>"
         vectorVizinhos[k].sort();
@@ -1172,15 +1188,117 @@ function vizinhacaInversa(){
     string += "</thead>"
     string += "<tbody class='text-center'>";
     string += "<tr>"
+    string += "<td>Vizinhos</td>";
     for(var k in vectorVizinhos){
-        string += "<td>{";
+        string += "<td>";
         for(var m in vectorVizinhos[k]){
-            string += " "+vectorVizinhos[k][m];
+            string += vectorVizinhos[k][m]+" ";
         }
-        string += " }</td>";
+        string += "</td>";
     }
     string += "</tr>"
     string += "</tbody>";
     string += "</table>";
     return string;
 };
+
+/*GRAUS DOS VÉRTICES*/
+function grausSimples(){
+    var graus = [];
+    for(var n in nodes._data){
+        graus[nodes._data[n].id] = 0;
+        for(var e in edges._data){
+            if(edges._data[e].from == nodes._data[n].id || edges._data[e].to == nodes._data[n].id){
+                graus[nodes._data[n].id]++;
+            }
+            if(edges._data[e].from == nodes._data[n].id && edges._data[e].to == nodes._data[n].id){
+                graus[nodes._data[n].id]++;
+            }
+        }
+    }
+    var string = '';
+    string += "<table class='table'>";
+    string += "<thead class='text-center'>";
+    string += "<tr>";
+    string += "<td>Vértice</td>";
+    var maiorgrau = graus[1], menorgrau = graus[1];
+    console.log(maiorgrau, menorgrau);
+    for(var k in graus){
+        string += "<td>"+k+"</td>"
+        if(graus[k] >= maiorgrau){
+            maiorgrau = graus[k];
+        }
+        if(graus[k] <= menorgrau){
+            menorgrau = graus[k];
+        }
+    }
+    console.log(maiorgrau, menorgrau);
+    string += "</tr>";
+    string += "</thead>"
+    string += "<tbody class='text-center'>";
+    string += "<tr>"
+    string += "<td>Grau</td>"
+    for(var k in graus){
+        string += "<td>"+graus[k]+"</td>";
+    }
+    string += "</tr>"
+    string += "</tbody>";
+    string += "</table>";
+    return [string, maiorgrau, menorgrau];
+}
+
+function grausOrientados(){
+    var graus = [];
+    for(var n in nodes._data){
+        graus[nodes._data[n].id] = [];
+        graus[nodes._data[n].id][0] = 0;
+        graus[nodes._data[n].id][1] = 0;
+        for(var e in edges._data){
+            if(edges._data[e].to == nodes._data[n].id){
+                graus[nodes._data[n].id][0]++;
+            }
+            if(edges._data[e].from == nodes._data[n].id){
+                graus[nodes._data[n].id][1]++;
+            }
+        }
+    }
+    console.log(graus);
+    var string = '';
+    string += "<table class='table'>";
+    string += "<thead class='text-center'>";
+    string += "<tr>";
+    string += "<td>Vértice</td>";
+    var maiorgrauentrada = graus[1][0], menorgrauentrada = graus[1][0], maiorgrausaida = graus[1][1], menorgrausaida = graus[1][1];
+    for(var k in graus){
+        string += "<td>"+k+"</td>"
+        if(graus[k][0] >= maiorgrauentrada){
+            maiorgrauentrada = graus[k][0];
+        }
+        if(graus[k][0] <= menorgrauentrada){
+            menorgrauentrada = graus[k][0];
+        }
+        if(graus[k][1] >= maiorgrausaida){
+            maiorgrausaida = graus[k][1];
+        }
+        if(graus[k][1] <= menorgrausaida){
+            menorgrausaida = graus[k][1];
+        }
+    }
+    string += "</tr>";
+    string += "</thead>"
+    string += "<tbody class='text-center'>";
+    string += "<tr>"
+    string += "<td>Grau Entrada</td>"
+    for(var k in graus){
+        string += "<td>"+graus[k][0]+"</td>";
+    }
+    string += "</tr><tr>";
+    string += "<td>Grau Saída</td>"
+    for(var k in graus){
+        string += "<td>"+graus[k][1]+"</td>";
+    }
+    string += "</tr>";
+    string += "</tbody>";
+    string += "</table>";
+    return [string, maiorgrauentrada, menorgrauentrada, maiorgrausaida, menorgrausaida];
+}
