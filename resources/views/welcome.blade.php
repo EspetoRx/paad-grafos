@@ -151,12 +151,15 @@
 
     <!-- MEU JAVASCRIPT -->
     <script src="{{asset("js/main.js")}}"></script>
+    <script src="{{asset("js/GraphContext.js")}}"></script>
+    <script src="{{asset("js/GraphProperties.js")}}"></script>
+    <script src="{{asset("js/GraphDerivation.js")}}"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
         $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        });  
+            $('[data-toggle="tooltip"]').tooltip();
+        });
         $("#filegrafo").change(function(event){
             event.preventDefault();
                 var formData = new FormData($("#abraArquivo")[0]);    
