@@ -191,7 +191,7 @@ function enableGraphContext(){
     GraphContext = true;
     $('#accordionSidebar').addClass("toggled");
     if(ordenado){
-        $('#ordenacao').html("<input type=\"checkbox\" checked=\"checked\" id=\"check_ordenado\"> <i class=\"fas fa-slash\"></i> Não ordenado");
+        $('#ordenacao').html("<input type=\"checkbox\" checked=\"checked\" id=\"check_ordenado\"> <i class=\"fas fa-slash\"></i> Não orientado");
         $("#ordenacao").attr("onclick","DesabilitarOrdenado()");    }
     if(ponderado){
         $('#ponderacao').html("<input type=\"checkbox\" id=\"check_ordenado\" checked=\"checked\"> <i class=\"fas fa-sort-numeric-down\"></i> Não Ponderado");
@@ -403,10 +403,10 @@ function showEditArestaModal(){
         }else{
             var label = data.edges._data[selecionados[0]].label;
             if(label == '' || label === undefined || label == ' '){
-                $('#editEdgeBody').html('<label>Label (Peso da aresta):</label><input type=\"number\" class=\"form-control\" id=\"labelEdge\" placeholder=\"Não definido\"/>');
+                $('#editEdgeBody').html('<label>Label (Peso da aresta):</label><input type=\"number\" class=\"form-control\" id=\"labelEdge\" placeholder=\"Não definido\"/><br><button type=\"button\" class=\"btn btn-primary\" onClick=\"InverterAresta(\'' + selecionados[0] + '\')\">Inverter ordem de conexão</button>');
                 $('#editEdgeFooter').html('<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button><button type=\"button\" class=\"btn btn-primary\" onClick=\"editEdgeLabel(\''+ selecionados[0] +'\')\">Salvar</button>');
             }else{
-                $('#editEdgeBody').html('<label>Label (Peso da aresta):</label><input type=\"number\" class=\"form-control\" id=\"labelEdge\" placeholder=\"'+label+'\"/>');
+                $('#editEdgeBody').html('<label>Label (Peso da aresta):</label><input type=\"number\" class=\"form-control\" id=\"labelEdge\" placeholder=\"'+label+'\"/><br><button type=\"button\" class=\"btn btn-primary\" onClick=\"InverterAresta()\">Inverter ordem de conexão</button>');
                 $('#editEdgeFooter').html('<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button><button type=\"button\" class=\"btn btn-primary\" onClick=\"editEdgeLabel(\''+ selecionados[0] +'\')\">Salvar</button>');
             }
             $('#labelEdge').focus();
@@ -428,6 +428,13 @@ function editEdgeLabel(id){
 
 }
 
+function InverterAresta(id){
+    var aux;
+    aux = edges._data[id].from;
+    edges.update([{id:id, from: edges._data[id].to, to: aux}]);
+    $('#editArestaModal').modal('hide');
+}
+
 function cancelEditAresta(){
     normalizeGraph();
     setGraphStatus();
@@ -447,7 +454,7 @@ function HabilitarOrdenado(){
         }
     }
     network.setOptions(options);
-    $('#ordenacao').html("<input type=\"checkbox\" checked=\"checked\" id=\"check_ordenado\"> <i class=\"fas fa-slash\"></i> Não ordenado");
+    $('#ordenacao').html("<input type=\"checkbox\" checked=\"checked\" id=\"check_ordenado\"> <i class=\"fas fa-slash\"></i> Não orientado");
     $("#ordenacao").attr("onclick","DesabilitarOrdenado()");
     ordenado = true;
 }
@@ -467,7 +474,7 @@ function DesabilitarOrdenado(){
     }
 
     network.setOptions(options);
-    $('#ordenacao').html("<input type=\"checkbox\" id=\"check_ordenado\"> <i class=\"fas fa-arrow-up\"></i> Ordenado");
+    $('#ordenacao').html("<input type=\"checkbox\" id=\"check_ordenado\"> <i class=\"fas fa-arrow-up\"></i> Orientado");
     $("#ordenacao").attr("onclick","HabilitarOrdenado()");
     ordenado = false;
 }
@@ -615,17 +622,17 @@ function habilitarPropriedades(){
     $('#conteudo').html("<div class=\"row\">"+
         "<div class=\"col-md-6\" id=\"minigrafo\"></div>"+
         "<div class=\"col-md-6\" id=\"propriedades1\">"+
-        "<p><b>Tipo do grafo:</b> "+tipo+"<br>"+
-        "<b>Número de vértices (Ordem - |V|):</b> "+nodes.length+"<br>"+
-        "<b>Número de arestas (Tamanho - |A|):</b> "+edges.length+"</br>"+
-        "<b>Multiplicidade de arestas:</b> <br>"+multiplicidadeGeral()+
+        "<p><button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se simples: Não possui laços nem arestas múltiplas;\nSe multígrafo: não possui laços mas possui arestas múltiplas;\nSe pseudografo: possui laço e pode possuir arestas múltiplas.\">(?)</button> <b>Tipo do grafo:</b> "+tipo+"<br>"+
+        "<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantidade de vértices.\">(?)</button> <b>Número de vértices (Ordem - |V|):</b> "+nodes.length+"<br>"+
+        "<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantidade de arestas.\">(?)</button> <b>Número de arestas (Tamanho - |A|):</b> "+edges.length+"</br>"+
+        "<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantas arestas ou arcos existem entre cada par ordenado de vértices.\">(?)</button> <b>Multiplicidade de arestas:</b> <br>"+multiplicidadeGeral()+
         "</div>"+
         "<div class='col-md-6' id='propriedades2'>"+
         "</div>"+
         "<div class='col-md-6' id='propriedades3'>"+
         "</div>"
         +"</div>");
-    $('#propriedades2').append("<b>Orientação:</b> ");
+    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se o grafo é orientado (direcionado) ou não.\">(?)</button> <b>Orientação:</b> ");
     if(ordenado){
         if(tipo == "Simples"){
             $('#propriedades2').append("Dígrafo simples<br>");
@@ -637,38 +644,38 @@ function habilitarPropriedades(){
         $('#propriedades2').append("Não direcionado<br>");
     }
     if(ponderado){
-        $('#propriedades2').append("<b>Ponderação:</b> Ponderado<br>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Ponderado<br>");
     }else{
-        $('#propriedades2').append("<b>Ponderação:</b> Não ponderado<br>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Não ponderado<br>");
     }
     if ((tipo == "Simples" || tipo == "Pseudografo") && !ordenado){
         var grado = grausSimples();
-        $('#propriedades3').append("<b>Vizinhança <i>&tau;</i>(<i>v</i>):</b><br/>");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quais vértices são vizinhos de quais vértices.\">(?)</button> <b>Vizinhança <i>&tau;</i>(<i>v</i>): </b><br/>");
         $('#propriedades3').append("<div id='vizinhancasimples'></div>");
         $('#vizinhancasimples').append(vizinhacaSimples());
         $('#vizinhancasimples').addClass('table-responsive');
-        $('#propriedades3').append("<b>Graus dos vértices:</b><br/>");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quantas conexões incidem em cada vértice.\">(?)</button> <b>Graus dos vértices:</b><br/>");
         $('#propriedades3').append("<div id='grausSimples'></div>");
         $('#grausSimples').append(grado[0]);
         $('#grausSimples').addClass("table-responsive");
-        $('#propriedades2').append("<b>Maior Grau: </b>"+grado[1]+"<br/>");
-        $('#propriedades2').append("<b>Menor Grau: </b>"+grado[2]+"<br/>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Maior Grau: </b>"+grado[1]+"<br/>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Menor Grau: </b>"+grado[2]+"<br/>");
     }
     if ((tipo=="Simples" || tipo == "Multigrafo" || tipo == "Pseudografo") && ordenado){
         var grado = grausOrientados();
-        $('#propriedades3').append("<b>Vizinhança Direta <i>&tau;</i><SUP>+</SUP>(<i>v</i>):</b><br/>");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quantos arcos incidem diretamente em cada vértice.\">(?)</button> <b>Vizinhança Direta <i>&tau;</i><SUP>+</SUP>(<i>v</i>):</b><br/>");
         $('#propriedades3').append("<div id='vizinhancadireta'></div>");
         $('#vizinhancadireta').append(vizinhacaDireta());
         $('#vizinhancadireta').addClass('table-responsive');
-        $('#propriedades3').append("<b>Vizinhança Inversa <i>&tau;</i><SUP>-</SUP>(<i>v</i>):</b><br/>");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quantos arcos saem de cada vértice.\">(?)</button> <b>Vizinhança Inversa <i>&tau;</i><SUP>-</SUP>(<i>v</i>):</b><br/>");
         $('#propriedades3').append("<div id='vizinhancainversa'></div>");
         $('#vizinhancainversa').append(vizinhacaInversa());
         $('#vizinhancainversa').addClass("table-responsive");
-        $('#propriedades2').append("<b>Maior Grau de Entrada: </b>"+grado[1]+"<br/>");
-        $('#propriedades2').append("<b>Menor Grau de Entrada: </b>"+grado[2]+"<br/>");
-        $('#propriedades2').append("<b>Maior Grau de Saída: </b>"+grado[3]+"<br/>");
-        $('#propriedades2').append("<b>Menor Grau de Saída: </b>"+grado[4]+"<br/>");
-        $('#propriedades2').append("<b>Graus dos vértices:</b><br/>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arcos que chegam a um vértice.\">(?)</button> <b>Maior Grau de Entrada: </b>"+grado[1]+"<br/>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arcos que chegam a um vértice.\">(?)</button> <b>Menor Grau de Entrada: </b>"+grado[2]+"<br/>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arcos que saem de um vértice.\">(?)</button> <b>Maior Grau de Saída: </b>"+grado[3]+"<br/>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arcos que saem de um vértice.\">(?)</button> <b>Menor Grau de Saída: </b>"+grado[4]+"<br/>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra a quantidade de arcos incidentes em cada vértice.\">(?)</button> <b>Graus dos vértices:</b><br/>");
         $('#propriedades2').append("<div id='grausOrientados'></div>");
         $('#grausOrientados').append(grado[0]);
     }
@@ -1114,8 +1121,9 @@ function vizinhacaSimples(){
     for(var k in vectorVizinhos){
         string += "<td>";
         for(var m in vectorVizinhos[k]){
-            string += vectorVizinhos[k][m]+" ";
+            string += vectorVizinhos[k][m]+",";
         }
+        string = string.substring(0,(string.length - 1));
         string += "</td>";
     }
     string += "</tr>"
@@ -1137,7 +1145,7 @@ function vizinhacaDireta(){
         }
     }
     var string = '';
-    string += "<table class='table table-responsive'>";
+    string += "<table class='table'>";
     string += "<thead class='text-center'>";
     string += "<tr>";
     string += "<td>Vértice</td>";
@@ -1150,10 +1158,16 @@ function vizinhacaDireta(){
     string += "<tbody class='text-center'>";
     string += "<tr>"
     string += "<td>Vizinhos</td>";
+    var change = false;
     for(var k in vectorVizinhos){
+        change = false;
         string += "<td>";
         for(var m in vectorVizinhos[k]){
-            string += vectorVizinhos[k][m]+' ';
+            string += vectorVizinhos[k][m]+',';
+            change = true;
+        }
+        if (change){
+            string = string.substring(0,(string.length - 1));
         }
         string += "</td>";
     }
@@ -1176,7 +1190,7 @@ function vizinhacaInversa(){
         }
     }
     var string = '';
-    string += "<table class='table table-responsive'>";
+    string += "<table class='table'>";
     string += "<thead class='text-center'>";
     string += "<tr>";
     string += "<td>Vértice</td>";
@@ -1189,10 +1203,16 @@ function vizinhacaInversa(){
     string += "<tbody class='text-center'>";
     string += "<tr>"
     string += "<td>Vizinhos</td>";
+    var change  = false;
     for(var k in vectorVizinhos){
+        change = false
         string += "<td>";
         for(var m in vectorVizinhos[k]){
-            string += vectorVizinhos[k][m]+" ";
+            string += vectorVizinhos[k][m]+",";
+            change = true;
+        }
+        if(change){
+            string = string.substring(0,(string.length - 1));
         }
         string += "</td>";
     }

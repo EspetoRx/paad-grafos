@@ -85,3 +85,11 @@ p{
 .table{
     margin-bottom: 0px;
 }
+
+.padding-0{
+    padding: 0 !important;
+}
+
+.cursor-default{
+    pointer: default;
+}

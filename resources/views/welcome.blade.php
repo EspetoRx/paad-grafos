@@ -154,6 +154,9 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });  
         $("#filegrafo").change(function(event){
             event.preventDefault();
                 var formData = new FormData($("#abraArquivo")[0]);    
