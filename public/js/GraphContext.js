@@ -257,10 +257,10 @@ function showEditArestaModal(){
         }else{
             var label = data.edges._data[selecionados[0]].label;
             if(label == '' || label === undefined || label == ' '){
-                $('#editEdgeBody').html('<label>Label (Peso da aresta):</label><input type=\"number\" class=\"form-control\" id=\"labelEdge\" placeholder=\"Não definido\"/><br><button type=\"button\" class=\"btn btn-primary\" onClick=\"InverterAresta(\'' + selecionados[0] + '\')\">Inverter ordem de conexão</button>');
+                $('#editEdgeBody').html('<label>Label (Peso da aresta):</label><input type=\"number\" class=\"form-control\" id=\"labelEdge\" placeholder=\"Não definido\"/><br><button type=\"button\" class=\"btn btn-primary\" onClick=\"InverterAresta(\''+ selecionados[0] +'\')\">Inverter ordem de conexão</button>');
                 $('#editEdgeFooter').html('<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button><button type=\"button\" class=\"btn btn-primary\" onClick=\"editEdgeLabel(\''+ selecionados[0] +'\')\">Salvar</button>');
             }else{
-                $('#editEdgeBody').html('<label>Label (Peso da aresta):</label><input type=\"number\" class=\"form-control\" id=\"labelEdge\" placeholder=\"'+label+'\"/><br><button type=\"button\" class=\"btn btn-primary\" onClick=\"InverterAresta()\">Inverter ordem de conexão</button>');
+                $('#editEdgeBody').html('<label>Label (Peso da aresta):</label><input type=\"number\" class=\"form-control\" id=\"labelEdge\" placeholder=\"'+label+'\"/><br><button type=\"button\" class=\"btn btn-primary\" onClick=\"InverterAresta(\''+ selecionados[0] +'\')\">Inverter ordem de conexão</button>');
                 $('#editEdgeFooter').html('<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button><button type=\"button\" class=\"btn btn-primary\" onClick=\"editEdgeLabel(\''+ selecionados[0] +'\')\">Salvar</button>');
             }
             $('#labelEdge').focus();
@@ -284,6 +284,7 @@ function editEdgeLabel(id){
 
 function InverterAresta(id){
     var aux;
+    console.log(id, edges._data[id]);
     aux = edges._data[id].from;
     edges.update([{id:id, from: edges._data[id].to, to: aux}]);
     $('#editArestaModal').modal('hide');
