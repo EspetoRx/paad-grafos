@@ -139,7 +139,7 @@ function subIndVertice(){
         edges:{
             font: {
                 color: 'white',
-            }
+            },
         }
     };
     var newdata = {
@@ -148,6 +148,14 @@ function subIndVertice(){
     };
     var newcontainer = document.getElementById('networkSubIndVer');
     var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
+    if(ordenado){
+        options = {
+            edges:{
+                arrows:'to'
+            }
+        };
+        newnetwork.setOptions(options);
+    }
     $('#induzirVertices').on('click', function(){
         for(var k in newnodes._data){
             if($('#node'+newnodes._data[k].id).prop('checked') == false){
@@ -158,6 +166,7 @@ function subIndVertice(){
         $('#btnindver').hide();
         $('#textindver').hide();
     });
+    $('#collapseTwo').removeClass('show');
 }
 
 function subIndAresta(){
@@ -202,7 +211,8 @@ function subIndAresta(){
         edges:{
             font: {
                 color: 'white',
-            }
+            },
+            arrows: 'to'
         }
     };
     var newdata = {
@@ -211,6 +221,14 @@ function subIndAresta(){
     };
     var newcontainer = document.getElementById('networkSubIndAre');
     var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
+    if(ordenado){
+        options = {
+            edges:{
+                arrows:'to'
+            }
+        };
+        newnetwork.setOptions(options);
+    }
     $('#induzirArestas').on('click', function(){
         var inuse = false;
         for(var k in newedges._data){
@@ -234,12 +252,15 @@ function subIndAresta(){
         $('#btnindar').hide();
         $('#textindar').hide();
     });
+    $('#collapseTwo').removeClass('show');
 }
 
 $(document).on('shown.bs.modal','#SubgrafoInducaoVertice', function () {
     subIndVertice();
+    
 });
 
 $(document).on('shown.bs.modal','#SubgrafoInducaoAresta', function () {
     subIndAresta();
+    
 });

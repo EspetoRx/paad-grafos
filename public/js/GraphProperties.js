@@ -39,7 +39,7 @@ function habilitarPropriedades(){
     }else{
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Não ponderado<br>");
     }
-    if ((tipo == "Simples" || tipo == "Pseudografo") && !ordenado){
+    if ((tipo == "Simples" || tipo == "Pseudografo" || tipo == "Multigrafo") && !ordenado){
         var grado = grausSimples();
         $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quais vértices são vizinhos de quais vértices.\">(?)</button> <b>Vizinhança <i>&tau;</i>(<i>v</i>): </b><br/>");
         $('#propriedades3').append("<div id='vizinhancasimples'></div>");
@@ -51,14 +51,20 @@ function habilitarPropriedades(){
         $('#grausSimples').addClass("table-responsive");
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Maior Grau: </b>"+grado[1]+"<br/>");
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Menor Grau: </b>"+grado[2]+"<br/>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Adjacência do grafo.\">(?)</button> <b>Matriz de Adjacência M = [m<sub>i,j</sub>]:</b><br/>");
+        $('#propriedades2').append('<div id="MatrizAdjacenciaSimples" class="table-responsive"></div>');
+        $('#MatrizAdjacenciaSimples').append(MatrizAdjacenciaSimples());
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Incidência do grafo.\">(?)</button> <b>Matriz de Incidência B = [b<sub>i,j</sub>]:</b><br/>");
+        $('#propriedades3').append('<div id="MatrizIncidenciaSimples" class="table-responsive"></div>');
+        $('#MatrizIncidenciaSimples').append(MatrizIncidenciaSimples());
     }
     if ((tipo=="Simples" || tipo == "Multigrafo" || tipo == "Pseudografo") && ordenado){
         var grado = grausOrientados();
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quantos arcos incidem diretamente em cada vértice.\">(?)</button> <b>Vizinhança Direta <i>&tau;</i><SUP>+</SUP>(<i>v</i>):</b><br/>");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra em quais vértices incidem as arestas que saem do vértice em destaque.\">(?)</button> <b>Vizinhança Direta <i>&tau;</i><SUP>+</SUP>(<i>v</i>):</b><br/>");
         $('#propriedades3').append("<div id='vizinhancadireta'></div>");
         $('#vizinhancadireta').append(vizinhacaDireta());
         $('#vizinhancadireta').addClass('table-responsive');
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quantos arcos saem de cada vértice.\">(?)</button> <b>Vizinhança Inversa <i>&tau;</i><SUP>-</SUP>(<i>v</i>):</b><br/>");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os vértices nos quais existem arcos que incidam sobre o vértice em destaque.\">(?)</button> <b>Vizinhança Inversa <i>&tau;</i><SUP>-</SUP>(<i>v</i>):</b><br/>");
         $('#propriedades3').append("<div id='vizinhancainversa'></div>");
         $('#vizinhancainversa').append(vizinhacaInversa());
         $('#vizinhancainversa').addClass("table-responsive");
@@ -67,8 +73,14 @@ function habilitarPropriedades(){
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arcos que saem de um vértice.\">(?)</button> <b>Maior Grau de Saída: </b>"+grado[3]+"<br/>");
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arcos que saem de um vértice.\">(?)</button> <b>Menor Grau de Saída: </b>"+grado[4]+"<br/>");
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra a quantidade de arcos incidentes em cada vértice.\">(?)</button> <b>Graus dos vértices:</b><br/>");
-        $('#propriedades2').append("<div id='grausOrientados'></div>");
+        $('#propriedades2').append("<div id='grausOrientados' class='table-responsive'></div>");
         $('#grausOrientados').append(grado[0]);
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Adjacência do grafo.\">(?)</button> <b>Matriz de Adjacência M = [m<sub>i,j</sub>]:</b><br/>");
+        $('#propriedades3').append('<div id="MatrizAdjacenciaOrientado" class="table-responsive"></div>');
+        $('#MatrizAdjacenciaOrientado').append(MatrizAdjacenciaOrientado());
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Incidência do grafo.\">(?)</button> <b>Matriz de Incidência B = [b<sub>i,j</sub>]:</b><br/>");
+        $('#propriedades2').append('<div id="MatrizIncidenciaOrientado" class="table-responsive"></div>');
+        $('#MatrizIncidenciaOrientado').append(MatrizIncidenciaOrientado());
     }
     
     $('#minigrafo').html(GrafoCompleto);
@@ -262,7 +274,7 @@ function vizinhacaSimples(){
     string += "<tr>";
     string += "<td>Vértice</td>";
     for(var k in vectorVizinhos){
-        string += "<td>"+k+"</td>"
+        string += "<td>"+nodes._data[k].label+"</td>"
         vectorVizinhos[k].sort();
     }
     string += "</tr>";
@@ -273,7 +285,7 @@ function vizinhacaSimples(){
     for(var k in vectorVizinhos){
         string += "<td>";
         for(var m in vectorVizinhos[k]){
-            string += vectorVizinhos[k][m]+",";
+            string += nodes._data[vectorVizinhos[k][m]].label+",";
         }
         string = string.substring(0,(string.length - 1));
         string += "</td>";
@@ -302,7 +314,7 @@ function vizinhacaDireta(){
     string += "<tr>";
     string += "<td>Vértice</td>";
     for(var k in vectorVizinhos){
-        string += "<td>"+k+"</td>"
+        string += "<td>"+nodes._data[k].label+"</td>"
         vectorVizinhos[k].sort();
     }
     string += "</tr>";
@@ -315,7 +327,7 @@ function vizinhacaDireta(){
         change = false;
         string += "<td>";
         for(var m in vectorVizinhos[k]){
-            string += vectorVizinhos[k][m]+',';
+            string += nodes._data[vectorVizinhos[k][m]].label+',';
             change = true;
         }
         if (change){
@@ -347,7 +359,7 @@ function vizinhacaInversa(){
     string += "<tr>";
     string += "<td>Vértice</td>";
     for(var k in vectorVizinhos){
-        string += "<td>"+k+"</td>"
+        string += "<td>"+nodes._data[k].label+"</td>"
         vectorVizinhos[k].sort();
     }
     string += "</tr>";
@@ -360,7 +372,7 @@ function vizinhacaInversa(){
         change = false
         string += "<td>";
         for(var m in vectorVizinhos[k]){
-            string += vectorVizinhos[k][m]+",";
+            string += nodes._data[vectorVizinhos[k][m]].label+",";
             change = true;
         }
         if(change){
@@ -395,7 +407,7 @@ function grausSimples(){
     string += "<td>Vértice</td>";
     var maiorgrau = graus[1], menorgrau = graus[1];
     for(var k in graus){
-        string += "<td>"+k+"</td>"
+        string += "<td>"+nodes._data[k].label+"</td>"
         if(graus[k] >= maiorgrau){
             maiorgrau = graus[k];
         }
@@ -439,7 +451,7 @@ function grausOrientados(){
     string += "<td>Vértice</td>";
     var maiorgrauentrada = graus[1][0], menorgrauentrada = graus[1][0], maiorgrausaida = graus[1][1], menorgrausaida = graus[1][1];
     for(var k in graus){
-        string += "<td>"+k+"</td>"
+        string += "<td>"+nodes._data[k].label+"</td>"
         if(graus[k][0] >= maiorgrauentrada){
             maiorgrauentrada = graus[k][0];
         }
@@ -470,4 +482,126 @@ function grausOrientados(){
     string += "</tbody>";
     string += "</table>";
     return [string, maiorgrauentrada, menorgrauentrada, maiorgrausaida, menorgrausaida];
+}
+
+/*-----------------------------------------------------------*/
+/*      MATRIZ DE ADJACÊNCIA PARA GRAFOS NÃO ORIENTADOS      */
+/*-----------------------------------------------------------*/
+
+function MatrizAdjacenciaSimples(){
+    var matriz = '<table class="table">';
+    matriz += '<tr>';
+    matriz += '<td>Vértices</td>'
+    for(var i in nodes._data){
+        matriz += '<td>'+nodes._data[i].label+'</td>';
+    }
+    matriz += '</tr>';
+    for(var i in nodes._data){
+        matriz += '<tr><td>'+nodes._data[i].label+'</td>';
+        for(var j in nodes._data){
+            if(i != j){
+                matriz += '<td>'+multiplicidade(i,j)+'</td>';
+            }else{
+                matriz += '<td>'+multiplicidade(i,j)/2+'</td>';
+            }
+            
+        }
+        matriz += '</tr>';
+    }
+    matriz += '</table>'
+    return matriz;
+}
+
+/*-----------------------------------------------------------*/
+/*      MATRIZ DE INCIDÊNCIA PARA GRAFOS NÃO ORIENTADOS      */
+/*-----------------------------------------------------------*/
+
+function MatrizIncidenciaSimples(){
+    var matriz = '<table class="table">';
+    matriz += '<tr>';
+    matriz += '<td>Vértices</td>'
+    for(var i in edges._data){
+        matriz += '<td>{'+nodes._data[edges._data[i].from].label+','+nodes._data[edges._data[i].to].label+'}</td>';
+    }
+    matriz += '</tr>';
+    for(var i in nodes._data){
+        matriz += '<tr><td>'+nodes._data[i].label+'</td>';
+        for(var j in edges._data){
+            var soma = 0;
+            if(edges._data[j].from == i){
+                soma++;
+            }
+            if(edges._data[j].to == i){
+                soma++;
+            }
+            if(edges._data[j].from == edges._data[j].to && i == edges._data[j].from){
+                soma--;
+            }
+            matriz += '<td>'+soma+'</td>';  
+        }
+        matriz += '</tr>';
+    }
+    matriz += '</table>'
+    return matriz;
+}
+
+/*-----------------------------------------------------------*/
+/*      MATRIZ DE Adjacencia PARA GRAFOS ORIENTADOS          */
+/*-----------------------------------------------------------*/
+
+function MatrizAdjacenciaOrientado(){
+    var matriz = '<table class="table">';
+    matriz += '<tr>';
+    matriz += '<td>Vértices</td>'
+    for(var i in nodes._data){
+        matriz += '<td>'+nodes._data[i].label+'</td>';
+    }
+    matriz += '</tr>';
+    for(var i in nodes._data){
+        matriz += '<tr><td>'+nodes._data[i].label+'</td>';
+        for(var j in nodes._data){
+            if(i != j){
+                matriz += '<td>'+multiplicidadeOr(i,j)+'</td>';
+            }else{
+                matriz += '<td>'+multiplicidadeOr(i,j)+'</td>';
+            }
+            
+        }
+        matriz += '</tr>';
+    }
+    matriz += '</table>'
+    return matriz;
+}
+
+/*-----------------------------------------------------------*/
+/*      MATRIZ DE INCIDÊNCIA PARA GRAFOS ORIENTADOS          */
+/*-----------------------------------------------------------*/
+
+function MatrizIncidenciaOrientado(){
+    var matriz = '<table class="table">';
+    matriz += '<tr>';
+    matriz += '<td>Vértices</td>'
+    for(var i in edges._data){
+        matriz += '<td>{'+nodes._data[edges._data[i].from].label+','+nodes._data[edges._data[i].to].label+'}</td>';
+    }
+    matriz += '</tr>';
+    for(var i in nodes._data){
+        matriz += '<tr><td>'+nodes._data[i].label+'</td>';
+        for(var j in edges._data){
+            var soma = 0;
+            if(edges._data[j].from == i){
+                soma--;
+            }
+            if(edges._data[j].to == i){
+                soma++;
+            }
+            if(edges._data[j].from == edges._data[j].to && i == edges._data[j].from){
+                soma++;
+            }
+            matriz += '<td>'+soma+'</td>';  
+        }
+        matriz += '</tr>';
+    }
+    matriz += '</table>'
+    return matriz;
 }
