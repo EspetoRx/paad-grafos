@@ -491,13 +491,13 @@ function grausOrientados(){
 function MatrizAdjacenciaSimples(){
     var matriz = '<table class="table">';
     matriz += '<tr>';
-    matriz += '<td>Vértices</td>'
+    matriz += '<td><b>*</b></td>'
     for(var i in nodes._data){
-        matriz += '<td>'+nodes._data[i].label+'</td>';
+        matriz += '<td><b>'+nodes._data[i].label+'</b></td>';
     }
     matriz += '</tr>';
     for(var i in nodes._data){
-        matriz += '<tr><td>'+nodes._data[i].label+'</td>';
+        matriz += '<tr><td><b>'+nodes._data[i].label+'</b></td>';
         for(var j in nodes._data){
             if(i != j){
                 matriz += '<td>'+multiplicidade(i,j)+'</td>';
@@ -519,13 +519,13 @@ function MatrizAdjacenciaSimples(){
 function MatrizIncidenciaSimples(){
     var matriz = '<table class="table">';
     matriz += '<tr>';
-    matriz += '<td>Vértices</td>'
+    matriz += '<td><b>*</b></td>'
     for(var i in edges._data){
-        matriz += '<td>{'+nodes._data[edges._data[i].from].label+','+nodes._data[edges._data[i].to].label+'}</td>';
+        matriz += '<td><b>{'+nodes._data[edges._data[i].from].label+','+nodes._data[edges._data[i].to].label+'}</b></td>';
     }
     matriz += '</tr>';
     for(var i in nodes._data){
-        matriz += '<tr><td>'+nodes._data[i].label+'</td>';
+        matriz += '<tr><td><b>'+nodes._data[i].label+'</b></td>';
         for(var j in edges._data){
             var soma = 0;
             if(edges._data[j].from == i){
@@ -552,13 +552,13 @@ function MatrizIncidenciaSimples(){
 function MatrizAdjacenciaOrientado(){
     var matriz = '<table class="table">';
     matriz += '<tr>';
-    matriz += '<td>Vértices</td>'
+    matriz += '<td><b>*</b></td>'
     for(var i in nodes._data){
-        matriz += '<td>'+nodes._data[i].label+'</td>';
+        matriz += '<td><b>'+nodes._data[i].label+'</b></td>';
     }
     matriz += '</tr>';
     for(var i in nodes._data){
-        matriz += '<tr><td>'+nodes._data[i].label+'</td>';
+        matriz += '<tr><td><b>'+nodes._data[i].label+'</b></td>';
         for(var j in nodes._data){
             if(i != j){
                 matriz += '<td>'+multiplicidadeOr(i,j)+'</td>';
@@ -580,13 +580,13 @@ function MatrizAdjacenciaOrientado(){
 function MatrizIncidenciaOrientado(){
     var matriz = '<table class="table">';
     matriz += '<tr>';
-    matriz += '<td>Vértices</td>'
+    matriz += '<td><b>*</b></td>'
     for(var i in edges._data){
-        matriz += '<td>{'+nodes._data[edges._data[i].from].label+','+nodes._data[edges._data[i].to].label+'}</td>';
+        matriz += '<td><b>{'+nodes._data[edges._data[i].from].label+','+nodes._data[edges._data[i].to].label+'}</b></td>';
     }
     matriz += '</tr>';
     for(var i in nodes._data){
-        matriz += '<tr><td>'+nodes._data[i].label+'</td>';
+        matriz += '<tr><td><b>'+nodes._data[i].label+'</b></td>';
         for(var j in edges._data){
             var soma = 0;
             if(edges._data[j].from == i){

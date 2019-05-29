@@ -1,4 +1,5 @@
-
+import $ from 'jquery';
+window.$ = window.jQuery = $;
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -18,3 +19,10 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+
+
+
+import 'jquery-ui/ui/widgets/mouse.js';
+import 'jquery-ui/ui/widgets/draggable.js';
+import 'jquery-ui/ui/widgets/droppable.js';
+//import 'jquery-ui-touch-punch/jquery.ui.touch-punch.min.js';

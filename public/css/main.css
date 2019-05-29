@@ -93,3 +93,47 @@ p{
 .cursor-defaul{
     pointer: default;
 }
+
+.draggable_vertices{
+    text-align: justify;
+    padding-left: 0px;
+    margin-bottom: 2px;
+}
+
+.draggable_vertices li{
+    background-color: #458B74;
+    color: white;
+    text-decoration: none;
+    display: inline;
+    padding: 10px;
+    margin-top: 3px;
+    margin-right: 3px;
+    margin-bottom: 10px;
+    border-radius: 15%;
+    line-height: 45px;
+}
+
+.draggable_vertices li:hover{
+    cursor: pointer;
+}
+
+.caixa_derivacao{
+    line-height: 45px;
+    background-color: #dddddd;
+    border: 1px solid black;
+    height: 50px;
+    border-radius: 15px;
+}
+
+#lista_derivacao li{
+    background-color: #458B74;
+    color: white;
+    text-decoration: none;
+    display: inline;
+    padding: 10px;
+    margin-top: 3px;
+    margin-right: 3px;
+    margin-bottom: 10px;
+    border-radius: 15%;
+    line-height: 45px;
+}

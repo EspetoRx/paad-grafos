@@ -211,8 +211,7 @@ function subIndAresta(){
         edges:{
             font: {
                 color: 'white',
-            },
-            arrows: 'to'
+            }
         }
     };
     var newdata = {
@@ -264,3 +263,42 @@ $(document).on('shown.bs.modal','#SubgrafoInducaoAresta', function () {
     subIndAresta();
     
 });
+
+$(document).on('shown.bs.modal','#DerivacaoDePasseio', function () {
+    var list = '<p><b>Vértices</b></p>';
+    list += '<ul id="draggable_vertices" class="draggable_vertices">';
+    for(var k in nodes._data){
+        if(nodes._data[k].label == undefined || nodes._data[k].label == '' || nodes._data[k].label == ' '){
+            nodes.update([{id: nodes._data[k].id, label: ""+nodes._data[k].id}]);
+        }
+    }
+    for(var k in nodes._data){
+        list += '<li class="draggable_item"><b>'+nodes._data[k].label+'</b></li>';
+    }
+    list += '</ul>';
+    list += '<p><b>Arestas</b></p>';
+    list += '<ul id="draggable_arestas" class="draggable_vertices">';
+    for(var k in edges._data){
+        list += '<li class="draggable_item"><b>{'+nodes._data[edges._data[k].from].label+','+nodes._data[edges._data[k].to].label+'}</b></li>';
+    }
+    list += '</ul>';
+    list += '<p><b>Caixa de Derivacao</b></p>Arraste items para cá para criar o caminho.'
+    list += '<div id="CaixaDeDerivacao" class="caixa_derivacao"><ul id="lista_derivacao" class="draggable_vertices" style="padding-left: 5px; margin-top: 2px;"></ul></id>';
+    $('#modal-passeio').html(list);
+    $( ".draggable_item" ).draggable({
+        cursor: 'pointer',
+        revert: true,
+        containment: '#DerivacaoDePasseio'
+    });
+    $("#CaixaDeDerivacao").droppable({
+        accept: '.draggable_item',
+        animate: false,
+        drop: function(ev, ui){
+            $("#lista_derivacao").append(ui.draggable);
+            $("#CaixaDeDerivacao").attr('style', 'height: auto');
+        }
+    });
+});
+/*
+
+*/
