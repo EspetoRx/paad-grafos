@@ -136,4 +136,12 @@ p{
     margin-bottom: 10px;
     border-radius: 15%;
     line-height: 45px;
+    cursor: auto;
+}
+
+.remove_item{
+    border-radius: 50%;
+    background-color: #cccccc;
+    color: black;
+    cursor: pointer;
 }

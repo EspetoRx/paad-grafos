@@ -276,39 +276,58 @@ $(document).on('shown.bs.modal','#DerivacaoDePasseio', function () {
         list += '<li class="draggable_item"><b>'+nodes._data[k].label+'</b></li>';
     }
     list += '</ul>';
+    list += '<p><b>Caixa de Derivacao</b></p>Arraste items para este campo para criar o passeio.'
+    list += '<div id="CaixaDeDerivacao" class="caixa_derivacao"><ul id="lista_derivacao" class="draggable_vertices" style="padding-left: 5px; margin-top: 2px;"></ul></id>';
+    $('#modal-passeio').html(list);
+    $( ".draggable_item" ).draggable({
+        cursor: 'pointer',
+        revert: true
+    });
+
+    $("#CaixaDeDerivacao").droppable({
+        accept: '.draggable_item',
+        drop: function(ev, ui){
+            var list2 = '';
+            ui.draggable.append(' <span class="remove_item" onclick="RemoveItem(this)">&nbsp;x&nbsp;</span>')
+            $("#lista_derivacao").append(ui.draggable);
+            $("#CaixaDeDerivacao").attr('style', 'height: auto');
+            if(!ordenado){
+                for(var k in edges._data){
+                    if(edges._data[k].from == ui.draggable.text()){
+                        list2 += '<li class="draggable_item"><b>{'+nodes._data[edges._data[k].from].label+','+nodes._data[edges._data[k].to].label+'}</b></li>';
+                    }else if(edges._data[k].to == ui.draggable.text()){
+                        list2 += '<li class="draggable_item"><b>{'+nodes._data[edges._data[k].to].label+','+nodes._data[edges._data[k].from].label+'}</b></li>';
+                    }
+                }
+            }else{
+                for(var k in edges._data){
+                    if(edges._data[k].from == ui.draggable.text()){
+                        list2 += '<li class="draggable_item"><b>{'+nodes._data[edges._data[k].from].label+','+nodes._data[edges._data[k].to].label+'}</b></li>';
+                    }
+                }
+            }
+            $('#caminho_title').html("<p><b>Arestas</b></p>");
+            $('#draggable_vertices').html(list2);
+            $( ".draggable_item" ).draggable({
+                cursor: 'pointer',
+                revert: true
+            });
+            $('#lista_derivacao li').draggable({
+                cancel: '.draggable_item',
+            });
+        }
+    });
+});
+
+function RemoveItem(item){
+    console.log(item);
+    var element = item.parentNode;
+    console.log(element.parentNode);
+    element.parentNode.removeChild(element);
+}
     //list += '<p><b>Arestas</b></p>';
     /*list += '<ul id="draggable_arestas" class="draggable_vertices">';
     for(var k in edges._data){
         list += '<li class="draggable_item"><b>{'+nodes._data[edges._data[k].from].label+','+nodes._data[edges._data[k].to].label+'}</b></li>';
     }
     list += '</ul>';*/
-    list += '<p><b>Caixa de Derivacao</b></p>Arraste items para este campo para criar o caminho.'
-    list += '<div id="CaixaDeDerivacao" class="caixa_derivacao"><ul id="lista_derivacao" class="draggable_vertices" style="padding-left: 5px; margin-top: 2px;"></ul></id>';
-    $('#modal-passeio').html(list);
-    $( ".draggable_item" ).draggable({
-        cursor: 'pointer',
-        revert: true,
-        containment: '#DerivacaoDePasseio'
-    });
-    $("#CaixaDeDerivacao").droppable({
-        accept: '.draggable_item',
-        drop: function(ev, ui){
-            var list2 = "";
-            $("#lista_derivacao").append(ui.draggable);
-            $("#CaixaDeDerivacao").attr('style', 'height: auto');
-            for(var k in edges._data){
-                list2 += '<li class="draggable_item"><b>{'+nodes._data[edges._data[k].from].label+','+nodes._data[edges._data[k].to].label+'}</b></li>';
-            }
-            $("#caminho_title").html("<b>Arestas</b>");
-            $("#draggable_vertices").html(list2);
-            $(".draggable_item").draggable({
-                cursor: 'pointer',
-                revert: true,
-                containment: '#DerivacaoDePasseio'
-            });
-        }
-    });
-});
-/*
-
-*/
