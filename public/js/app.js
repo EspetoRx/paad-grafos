@@ -16477,7 +16477,6 @@ Vue.component('example-component', __webpack_require__(44));
 
 
 
-//import 'jquery-ui-touch-punch/jquery.ui.touch-punch.min.js';
 
 /***/ }),
 /* 17 */

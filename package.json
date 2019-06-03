@@ -22,7 +22,6 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.8.1",
-        "font-awesome": "^4.7.0",
-        "jquery-ui-touch-punch": "^0.2.3"
+        "font-awesome": "^4.7.0"
     }
 }

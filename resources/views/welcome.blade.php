@@ -143,7 +143,8 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="{{asset("js/app.js")}}"></script>
-    <script type="text/javascript" src="{{asset('node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js')}}"></script>
+    <script src="{{asset("js/jquery.ui.touch-punch.min.js")}}"></script>
+
     <!-- SB Admin Panel -->
     <script src="{{asset("js/sb-admin-2.min.js")}}"></script>
 

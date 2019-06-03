@@ -20,9 +20,6 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
-
-
 import 'jquery-ui/ui/widgets/mouse.js';
 import 'jquery-ui/ui/widgets/draggable.js';
 import 'jquery-ui/ui/widgets/droppable.js';
-//import 'jquery-ui-touch-punch/jquery.ui.touch-punch.min.js';
