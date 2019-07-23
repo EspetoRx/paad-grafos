@@ -16,8 +16,11 @@ function habilitarPropriedades(){
         "<p><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se simples: Não possui laços nem arestas múltiplas;\nSe multígrafo: não possui laços mas possui arestas múltiplas;\nSe pseudografo: possui laço e pode possuir arestas múltiplas.\">(?)</button> <b>Tipo do grafo:</b> "+tipo+"<br>"+
         "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantidade de vértices.\">(?)</button> <b>Número de vértices (Ordem - |V|):</b> "+nodes.length+"<br>"+
         "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantidade de arestas.\">(?)</button> <b>Número de arestas (Tamanho - |A|):</b> "+edges.length+"</br>"+
-        "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantas arestas ou arcos existem entre cada par ordenado de vértices.\">(?)</button> <b>Multiplicidade de arestas:</b> <br>"+multiplicidadeGeral()+
-        "</div>"+
+        "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantas arestas ou arcos existem entre cada par ordenado de vértices.\">(?)</button>"+
+        "<b> Multiplicidade de arestas:</b> "+
+        "<button id='btnMultAresta' value=0 class='btn btn-sm' onclick='TabelaMultiplicidadeArestas()'>Mostrar Tabela</button> "+
+        "<div id='multiplicidadeTable' style='display: none; padding-top: 5px; margin-bottom: 5px;'>"+multiplicidadeGeral()+
+        "</div></div>"+
         "<div class='col-md-6' id='propriedades2'>"+
         "</div>"+
         "<div class='col-md-6' id='propriedades3'>"+
@@ -41,21 +44,25 @@ function habilitarPropriedades(){
     }
     if ((tipo == "Simples" || tipo == "Pseudografo" || tipo == "Multigrafo") && !ordenado){
         var grado = grausSimples();
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quais vértices são vizinhos de quais vértices.\">(?)</button> <b>Vizinhança <i>&tau;</i>(<i>v</i>): </b><br/>");
-        $('#propriedades3').append("<div id='vizinhancasimples'></div>");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quais vértices são vizinhos de quais vértices.\">(?)</button> <b>Vizinhança <i>&tau;</i>(<i>v</i>): </b> ");
+        $('#propriedades3').append("<button id='TabViz' class='btn btn-sm' onClick='TabVizSH()'>Mostrar Tabela</button><br>")
+        $('#propriedades3').append("<div id='vizinhancasimples' style='display:none; padding-top: 5px; margin-bottom: 5px;'></div>");
         $('#vizinhancasimples').append(vizinhacaSimples());
         $('#vizinhancasimples').addClass('table-responsive');
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quantas conexões incidem em cada vértice.\">(?)</button> <b>Graus dos vértices:</b><br/>");
-        $('#propriedades3').append("<div id='grausSimples'></div>");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quantas conexões incidem em cada vértice.\">(?)</button> <b>Graus dos vértices:</b> ");
+        $('#propriedades3').append("<button class='btn btn-sm' id='btnTabGS' value='0' onClick='TabGSSH()'>Mostrar Tabela</button>");
+        $('#propriedades3').append("<div id='grausSimples' style='display:none; padding-top: 5px; margin-bottom: 5px;'></div><br>");
         $('#grausSimples').append(grado[0]);
         $('#grausSimples').addClass("table-responsive");
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Maior Grau: </b>"+grado[1]+"<br/>");
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Menor Grau: </b>"+grado[2]+"<br/>");
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Adjacência do grafo.\">(?)</button> <b>Matriz de Adjacência M = [m<sub>i,j</sub>]:</b><br/>");
-        $('#propriedades2').append('<div id="MatrizAdjacenciaSimples" class="table-responsive"></div>');
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Adjacência do grafo.\">(?)</button> <b>Matriz de Adjacência M = [m<sub>i,j</sub>]:</b> ");
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabMA' onClick='TabMASH()' value='0'>Mostrar Tabela</button></br>")
+        $('#propriedades2').append('<div id="MatrizAdjacenciaSimples" class="table-responsive" style=\"display:none; padding-top: 5px; margin-bottom:5px\"></div>');
         $('#MatrizAdjacenciaSimples').append(MatrizAdjacenciaSimples());
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Incidência do grafo.\">(?)</button> <b>Matriz de Incidência B = [b<sub>i,j</sub>]:</b><br/>");
-        $('#propriedades3').append('<div id="MatrizIncidenciaSimples" class="table-responsive"></div>');
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Incidência do grafo.\">(?)</button> <b>Matriz de Incidência B = [b<sub>i,j</sub>]:</b>");
+        $('#propriedades3').append("<button class='btn btn-sm' id='TabMI' onClick='TabMISH()' value='0'>Mostrar Tabela</button>")
+        $('#propriedades3').append('<div id="MatrizIncidenciaSimples" class="table-responsive" style="display:none; padding-top: 5px; margin-bottom: 5px;"></div>');
         $('#MatrizIncidenciaSimples').append(MatrizIncidenciaSimples());
     }
     if ((tipo=="Simples" || tipo == "Multigrafo" || tipo == "Pseudografo") && ordenado){
@@ -604,4 +611,89 @@ function MatrizIncidenciaOrientado(){
     }
     matriz += '</table>'
     return matriz;
+}
+
+/*-----------------------------------------------------------*/
+/*      BOTÃO DE SHOW/HIDE DA MULTIPLICIDADE DE ARESTAS      */
+/*-----------------------------------------------------------*/
+
+
+function TabelaMultiplicidadeArestas(){
+    if($('#btnMultAresta').val() == 0){
+        $('#multiplicidadeTable').css('display', 'block');
+        $('#btnMultAresta').val('1');
+        $('#btnMultAresta').html('Esconder Tabela');
+    }else{
+        $('#multiplicidadeTable').css('display', 'none');
+        $('#btnMultAresta').val('0');
+        $('#btnMultAresta').html('Mostrar Tabela');
+    }
+}
+
+/*------------------------------------------------------------------------*/
+/*      BOTÃO DE SHOW/HIDE DOS GRAUS DOS VÉRTICES PARA GRAFOS SIMPLES     */
+/*------------------------------------------------------------------------*/
+
+
+function TabGSSH(){
+    if($('#btnTabGS').val() == 0){
+        $('#grausSimples').css('display', 'block');
+        $('#btnTabGS').val('1');
+        $('#btnTabGS').html('Esconder Tabela');
+    }else{
+        $('#grausSimples').css('display', 'none');
+        $('#btnTabGS').val('0');
+        $('#btnTabGS').html('Mostrar Tabela');
+    }
+}
+
+/*------------------------------------------------------------------------*/
+/*   BOTÃO DE SHOW/HIDE DOS VIZINHOS DOS VÉRTICES PARA GRAFOS SIMPLES     */
+/*------------------------------------------------------------------------*/
+
+
+function TabVizSH(){
+    if($('#TabViz').val() == 0){
+        $('#vizinhancasimples').css('display', 'block');
+        $('#TabViz').val('1');
+        $('#TabViz').html('Esconder Tabela');
+    }else{
+        $('#vizinhancasimples').css('display', 'none');
+        $('#TabViz').val('0');
+        $('#TabViz').html('Mostrar Tabela');
+    }
+}
+
+/*------------------------------------------------------------------------*/
+/*   BOTÃO DE SHOW/HIDE MATRIZ DE ADJACÊNCIA      PARA GRAFOS SIMPLES     */
+/*------------------------------------------------------------------------*/
+
+
+function TabMASH(){
+    if($('#TabMA').val() == 0){
+        $('#MatrizAdjacenciaSimples').css('display', 'block');
+        $('#TabMA').val('1');
+        $('#TabMA').html('Esconder Tabela');
+    }else{
+        $('#MatrizAdjacenciaSimples').css('display', 'none');
+        $('#TabMA').val('0');
+        $('#TabMA').html('Mostrar Tabela');
+    }
+}
+
+/*------------------------------------------------------------------------*/
+/*   BOTÃO DE SHOW/HIDE MATRIZ DE INCIDÊNCIA      PARA GRAFOS SIMPLES     */
+/*------------------------------------------------------------------------*/
+
+
+function TabMISH(){
+    if($('#TabMI').val() == 0){
+        $('#MatrizIncidenciaSimples').css('display', 'block');
+        $('#TabMI').val('1');
+        $('#TabMI').html('Esconder Tabela');
+    }else{
+        $('#MatrizIncidenciaSimples').css('display', 'none');
+        $('#TabMI').val('0');
+        $('#TabMI').html('Mostrar Tabela');
+    }
 }

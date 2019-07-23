@@ -325,7 +325,9 @@
                     </div>
                     <p class="text-justify">
                         &emsp;Se G<SUB>1</SUB> é subgrafo de G<SUB>2</SUB>, então G<SUB>2</SUB> é supergrafo de G<SUB>1</SUB>. Quando G<SUB>1</SUB> &ne; G<SUB>2</SUB>, então G<SUB>1</SUB> é um subgrafo próprio de G<SUB>2</SUB> . <br>&emsp;Quando V(G<SUB>1</SUB>) = V(G<SUB>2</SUB>), então G<SUB>1</SUB> é <strong>chamado subgrafo gerador ou subgrafo de espalhamento</strong> de G<SUB>2</SUB>. Para um dı́grafo D<SUB>1</SUB>, um subdı́grafo D<SUB>2</SUB> que contém um conjunto de vértices igual ao conjunto de vértices do dı́grafo original é chamado de <strong>subdı́grafo de espalhamento ou fator do dı́grafo</strong>.<br>&emsp;Estre grafo em exibição foi derivado com base no Grafo Subjacente dada 50% de chance de remoção de uma aresta pertencente ao conjunto A(G<SUB>S</SUB>).
-
+                    </p>
+                    <p class="text-center">
+                        <button class="btn btn-success btn-sm" id="NovoGrafoEspalhamento">Gerar novo subgrafo de espalhamento</button>
                     </p>
                 </div>
                 <div class="modal-footer">

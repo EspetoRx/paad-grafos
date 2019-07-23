@@ -94,6 +94,46 @@ $(document).on('shown.bs.modal','#SubgrafoEspalhamento', function () {
         }
         newnetwork.setOptions(options);
     }
+    $('#NovoGrafoEspalhamento').on('click', function(){
+        var newedges, newnodes;
+        var res = grafoSubjacente();
+        newedges = res[0];
+        newnodes = res[1];
+        var newdata = {
+            nodes: newnodes,
+            edges: newedges
+        };
+        var newcontainer = document.getElementById('networkSubgrafoEspalhamento');
+        var newoptions = {
+            nodes:{
+                color: {
+                    border: '#698B69',
+                    background: '#458B74',
+                    highlight: {
+                        border: '#698B69',
+                        background: '#458B74'
+                    },
+                },
+                font:{
+                    color: 'white',
+                }
+            },
+        };
+        var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
+        for(var k in newedges._data){
+            if(Math.random()>0.5){
+                newedges.remove([{id: newedges._data[k].id}]);
+            }
+        }
+        if(ordenado){
+            var options = {
+                edges:{
+                    arrows: 'to'
+                }
+            }
+            newnetwork.setOptions(options);
+        }
+    });
 });
 
 /*INDUÇÃO DO GRAFO*/
