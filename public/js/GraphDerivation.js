@@ -462,6 +462,8 @@ function DerivarPasseio(){
             }
         }
         var newoptions = {
+            height: '100%',
+            width: '100%',
             nodes:{
                 color: {
                     border: '#698B69',
@@ -492,7 +494,7 @@ function DerivarPasseio(){
         
         var newcontainer = document.getElementById('modal-passeio');
         var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
-        $('#modal-passeio').attr('style', 'height:auto; background-color: #a0a0a0');
+        $('#modal-passeio').attr('style', 'height:auto; background-color: #a0a0a0; padding: 0 !important;');
         $('#modal-passeio').after('<div id="passeio-response" class="container"></div>');
         colorePasseio(list_nodes, newnetwork, newdata);
     }else{
@@ -525,6 +527,8 @@ function DerivarPasseio(){
             }
         }
         var newoptions = {
+            height: '100%',
+            width: '100%',
             nodes:{
                 color: {
                     border: '#698B69',
@@ -555,7 +559,7 @@ function DerivarPasseio(){
         var newcontainer = document.getElementById('modal-passeio');
         var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
         $('#modal-passeio').attr('style', 'height:auto; width: 100%;');
-        $('#modal-passeio').attr('style', 'height:auto; background-color: #a0a0a0');
+        $('#modal-passeio').attr('style', 'height:auto; background-color: #a0a0a0; padding: 0 !important;');
         $('#modal-passeio').after('<div id="passeio-response" class="container"></div>');
         colorePasseio(list_nodes, newnetwork, newdata);
     }
