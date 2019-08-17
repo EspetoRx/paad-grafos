@@ -91,7 +91,7 @@ var options = {
                     confirm: function () {
                         if(ponderado) data.label = '1';
                         else data.label = ' ';
-                        data.id = parseInt(edgeid++);
+                        data.id = edgeid++;
                         callback(data);
                         network.addEdgeMode();
                     },
