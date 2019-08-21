@@ -74,7 +74,7 @@
                     <a class="collapse-item" data-toggle="modal" data-target="#SubgrafoInducaoVertice">Subgrafo por indução<br> de vértice</a>
                     <a class="collapse-item" data-toggle="modal" data-target="#SubgrafoInducaoAresta">Subgrafo por indução<br> de aresta</a>
                     <a class="collapse-item" data-toggle="modal" data-target="#DerivacaoDePasseio">Derivar Passeio</a>
-                    <a class="collapse-item" data-toggle="modal" data-target="#DerivarDistancias">Derivar Distancia</a>
+                    <a class="collapse-item" data-toggle="modal" data-target="#DerivarDistancias">Derivar Distância</a>
                 </div>
             </div>
         </li>

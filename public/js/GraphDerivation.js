@@ -750,7 +750,7 @@ $(document).on('shown.bs.modal','#DerivarDistancias', function () {
     palavra += '</select>';
     palavra += '</div>';
     palavra += '<div class="col-md-12 text-center mt-2">';
-    palavra += '<button onClick="GeraDerivaDistancia(document.getElementById(\'inicial_node\').value, document.getElementById(\'final_node\').value)" class="btn btn-success">Derivar distância</button>';
+    palavra += '<button onClick="GeraDerivaDistancia(document.getElementById(\'inicial_node\').value, document.getElementById(\'final_node\').value)" class="btn btn-success">Derivar busca</button>';
     palavra += '</div>';
     palavra += '</div>';
     palavra += '</div>';
@@ -882,14 +882,15 @@ function DerivaDistancia(node_inicial, node_final){
                     acao: 'SN2',
                     target: adjacentes[k]
                 });
+                let escolha;
+                for(e in edges._data){
+                    if(edges._data[e].from == adjacentes[k] && edges._data[e].to == v || 
+                        edges._data[e].from == v && edges._data[e].to == adjacentes[k]){
+                            escolha = parseInt(edges._data[e].label);
+                        }
+                }
+
                 if(dist[adjacentes[k]] == Infinity){
-                    let escolha;
-                    for(e in edges._data){
-                        if(edges._data[e].from == adjacentes[k] && edges._data[e].to == v || 
-                            edges._data[e].from == v && edges._data[e].to == adjacentes[k]){
-                                escolha = parseInt(edges._data[e].label);
-                            }
-                    }
                     dist[adjacentes[k]] = dist[v] + escolha;
                     animacao.push({
                         acao: 'PE',
@@ -904,7 +905,7 @@ function DerivaDistancia(node_inicial, node_final){
                             acao: 'update',
                             target: 'dists',
                             node: adjacentes[k],
-                            data: dist[v] + 1
+                            data: dist[adjacentes[k]]
                         }
                     });
                     pai[adjacentes[k]] = v;
@@ -927,6 +928,46 @@ function DerivaDistancia(node_inicial, node_final){
                     });
                     queue.push(adjacentes[k]);
                 }
+
+                if(dist[adjacentes[k]] > dist[v] + escolha){
+                    dist[adjacentes[k]] = dist[v] + escolha;
+                    animacao.push({
+                        acao: 'PE',
+                        target: {
+                            node1: adjacentes[k],
+                            node2: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'dists',
+                            node: adjacentes[k],
+                            data: dist[adjacentes[k]]
+                        }
+                    });
+                    pai[adjacentes[k]] = v;
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'pai',
+                            node: adjacentes[k],
+                            data: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'push',
+                            target: 'fila',
+                            node: adjacentes[k]
+                        }
+                    });
+                    queue.push(adjacentes[k]);
+                }
+
             }
             queue.shift();
             animacao.push({
@@ -937,7 +978,6 @@ function DerivaDistancia(node_inicial, node_final){
                 }
             });
         }
-        //console.log(dist, pai);
     }
     if(ordenado && !ponderado){
         while(queue.length != 0){
@@ -1014,25 +1054,22 @@ function DerivaDistancia(node_inicial, node_final){
                 target: v
             });
             let adjacentes = GetVerticesAdjacentes(v);
-            console.log(v, adjacentes);
             animacao.push({
                 acao: 'IN',
                 target: adjacentes
             });
             for(k in adjacentes){
-                //console.log(adjacentes[k]);
                 animacao.push({
                     acao: 'SN2',
                     target: adjacentes[k]
                 });
-                if(dist[adjacentes[k]] == Infinity){
-                    let escolha;
-                    for(e in edges._data){
-                        console.log(edges._data[e].from, edges._data[e].to, adjacentes[k], v);
-                        if(edges._data[e].to == adjacentes[k] && edges._data[e].from == v ){
-                            escolha = parseInt(edges._data[e].label);
-                        }
+                let escolha;
+                for(e in edges._data){
+                    if(edges._data[e].to == adjacentes[k] && edges._data[e].from == v ){
+                        escolha = parseInt(edges._data[e].label);
                     }
+                }
+                if(dist[adjacentes[k]] == Infinity){
                     console.log(dist[v], escolha, typeof(dist[v]), typeof(escolha));
                     dist[adjacentes[k]] = dist[v] + escolha;
                     animacao.push({
@@ -1048,7 +1085,7 @@ function DerivaDistancia(node_inicial, node_final){
                             acao: 'update',
                             target: 'dists',
                             node: adjacentes[k],
-                            data: dist[v] + 1
+                            data: dist[adjacentes[k]]
                         }
                     });
                     pai[adjacentes[k]] = v;
@@ -1071,6 +1108,44 @@ function DerivaDistancia(node_inicial, node_final){
                     });
                     queue.push(adjacentes[k]);
                     //console.log(queue);
+                }
+                if(dist[adjacentes[k]] > dist[v] + escolha){
+                    dist[adjacentes[k]] = dist[v] + escolha;
+                    animacao.push({
+                        acao: 'PE',
+                        target: {
+                            node1: adjacentes[k],
+                            node2: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'dists',
+                            node: adjacentes[k],
+                            data: dist[adjacentes[k]]
+                        }
+                    });
+                    pai[adjacentes[k]] = v;
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'pai',
+                            node: adjacentes[k],
+                            data: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'push',
+                            target: 'fila',
+                            node: adjacentes[k]
+                        }
+                    });
+                    queue.push(adjacentes[k]);
                 }
             }
             queue.shift();
@@ -1193,7 +1268,6 @@ function GeraDerivaDistancia(inicial, final){
                 break;
             }
         }
-        console.log(caminho[caminho.length-1]);
         if(caminho[caminho.length-1] != "Não definido"){
             caminho.push(newnodes._data[node_aux].label);
             for(let i=caminho.length-1; i>=0; i--){
@@ -1394,4 +1468,3 @@ function GetVerticesAdjacentes(vertice){
 $(document).on('hidden.bs.modal', '#DerivarDistancias', () => {
     $('#collapseTwo').removeClass('show');
 });
-

@@ -30,8 +30,10 @@ function habilitarPropriedades(){
     if(ordenado){
         if(tipo == "Simples"){
             $('#propriedades2').append("Dígrafo simples<br>");
+        }else if(tipo == "Pseudografo"){
+            $('#propriedades2').append("Pseudografo direcionado<br>");
         }else{
-            $('#propriedades2').append("Multigrafo direcionado<br>");
+            $('#propriedades2').append("Multidígrafo direcionado<br>");
         }
 
     }else{
@@ -42,6 +44,8 @@ function habilitarPropriedades(){
     }else{
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Não ponderado<br>");
     }
+
+
     if ((tipo == "Simples" || tipo == "Pseudografo" || tipo == "Multigrafo") && !ordenado){
         var grado = grausSimples();
         $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quais vértices são vizinhos de quais vértices.\">(?)</button> <b>Vizinhança <i>&tau;</i>(<i>v</i>): </b> ");
