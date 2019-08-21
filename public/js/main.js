@@ -104,6 +104,7 @@ var options = {
                 if(ponderado) data.label = '1';
                 else data.label = ' ';
                 data.id = edgeid++;
+                data.color = {};
                 callback(data);
                 network.addEdgeMode();
             }
@@ -113,7 +114,7 @@ var options = {
         addNode: function (data, callback){
             data.label = '';
             data.id = id++;
-            data.color = '';
+            data.color = undefined;
             callback(data);
             network.addNodeMode();
         },

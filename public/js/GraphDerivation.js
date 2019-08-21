@@ -768,6 +768,7 @@ function DerivaDistancia(node_inicial, node_final){
         dist[k] = Infinity;
     }
     dist[node_inicial] = 0;
+    pai[node_inicial] = node_inicial;
     animacao.push({
         acao: 'IN',
         target: node_inicial
@@ -787,6 +788,15 @@ function DerivaDistancia(node_inicial, node_final){
             target: 'dists',
             node: node_inicial,
             data: 0
+        }
+    });
+    animacao.push({
+        acao: 'QU',
+        target: {
+            acao: 'update',
+            target: 'pai',
+            node: node_inicial,
+            data: node_inicial
         }
     });
     if(!ordenado && !ponderado){
@@ -1004,6 +1014,7 @@ function DerivaDistancia(node_inicial, node_final){
                 target: v
             });
             let adjacentes = GetVerticesAdjacentes(v);
+            console.log(v, adjacentes);
             animacao.push({
                 acao: 'IN',
                 target: adjacentes
@@ -1017,11 +1028,13 @@ function DerivaDistancia(node_inicial, node_final){
                 if(dist[adjacentes[k]] == Infinity){
                     let escolha;
                     for(e in edges._data){
-                        if(edges._data[e].from == adjacentes[k] && edges._data[e].to == v){
-                                escolha = parseInt(edges._data[e].label);
-                            }
+                        console.log(edges._data[e].from, edges._data[e].to, adjacentes[k], v);
+                        if(edges._data[e].to == adjacentes[k] && edges._data[e].from == v ){
+                            escolha = parseInt(edges._data[e].label);
+                        }
                     }
-                    dist[adjacentes[k]] = dist[v] + 1;
+                    console.log(dist[v], escolha, typeof(dist[v]), typeof(escolha));
+                    dist[adjacentes[k]] = dist[v] + escolha;
                     animacao.push({
                         acao: 'PE',
                         target: {
@@ -1057,7 +1070,7 @@ function DerivaDistancia(node_inicial, node_final){
                         }
                     });
                     queue.push(adjacentes[k]);
-                    console.log(queue);
+                    //console.log(queue);
                 }
             }
             queue.shift();
@@ -1165,7 +1178,39 @@ function GeraDerivaDistancia(inicial, final){
     palavra += '</div><div class="col-md-12"><p>Lista de Distâncias</p>';
     palavra += '<ul class="list-inline lista-pai" id="dists">';
     palavra += '</ul>';
-    palavra += '</div></div>';
+    palavra += '</div>';
+    palavra += 'Caminho: ';
+    if(node_aux != inicial){
+        var caminho = [];
+        var p = "";
+        var node_aux = final;
+        while(node_aux != inicial){
+            if(node_aux != undefined){
+                caminho.push(newnodes._data[node_aux].label);
+                node_aux = distanciaDerivada[1][node_aux];
+            }else{
+                caminho.push("Não definido");
+                break;
+            }
+        }
+        console.log(caminho[caminho.length-1]);
+        if(caminho[caminho.length-1] != "Não definido"){
+            caminho.push(newnodes._data[node_aux].label);
+            for(let i=caminho.length-1; i>=0; i--){
+                p += caminho[i] + ' ';
+            }
+            p = p.substring(0,(p.length - 1));
+            p = p.replace(/ /g, "&rarr;");
+        }else{
+            p = 'Não definido';
+        }
+        
+        palavra += p + '  |  ';
+    }else{
+        palavra += node_aux + '   |   ';
+    }
+    palavra += 'Distância: ' + distanciaDerivada[0][final];
+    palavra += '</div>';
     palavra += '</div>';
     palavra += '</div>';
     $('#modal-distancia').after(palavra);
@@ -1245,7 +1290,9 @@ function GeraDerivaDistancia(inicial, final){
             }
             if(valor.target.acao == 'push'){
                 var palavra;
+                //console.log(valor.target.node);
                 for(let n in valor.target.node){
+                    //console.log(n, newnodes._data);
                     var palavra = '<li class="list-inline-item">'+newnodes._data[valor.target.node[n]].label+'</li>';
                 }
             }
@@ -1260,7 +1307,7 @@ function GeraDerivaDistancia(inicial, final){
     $('#volta_um').on('click', ()=>{
         var atual = $('#atual').html();
         $('#atual').html('0');
-        limpaFila();
+        limpaTudo();
         for(let i=0; i<parseInt(atual)-1; i++){
             $('#passa_um').click();
         }
@@ -1293,7 +1340,7 @@ function NormalizaCompleto(newnodes, newedges){
     }
 }
 
-function limpaFila(){
+function limpaTudo(){
     $('#fila').html('');
     var lista_pais = '';
     var lista_distancia = '';
