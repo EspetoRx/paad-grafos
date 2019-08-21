@@ -1295,6 +1295,14 @@ function NormalizaCompleto(newnodes, newedges){
 
 function limpaFila(){
     $('#fila').html('');
+    var lista_pais = '';
+    var lista_distancia = '';
+    for(k in nodes._data){
+        lista_pais += '<li class="list-inline-item" id="pai'+nodes._data[k].id+'">'+nodes._data[k].label+' | Ind</li>';
+        lista_distancia += '<li class="list-inline-item" id="dists'+nodes._data[k].id+'">'+nodes._data[k].label+' | Inf</li>';
+    }
+    $('#pai').html(lista_pais);
+    $('#dists').html(lista_distancia);
 }
 
 function PlayAnimation(sentinel){
