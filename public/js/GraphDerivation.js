@@ -432,7 +432,6 @@ function DerivarPasseio(){
         let el = document.getElementById('lista_derivacao');
         var list_nodes = new Array();
         for(let k=0; k < el.childNodes.length; k++){
-            //console.log(el.childNodes[k].innerText, el.childNodes[k].innerText);
             if(el.childNodes[k] != el.lastElementChild){
                 list_nodes.push(el.childNodes[k].innerText.substr(0, el.childNodes[k].innerText.length-1));
             }else{
@@ -450,9 +449,10 @@ function DerivarPasseio(){
                     
                     if(typeof(list_nodes[parseInt(n)+1]) != 'undefined'){
                         for(var l in edges._data){
-                            
                             if(edges._data[l].from == nodes._data[k].id && nodes._data[edges._data[l].to].label == list_nodes[parseInt(n)+1] && newedges._data[l] === undefined){
-                                
+                                newedges.add([edges._data[l]]);
+                            }
+                            if(edges._data[l].to == nodes._data[k].id && nodes._data[edges._data[l].from].label == list_nodes[parseInt(n)+1] && newedges._data[l] === undefined){
                                 newedges.add([edges._data[l]]);
                             }
                         }
@@ -491,10 +491,9 @@ function DerivarPasseio(){
             nodes: newnodes,
             edges: newedges
         };
-        
+        $('#modal-passeio').attr('style', 'height:50vh; background-color: #a0a0a0; padding: 0 !important;');
         var newcontainer = document.getElementById('modal-passeio');
         var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
-        $('#modal-passeio').attr('style', 'height:auto; background-color: #a0a0a0; padding: 0 !important;');
         $('#modal-passeio').after('<div id="passeio-response" class="container"></div>');
         colorePasseio(list_nodes, newnetwork, newdata);
     }else{
@@ -555,11 +554,10 @@ function DerivarPasseio(){
             nodes: newnodes,
             edges: newedges
         };
-        
+        $('#modal-passeio').attr('style', 'height: 50vh; background-color: #a0a0a0; padding: 0 !important; width: 100%;');
         var newcontainer = document.getElementById('modal-passeio');
         var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
-        $('#modal-passeio').attr('style', 'height:auto; width: 100%;');
-        $('#modal-passeio').attr('style', 'height:auto; background-color: #a0a0a0; padding: 0 !important;');
+        
         $('#modal-passeio').after('<div id="passeio-response" class="container"></div>');
         colorePasseio(list_nodes, newnetwork, newdata);
     }
@@ -604,6 +602,8 @@ function colorePasseio(list_nodes, p_network, p_data){
     let colors_nodes = [];
     let color_edges = [];
     let comprimento = 0;
+    var edges_on_data = p_data.edges._data;
+    console.log(list_nodes, p_network, p_data);
     for(var n in list_nodes){
         for(var k in nodes._data){
             if(nodes._data[k].label == list_nodes[n]){ 
@@ -614,7 +614,7 @@ function colorePasseio(list_nodes, p_network, p_data){
                 }
                 if(typeof(list_nodes[parseInt(n)+1]) != 'undefined'){
                     for(var l in edges._data){
-                        if(edges._data[l].from == nodes._data[k].id && nodes._data[edges._data[l].to].label == list_nodes[parseInt(n)+1] && typeof(edges_visit[edges._data[l].id]) == 'undefined'){
+                        if(edges._data[l].from == nodes._data[k].id && nodes._data[edges._data[l].to].label == list_nodes[parseInt(n)+1] && typeof(edges_visit[edges._data[l].id]) == 'undefined' ){
                             edges_visit[edges._data[l].id] = 1;
                             if(!ponderado){
                                 comprimento++;
@@ -664,10 +664,11 @@ function colorePasseio(list_nodes, p_network, p_data){
     }
     for(let i=0; i<edges_visit.length; i++){
         if(typeof(edges_visit[i]) != 'undefined'){
+            //console.log(i, edges_visit[i], p_data.edges._data[i]);
             p_data.edges._data[i].color = {
-                'color' : color_edges[edges_visit[i]-1], 
-                'highlight' : color_edges[edges_visit[i]-1],
-                'hover' : color_edges[edges_visit[i]-1]
+                color : color_edges[edges_visit[i]-1],
+                highlight: color_edges[edges_visit[i]-1],
+                hover: color_edges[edges_visit[i]-1]
             };
         }
     }
@@ -706,7 +707,7 @@ function colorePasseio(list_nodes, p_network, p_data){
     }
     passeio += '</p><p><b>Comprimento: </b>' + comprimento + '</p>';
     passeio += '<p><b>É ciclo ou circuito:</b> ';
-    if(max(nodes_visit) == 2 && howMany2(nodes_visit) == 1 && fechado){
+    if(max(nodes_visit) == 2 && howMany2(nodes_visit) == 1 && fechado && howMany2(edges_visit)==0){
         passeio += 'Sim';
     }else{
         passeio += 'Não';
@@ -718,3 +719,624 @@ function colorePasseio(list_nodes, p_network, p_data){
 $(document).on('hidden.bs.modal', '#DerivacaoDePasseio', () => {
     $('#collapseTwo').removeClass('show');
 });
+
+$(document).on('shown.bs.modal','#DerivarDistancias', function () {
+    $('#modal-distancia').html('');
+    $('#modal-distancia').removeAttr("style");
+    $('#distancia_def').remove();
+    /* NOMEAÇÃO SE NECESSÁRIO */
+    for(var k in nodes._data){
+        if(nodes._data[k].label == undefined || nodes._data[k].label == '' || nodes._data[k].label == ' '){
+            nodes.update([{id: nodes._data[k].id, label: ""+nodes._data[k].id}]);
+        }
+    }
+
+    var palavra = '<div class="container">';
+    palavra += '<div class="row">';
+    palavra += '<div class="col-md-6 mt-2">';
+    palavra += '<label for="inicial_node">Vértice inicial</label>';
+    palavra += '<select id="inicial_node" class="form-control">';
+    for(let k in nodes._data){
+        palavra += '<option value="'+nodes._data[k].id+'">'+nodes._data[k].label+'</option>';
+    }
+    palavra += '</select>';
+    palavra += '</div>'
+    palavra += '<div class="col-md-6 mt-2">';
+    palavra += '<label for="final_node">Vértice final</label>';
+    palavra += '<select id="final_node" class="form-control">';
+    for(let k in nodes._data){
+        palavra += '<option value="'+nodes._data[k].id+'">'+nodes._data[k].label+'</option>';
+    }
+    palavra += '</select>';
+    palavra += '</div>';
+    palavra += '<div class="col-md-12 text-center mt-2">';
+    palavra += '<button onClick="GeraDerivaDistancia(document.getElementById(\'inicial_node\').value, document.getElementById(\'final_node\').value)" class="btn btn-success">Derivar distância</button>';
+    palavra += '</div>';
+    palavra += '</div>';
+    palavra += '</div>';
+    palavra += '</div>';
+    $('#modal-distancia').append(palavra);
+});
+
+function DerivaDistancia(node_inicial, node_final){
+    var queue = [];
+    var dist = [];
+    var pai = [];
+    var animacao = [];
+    queue.push(node_inicial);
+    for(let k in nodes._data){
+        dist[k] = Infinity;
+    }
+    dist[node_inicial] = 0;
+    animacao.push({
+        acao: 'IN',
+        target: node_inicial
+    });
+    animacao.push({
+        acao: 'QU',
+        target: {
+            acao: 'push',
+            target: 'fila',
+            node: node_inicial
+        }
+    });
+    animacao.push({
+        acao: 'QU',
+        target: {
+            acao: 'update',
+            target: 'dists',
+            node: node_inicial,
+            data: 0
+        }
+    });
+    if(!ordenado && !ponderado){
+        while(queue.length != 0){
+            let v = queue[0];
+            animacao.push({
+                acao: 'SN',
+                target: v
+            });
+            let adjacentes = GetVerticesAdjacentes(v);
+            animacao.push({
+                acao: 'IN',
+                target: adjacentes
+            });
+            for(k in adjacentes){
+                animacao.push({
+                    acao: 'SN2',
+                    target: adjacentes[k]
+                });
+                if(dist[adjacentes[k]] == Infinity){
+                    dist[adjacentes[k]] = dist[v] + 1;
+                    animacao.push({
+                        acao: 'PE',
+                        target: {
+                            node1: adjacentes[k],
+                            node2: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'dists',
+                            node: adjacentes[k],
+                            data: dist[v] + 1
+                        }
+                    });
+                    pai[adjacentes[k]] = v;
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'pai',
+                            node: adjacentes[k],
+                            data: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'push',
+                            target: 'fila',
+                            node: adjacentes[k]
+                        }
+                    });
+                    queue.push(adjacentes[k]);
+                }
+            }
+            queue.shift();
+            animacao.push({
+                acao: 'QU',
+                target: {
+                    acao: 'shift',
+                    target: 'fila',
+                }
+            });
+        }
+    }
+    if(!ordenado && ponderado){
+        while(queue.length != 0){
+            let v = queue[0];
+            animacao.push({
+                acao: 'SN',
+                target: v
+            });
+            let adjacentes = GetVerticesAdjacentes(v);
+            animacao.push({
+                acao: 'IN',
+                target: adjacentes
+            });
+            for(k in adjacentes){
+                animacao.push({
+                    acao: 'SN2',
+                    target: adjacentes[k]
+                });
+                if(dist[adjacentes[k]] == Infinity){
+                    let escolha;
+                    for(e in edges._data){
+                        if(edges._data[e].from == adjacentes[k] && edges._data[e].to == v || 
+                            edges._data[e].from == v && edges._data[e].to == adjacentes[k]){
+                                escolha = parseInt(edges._data[e].label);
+                            }
+                    }
+                    dist[adjacentes[k]] = dist[v] + escolha;
+                    animacao.push({
+                        acao: 'PE',
+                        target: {
+                            node1: adjacentes[k],
+                            node2: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'dists',
+                            node: adjacentes[k],
+                            data: dist[v] + 1
+                        }
+                    });
+                    pai[adjacentes[k]] = v;
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'pai',
+                            node: adjacentes[k],
+                            data: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'push',
+                            target: 'fila',
+                            node: adjacentes[k]
+                        }
+                    });
+                    queue.push(adjacentes[k]);
+                }
+            }
+            queue.shift();
+            animacao.push({
+                acao: 'QU',
+                target: {
+                    acao: 'shift',
+                    target: 'fila',
+                }
+            });
+        }
+        //console.log(dist, pai);
+    }
+    if(ordenado && !ponderado){
+        while(queue.length != 0){
+            let v = queue[0];
+            animacao.push({
+                acao: 'SN',
+                target: v
+            });
+            let adjacentes = GetVerticesAdjacentes(v);
+            animacao.push({
+                acao: 'IN',
+                target: adjacentes
+            });
+            for(k in adjacentes){
+                animacao.push({
+                    acao: 'SN2',
+                    target: adjacentes[k]
+                });
+                if(dist[adjacentes[k]] == Infinity){
+                    dist[adjacentes[k]] = dist[v] + 1;
+                    animacao.push({
+                        acao: 'PE',
+                        target: {
+                            node1: adjacentes[k],
+                            node2: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'dists',
+                            node: adjacentes[k],
+                            data: dist[v] + 1
+                        }
+                    });
+                    pai[adjacentes[k]] = v;
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'pai',
+                            node: adjacentes[k],
+                            data: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'push',
+                            target: 'fila',
+                            node: adjacentes[k]
+                        }
+                    });
+                    queue.push(adjacentes[k]);
+                }
+            }
+            queue.shift();
+            animacao.push({
+                acao: 'QU',
+                target: {
+                    acao: 'shift',
+                    target: 'fila',
+                }
+            });
+        }
+        //console.log(dist, pai);
+    }
+    if(ordenado && ponderado){
+        while(queue.length != 0){
+            let v = queue[0];
+            animacao.push({
+                acao: 'SN',
+                target: v
+            });
+            let adjacentes = GetVerticesAdjacentes(v);
+            animacao.push({
+                acao: 'IN',
+                target: adjacentes
+            });
+            for(k in adjacentes){
+                //console.log(adjacentes[k]);
+                animacao.push({
+                    acao: 'SN2',
+                    target: adjacentes[k]
+                });
+                if(dist[adjacentes[k]] == Infinity){
+                    let escolha;
+                    for(e in edges._data){
+                        if(edges._data[e].from == adjacentes[k] && edges._data[e].to == v){
+                                escolha = parseInt(edges._data[e].label);
+                            }
+                    }
+                    dist[adjacentes[k]] = dist[v] + 1;
+                    animacao.push({
+                        acao: 'PE',
+                        target: {
+                            node1: adjacentes[k],
+                            node2: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'dists',
+                            node: adjacentes[k],
+                            data: dist[v] + 1
+                        }
+                    });
+                    pai[adjacentes[k]] = v;
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'pai',
+                            node: adjacentes[k],
+                            data: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'push',
+                            target: 'fila',
+                            node: adjacentes[k]
+                        }
+                    });
+                    queue.push(adjacentes[k]);
+                    console.log(queue);
+                }
+            }
+            queue.shift();
+            animacao.push({
+                acao: 'QU',
+                target: {
+                    acao: 'shift',
+                    target: 'fila',
+                }
+            });
+        }
+    }
+    return ([dist, pai, animacao]);
+}
+
+function GeraDerivaDistancia(inicial, final){
+    let distanciaDerivada = DerivaDistancia(inicial, final);
+    $('#modal-distancia').html('');
+    var newnodes = new vis.DataSet([]);
+    var newedges = new vis.DataSet([]);
+    var newoptions;
+    for(let k in nodes._data){
+        newnodes.add(nodes._data[k]);
+    }
+    for(let k in edges._data){
+        newedges.add(edges._data[k]);
+    }
+    if(!ordenado){
+        newoptions = {
+            height: '100%',
+            width: '100%',
+            nodes:{
+                color: {
+                    border: '#698B69',
+                    background: '#458B74',
+                    highlight: {
+                        border: '#698B69',
+                        background: '#458B74'
+                    },
+                },
+                font:{
+                    color: 'white',
+                    strokeWidth: 2, // px
+                    strokeColor: '#black',
+                }
+            },
+            edges:{
+                font: {
+                    color: 'black',
+                }
+            }
+        };
+    }else{
+        newoptions = {
+            height: '100%',
+            width: '100%',
+            nodes:{
+                color: {
+                    border: '#698B69',
+                    background: '#458B74',
+                    highlight: {
+                        border: '#698B69',
+                        background: '#458B74'
+                    },
+                },
+                font:{
+                    color: 'white',
+                    strokeWidth: 2, // px
+                    strokeColor: '#black',
+                }
+            },
+            edges:{
+                font: {
+                    color: 'black',
+                },
+                arrows: 'to'
+            }
+        };
+    }
+    var newdata = {
+        nodes: newnodes,
+        edges: newedges
+    };
+    var newcontainer = document.getElementById('modal-distancia');
+    $('#modal-distancia').attr('style', 'height: 270px; background-color: #a0a0a0; padding: 0 !important; width: 100%;');
+    var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
+    var palavra = '<div class="container" id="distancia_def">';
+    palavra += '<div class="row mt-1">';
+    palavra += '<div class="col-md-12 text-center">';
+    /* palavra += '<button id="volta_primeiro" class="btn btn-success btn-sm"><i class="fas fa-fast-backward"></i></button> '; */
+    palavra += '<button id="volta_um" class="btn btn-success btn-sm "><i class="fas fa-step-backward"></i></button> ';
+    palavra += '<button id="para" class="btn btn-success btn-sm" ><i class="fas fa-stop"></i></button> ';
+    palavra += '<button id="play" class="btn btn-success btn-sm"><i class="fas fa-play"></i></button> ';
+    palavra += '<button id="passa_um" class="btn btn-success btn-sm"><i class="fas fa-step-forward"></i></button> ';
+    /* palavra += '<button id="passa_todos" class="btn btn-success btn-sm"><i class="fas fa-fast-forward"></i></button> '; */
+    palavra += '</div><div class="col-md-12 text-center">';
+    palavra += 'Delay: 100ms <input type="range" min="1" max="10" step="1" value="5" class="slider round" id="range_delay"> 1s &nbsp;&nbsp;';
+    palavra += ' Animação: <span id="atual">0</span> de <span id="total">'+distanciaDerivada[2].length+'</span>';
+    palavra += '</div><div id="listas" class="col-md-12"><div class="col-md-12"><p>Fila</p>';
+    palavra += '<ul class="list-inline lista-pai" id="fila">';
+    palavra += '</ul>';
+    palavra += '</div><div class="col-md-12"><p>Lista de Pais';
+    palavra += '<ul class="list-inline lista-pai" id="pai">';
+    palavra += '</ul>';
+    palavra += '</div><div class="col-md-12"><p>Lista de Distâncias</p>';
+    palavra += '<ul class="list-inline lista-pai" id="dists">';
+    palavra += '</ul>';
+    palavra += '</div></div>';
+    palavra += '</div>';
+    palavra += '</div>';
+    $('#modal-distancia').after(palavra);
+    var lista_pais = '';
+    var lista_distancia = '';
+    for(k in newnodes._data){
+        lista_pais += '<li class="list-inline-item" id="pai'+newnodes._data[k].id+'">'+newnodes._data[k].label+' | Ind</li>';
+        lista_distancia += '<li class="list-inline-item" id="dists'+newnodes._data[k].id+'">'+newnodes._data[k].label+' | Inf</li>';
+    }
+    $('#pai').append(lista_pais);
+    $('#dists').append(lista_distancia);
+    $('#passa_um').on('click', () => {
+        var valor = distanciaDerivada[2][$('#atual').html()];
+        if(valor.acao == 'IN'){
+            NormalizaDesenho(newnodes, newedges);
+            if(typeof(valor.target) == 'string'){
+                newnodes.update([{id: valor.target, color: 'red'}]);
+                for(k in newedges._data){
+                    if(newedges._data[k].from == valor.target){
+                        newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}])
+                    }
+                }
+            }else{
+                for(let k in valor.target){
+                    newnodes.update([{id: valor.target[k], color: 'red'}]);
+                }
+                for(k in newedges._data){
+                    if(newedges._data[k].from == valor.target[k]){
+                        newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}])
+                    }
+                }
+            }
+        }
+        if(valor.acao == 'QU'){
+            if(valor.target.acao == 'push'){
+                palavra = '<li class="list-inline-item">'+newnodes._data[valor.target.node].label+'</li>';
+                $('#'+valor.target.target).append(palavra);
+            }
+        }
+        if(valor.acao == 'SN'){
+            NormalizaCompleto(newnodes, newedges);
+            newnodes.update([{id: valor.target, color: 'blue'}]);
+            for(k in newedges._data){
+                if(newedges._data[k].from == valor.target){
+                    newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}]);
+                }
+            }
+        }
+        if(valor.acao == 'SN2'){
+            NormalizaDesenho(newnodes, newedges);
+            newnodes.update([{id: valor.target, color: 'purple'}]);
+            for(k in newedges._data){
+                if(newedges._data[k].from == valor.target){
+                    newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}]);
+                }
+            }
+        }
+        if(valor.acao == 'PE'){
+            if(!ordenado){
+                for(k in newedges._data){
+                    if(newedges._data[k].from == valor.target.node1 && newedges._data[k].to == valor.target.node2 || 
+                        newedges._data[k].to == valor.target.node1 && newedges._data[k].from == valor.target.node2){
+                            newedges.update([{id: newedges._data[k].id, color: {color: 'black'}}]);
+                    }
+                }
+            }else{
+                for(k in newedges._data){
+                    if(newedges._data[k].from == valor.target.node1 && newedges._data[k].to == valor.target.node2){
+                            newedges.update([{id: newedges._data[k].id, color: {color: 'balck'}}]);
+                    }
+                }
+            }
+        }
+        if(valor.acao == 'QU'){
+            if(valor.target.acao == 'update'){
+                var possibilidades = $('#'+valor.target.target+valor.target.node).html(newnodes._data[valor.target.node].label + ' | ' + valor.target.data);
+            }
+            if(valor.target.acao == 'push'){
+                var palavra;
+                for(let n in valor.target.node){
+                    var palavra = '<li class="list-inline-item">'+newnodes._data[valor.target.node[n]].label+'</li>';
+                }
+            }
+            if(valor.target.acao == 'shift'){
+                $('#'+valor.target.target).find('>:first-child').remove();
+            }
+        }
+        let newatual = $('#atual').html();
+        newatual++;
+        $('#atual').html(newatual);
+    });
+    $('#volta_um').on('click', ()=>{
+        var atual = $('#atual').html();
+        $('#atual').html('0');
+        limpaFila();
+        for(let i=0; i<parseInt(atual)-1; i++){
+            $('#passa_um').click();
+        }
+    });
+    $('#play').on('click',() => {
+        var sentinel = false;
+        var cont = $('#atual').html();
+        PlayAnimation(sentinel);
+    });
+
+}
+
+function NormalizaDesenho(newnodes, newedges){
+    for(k in newnodes._data){
+        if(newnodes._data[k].color != 'blue'){
+            newnodes.update([{id: newnodes._data[k].id, color: '#458B74'}]);
+        }
+    }
+    for(k in newedges._data){
+        newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}]);
+    }
+}
+
+function NormalizaCompleto(newnodes, newedges){
+    for(k in newnodes._data){
+        newnodes.update([{id: newnodes._data[k].id, color: '#458B74'}]);
+    }
+    for(k in newedges._data){
+        newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}]);
+    }
+}
+
+function limpaFila(){
+    $('#fila').html('');
+}
+
+function PlayAnimation(sentinel){
+    if(sentinel){
+        return;
+    }else{
+        if(parseInt($('#atual').html()) < parseInt($('#total').html())){
+            $('#play').addClass
+            $('#para').on('click', () =>{
+                sentinel = true;
+            });
+            setTimeout(()=>{
+                $('#passa_um').click();
+                //console.log($('#atual').html());
+                return PlayAnimation(sentinel);
+            },$('#range_delay').val()*100);
+        }
+    }
+}
+
+function GetVerticesAdjacentes(vertice){
+    let list = [];
+    if(!ordenado){
+        for(let k in edges._data){
+            if(edges._data[k].from == vertice){
+                list[list.length] = edges._data[k].to;
+            }
+            if(edges._data[k]. to == vertice){
+                list[list.length] = edges._data[k].from;
+            }
+        }
+    }else{
+        for(let k in edges._data){
+            if(edges._data[k].from == vertice){
+                list[list.length] = edges._data[k].to;
+            }
+        }
+    }
+    return list;
+}
+
+$(document).on('hidden.bs.modal', '#DerivarDistancias', () => {
+    $('#collapseTwo').removeClass('show');
+});
+

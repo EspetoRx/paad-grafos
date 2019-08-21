@@ -19,6 +19,7 @@
     <title>PAAD - Grafos</title>
   </head>
   <body>
+        
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -73,7 +74,7 @@
                     <a class="collapse-item" data-toggle="modal" data-target="#SubgrafoInducaoVertice">Subgrafo por indução<br> de vértice</a>
                     <a class="collapse-item" data-toggle="modal" data-target="#SubgrafoInducaoAresta">Subgrafo por indução<br> de aresta</a>
                     <a class="collapse-item" data-toggle="modal" data-target="#DerivacaoDePasseio">Derivar Passeio</a>
-                    {{--<a class="collapse-item" href="#" onclick="">Desativar edição</a>--}}
+                    <a class="collapse-item" data-toggle="modal" data-target="#DerivarDistancias">Derivar Distancia</a>
                 </div>
             </div>
         </li>
@@ -411,6 +412,26 @@
                 </div>
                 <div class="modal-body" id="modal-passeio">
                     
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="DerivarDistancias" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Derivar Distância</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-distancia"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>

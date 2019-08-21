@@ -43,19 +43,19 @@ $.fn.confirm.defaults = {
 
 // create an array with nodes
 var nodes = new vis.DataSet([
-    {id: 1, label: ''},
-    {id: 2, label: ''},
-    {id: 3, label: ''},
-    {id: 4, label: ''},
-    {id: 5, label: ''}
+    {id: 1, label: '', color: undefined},
+    {id: 2, label: '', color: undefined},
+    {id: 3, label: '', color: undefined},
+    {id: 4, label: '', color: undefined},
+    {id: 5, label: '', color: undefined}
 ]);
 
 // create an array with edges
 var edges = new vis.DataSet([
-    {from: 1, to: 3, id: 1},
-    {from: 1, to: 2, id: 2},
-    {from: 2, to: 4, id: 3},
-    {from: 2, to: 5, id: 4}
+    {from: 1, to: 3, id: 1, color: {}},
+    {from: 1, to: 2, id: 2, color: {}},
+    {from: 2, to: 4, id: 3, color: {}},
+    {from: 2, to: 5, id: 4, color: {}}
 ]);
 
 var id = 6;
@@ -92,6 +92,7 @@ var options = {
                         if(ponderado) data.label = '1';
                         else data.label = ' ';
                         data.id = parseInt(edgeid++);
+                        data.color = {};
                         callback(data);
                         network.addEdgeMode();
                     },
@@ -112,6 +113,7 @@ var options = {
         addNode: function (data, callback){
             data.label = '';
             data.id = id++;
+            data.color = '';
             callback(data);
             network.addNodeMode();
         },
