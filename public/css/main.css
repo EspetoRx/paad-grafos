@@ -163,3 +163,22 @@ ul.lista-pai{
     margin-top: 3px;
 }
 
+pre{
+    margin-bottom: 0rem !important;
+}
+
+pre.code {
+  white-space: pre-wrap;
+  margin-left: 8em;
+}
+
+pre.code:before {
+  counter-reset: listing;
+}
+
+pre.code code {
+  counter-increment: listing;
+  text-align: left;
+  float: left;
+  clear: left;
+}

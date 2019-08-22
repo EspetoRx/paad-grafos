@@ -275,7 +275,9 @@ function showEditArestaModal(){
 }
 
 function editEdgeLabel(id){
-
+    if(!ponderado){
+        HabilitarPonderado();
+    }
     edges.update([{id: id, label:$('#labelEdge').val()}]);
     $('#editArestaModal').modal('hide');
     ponderado = true;

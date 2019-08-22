@@ -603,7 +603,6 @@ function colorePasseio(list_nodes, p_network, p_data){
     let color_edges = [];
     let comprimento = 0;
     var edges_on_data = p_data.edges._data;
-    console.log(list_nodes, p_network, p_data);
     for(var n in list_nodes){
         for(var k in nodes._data){
             if(nodes._data[k].label == list_nodes[n]){ 
@@ -664,7 +663,6 @@ function colorePasseio(list_nodes, p_network, p_data){
     }
     for(let i=0; i<edges_visit.length; i++){
         if(typeof(edges_visit[i]) != 'undefined'){
-            //console.log(i, edges_visit[i], p_data.edges._data[i]);
             p_data.edges._data[i].color = {
                 color : color_edges[edges_visit[i]-1],
                 highlight: color_edges[edges_visit[i]-1],
@@ -750,7 +748,7 @@ $(document).on('shown.bs.modal','#DerivarDistancias', function () {
     palavra += '</select>';
     palavra += '</div>';
     palavra += '<div class="col-md-12 text-center mt-2">';
-    palavra += '<button onClick="GeraDerivaDistancia(document.getElementById(\'inicial_node\').value, document.getElementById(\'final_node\').value)" class="btn btn-success">Derivar busca</button>';
+    palavra += '<button onClick="GeraDerivaDistancia(document.getElementById(\'inicial_node\').value, document.getElementById(\'final_node\').value)" class="btn btn-success">Derivar Distância</button>';
     palavra += '</div>';
     palavra += '</div>';
     palavra += '</div>';
@@ -799,6 +797,9 @@ function DerivaDistancia(node_inicial, node_final){
             data: node_inicial
         }
     });
+    animacao.push({
+        acao: 'INQE'
+    });
     if(!ordenado && !ponderado){
         while(queue.length != 0){
             let v = queue[0];
@@ -817,6 +818,44 @@ function DerivaDistancia(node_inicial, node_final){
                     target: adjacentes[k]
                 });
                 if(dist[adjacentes[k]] == Infinity){
+                    dist[adjacentes[k]] = dist[v] + 1;
+                    animacao.push({
+                        acao: 'PE',
+                        target: {
+                            node1: adjacentes[k],
+                            node2: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'dists',
+                            node: adjacentes[k],
+                            data: dist[v] + 1
+                        }
+                    });
+                    pai[adjacentes[k]] = v;
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'pai',
+                            node: adjacentes[k],
+                            data: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'push',
+                            target: 'fila',
+                            node: adjacentes[k]
+                        }
+                    });
+                    queue.push(adjacentes[k]);
+                }
+                if(dist[adjacentes[k]] > dist[v] + 1){
                     dist[adjacentes[k]] = dist[v] + 1;
                     animacao.push({
                         acao: 'PE',
@@ -1034,6 +1073,44 @@ function DerivaDistancia(node_inicial, node_final){
                     });
                     queue.push(adjacentes[k]);
                 }
+                if(dist[adjacentes[k]] > dist[v] + 1){
+                    dist[adjacentes[k]] = dist[v] + 1;
+                    animacao.push({
+                        acao: 'PE',
+                        target: {
+                            node1: adjacentes[k],
+                            node2: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'dists',
+                            node: adjacentes[k],
+                            data: dist[v] + 1
+                        }
+                    });
+                    pai[adjacentes[k]] = v;
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'update',
+                            target: 'pai',
+                            node: adjacentes[k],
+                            data: v
+                        }
+                    });
+                    animacao.push({
+                        acao: 'QU',
+                        target: {
+                            acao: 'push',
+                            target: 'fila',
+                            node: adjacentes[k]
+                        }
+                    });
+                    queue.push(adjacentes[k]);
+                }
             }
             queue.shift();
             animacao.push({
@@ -1044,7 +1121,6 @@ function DerivaDistancia(node_inicial, node_final){
                 }
             });
         }
-        //console.log(dist, pai);
     }
     if(ordenado && ponderado){
         while(queue.length != 0){
@@ -1070,7 +1146,6 @@ function DerivaDistancia(node_inicial, node_final){
                     }
                 }
                 if(dist[adjacentes[k]] == Infinity){
-                    console.log(dist[v], escolha, typeof(dist[v]), typeof(escolha));
                     dist[adjacentes[k]] = dist[v] + escolha;
                     animacao.push({
                         acao: 'PE',
@@ -1107,7 +1182,6 @@ function DerivaDistancia(node_inicial, node_final){
                         }
                     });
                     queue.push(adjacentes[k]);
-                    //console.log(queue);
                 }
                 if(dist[adjacentes[k]] > dist[v] + escolha){
                     dist[adjacentes[k]] = dist[v] + escolha;
@@ -1235,16 +1309,40 @@ function GeraDerivaDistancia(inicial, final){
     var palavra = '<div class="container" id="distancia_def">';
     palavra += '<div class="row mt-1">';
     palavra += '<div class="col-md-12 text-center">';
-    /* palavra += '<button id="volta_primeiro" class="btn btn-success btn-sm"><i class="fas fa-fast-backward"></i></button> '; */
+    palavra += '<button id="volta_primeiro" class="btn btn-success btn-sm"><i class="fas fa-fast-backward"></i></button> ';
     palavra += '<button id="volta_um" class="btn btn-success btn-sm "><i class="fas fa-step-backward"></i></button> ';
     palavra += '<button id="para" class="btn btn-success btn-sm" ><i class="fas fa-stop"></i></button> ';
     palavra += '<button id="play" class="btn btn-success btn-sm"><i class="fas fa-play"></i></button> ';
     palavra += '<button id="passa_um" class="btn btn-success btn-sm"><i class="fas fa-step-forward"></i></button> ';
-    /* palavra += '<button id="passa_todos" class="btn btn-success btn-sm"><i class="fas fa-fast-forward"></i></button> '; */
+    palavra += '<button id="passa_todos" class="btn btn-success btn-sm"><i class="fas fa-fast-forward"></i></button> ';
     palavra += '</div><div class="col-md-12 text-center">';
     palavra += 'Delay: 100ms <input type="range" min="1" max="10" step="1" value="5" class="slider round" id="range_delay"> 1s &nbsp;&nbsp;';
     palavra += ' Animação: <span id="atual">0</span> de <span id="total">'+distanciaDerivada[2].length+'</span>';
-    palavra += '</div><div id="listas" class="col-md-12"><div class="col-md-12"><p>Fila</p>';
+    palavra += '</div>';
+    palavra += '<div class="col-md-12">';
+    palavra += '<div class="card shadow mb-2 mt-2 pb-0" height="250px">';
+    palavra += '    <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">';
+    palavra += '        <h6 class="m-0 font-weight-bold text-primary">Algoritmo</h6>';
+    palavra += '    </a>';
+    palavra += '    <div class="collapse show" id="collapseCardExample" style="">';
+    palavra += '        <div class="card-body">';
+    palavra += '<pre class"code">';
+    palavra += '<code id="algL1">1. Seja v o vértice inicial.</code><br>';
+    palavra += '<code id="algL2">2. Coloque v na fila. //Defina dist e pai</code><br>';
+    palavra += '<code id="algL3">3. Enquanto fila não for vazia, faça:</code><br>';
+    palavra += '<code id="algL4">4. &#09;v = fila[0]:</code><br>';
+    palavra += '<code id="algL5">5. &#09;Para cada vizinho w de v:</code><br>';
+    palavra += '<code id="algL6">6. &#09;&#09;Se dist[w] está Indefinido ou <br>&#09;&#09;dist[w] > dist[v] + peso_aresta então:</code><br>';
+    palavra += '<code id="algL7">7. &#09;&#09;&#09;dist[w] = dist[v] + peso_aresta</code><br>';
+    palavra += '<code id="algL8">8. &#09;&#09;&#09;pais[w] = v</code><br>';
+    palavra += '<code id="algL9">9. &#09;&#09;&#09;Coloque w na fila.</code><br>';
+    palavra += '<code id="algL10">10. &#09;Remova v da fila.</code><br>';
+    palavra += '</pre>';
+    palavra += '        </div>';
+    palavra += '    </div>';
+    palavra += '</div>';
+    palavra += '</div>';
+    palavra += '<div id="listas" class="col-md-12"><div class="col-md-12"><p>Fila</p>';
     palavra += '<ul class="list-inline lista-pai" id="fila">';
     palavra += '</ul>';
     palavra += '</div><div class="col-md-12"><p>Lista de Pais';
@@ -1307,6 +1405,12 @@ function GeraDerivaDistancia(inicial, final){
                         newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}])
                     }
                 }
+                if(valor.target == inicial){
+                    NormalizeAlgorithm();
+                    $('#algL1').attr('style','color: red');
+                }else{
+                    $('#algL5').attr('style','color: red');
+                }
             }else{
                 for(let k in valor.target){
                     newnodes.update([{id: valor.target[k], color: 'red'}]);
@@ -1316,10 +1420,20 @@ function GeraDerivaDistancia(inicial, final){
                         newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}])
                     }
                 }
+                if(valor.target == inicial){
+                    NormalizeAlgorithm();
+                    $('#algL1').attr('style','color: red');
+                }else{
+                    $('#algL5').attr('style','color: red');
+                }
             }
         }
         if(valor.acao == 'QU'){
             if(valor.target.acao == 'push'){
+                if(valor.target.node == inicial){
+                    NormalizeAlgorithm();
+                    $('#algL2').attr('style', 'color: green');
+                }
                 palavra = '<li class="list-inline-item">'+newnodes._data[valor.target.node].label+'</li>';
                 $('#'+valor.target.target).append(palavra);
             }
@@ -1332,6 +1446,8 @@ function GeraDerivaDistancia(inicial, final){
                     newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}]);
                 }
             }
+            NormalizeAlgorithm();
+            $('#algL4').attr('style', 'color: blue');
         }
         if(valor.acao == 'SN2'){
             NormalizaDesenho(newnodes, newedges);
@@ -1341,6 +1457,9 @@ function GeraDerivaDistancia(inicial, final){
                     newedges.update([{id: newedges._data[k].id, color: {color: '#458B74'}}]);
                 }
             }
+            $('#algL9').removeAttr('style');
+            $('#algL5').attr('style', 'color: purple');
+            $('#algL6').attr('style', 'color: green');
         }
         if(valor.acao == 'PE'){
             if(!ordenado){
@@ -1357,6 +1476,8 @@ function GeraDerivaDistancia(inicial, final){
                     }
                 }
             }
+            $('#algL6').removeAttr('style');
+            $('#algL6').attr('style', 'font-weight: bold');
         }
         if(valor.acao == 'QU'){
             if(valor.target.acao == 'update'){
@@ -1364,15 +1485,34 @@ function GeraDerivaDistancia(inicial, final){
             }
             if(valor.target.acao == 'push'){
                 var palavra;
-                //console.log(valor.target.node);
                 for(let n in valor.target.node){
-                    //console.log(n, newnodes._data);
                     var palavra = '<li class="list-inline-item">'+newnodes._data[valor.target.node[n]].label+'</li>';
                 }
             }
             if(valor.target.acao == 'shift'){
                 $('#'+valor.target.target).find('>:first-child').remove();
+                $('#algL9').removeAttr('style');
+                $('#algL4').removeAttr('style');
+                $('#algL5').removeAttr('style');
+                $('#algL6').removeAttr('style');
+                $('#algL10').attr('style', 'color: blue');
             }
+            if(valor.target.node != inicial && valor.target.acao != 'shift'){
+                if(valor.target.target == 'dists'){
+                    $('#algL7').attr('style', 'font-weight: bold');
+                }else if(valor.target.target == 'pai'){
+                    $('#algL7').removeAttr('style');
+                    $('#algL8').attr('style', 'font-weight: bold');
+                }else if(valor.target.target == 'fila'){
+                    $('#algL8').removeAttr('style');
+                    $('#algL9').attr('style', 'font-weight: bold');
+                }
+            }
+            
+        }
+        if(valor.acao == 'INQE'){
+            NormalizeAlgorithm();
+            $('#algL3').attr('style', 'color: green');
         }
         let newatual = $('#atual').html();
         newatual++;
@@ -1386,12 +1526,34 @@ function GeraDerivaDistancia(inicial, final){
             $('#passa_um').click();
         }
     });
+    $('#volta_primeiro').on('click', () => {
+        var atual = $('#atual').html();
+        $('#atual').html('0');
+        limpaTudo();
+        NormalizaCompleto(newnodes, newedges);
+    });
     $('#play').on('click',() => {
         var sentinel = false;
         var cont = $('#atual').html();
         PlayAnimation(sentinel);
     });
-
+    $('#passa_todos').on('click', ()=>{
+        var total = $('#total').html();
+        $('#atual').html('0');
+        limpaTudo();
+        for(let i=0; i<parseInt(total); i++){
+            $('#passa_um').click();
+        }
+    });
+    /* $('#atual').on('update', () =>{
+        let atual = $('#atual').html();
+        console.log(atual);
+        if(atual == 3){
+            $('#volta_primeiro').attr('disabled', 'disabled');
+        }else{
+            $('#volta_primeiro').removeAttr('disabled');
+        }
+    }) */
 }
 
 function NormalizaDesenho(newnodes, newedges){
@@ -1437,7 +1599,6 @@ function PlayAnimation(sentinel){
             });
             setTimeout(()=>{
                 $('#passa_um').click();
-                //console.log($('#atual').html());
                 return PlayAnimation(sentinel);
             },$('#range_delay').val()*100);
         }
@@ -1468,3 +1629,16 @@ function GetVerticesAdjacentes(vertice){
 $(document).on('hidden.bs.modal', '#DerivarDistancias', () => {
     $('#collapseTwo').removeClass('show');
 });
+
+function NormalizeAlgorithm(){
+    $('#algL1').removeAttr('style');
+    $('#algL2').removeAttr('style');
+    $('#algL3').removeAttr('style');
+    $('#algL4').removeAttr('style');
+    $('#algL5').removeAttr('style');
+    $('#algL6').removeAttr('style');
+    $('#algL7').removeAttr('style');
+    $('#algL8').removeAttr('style');
+    $('#algL9').removeAttr('style');
+    $('#algL10').removeAttr('style');
+}

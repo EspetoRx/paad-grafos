@@ -141,7 +141,7 @@ var options = {
         font: {
             color: 'white',
         }
-    },
+    }
 };
 
 // initialize your network!
