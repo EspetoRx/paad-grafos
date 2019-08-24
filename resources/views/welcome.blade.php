@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta content="paad grafos graphs grafo graph teory apoio docencia" name="keywords">
+    <meta content="Projeto de Aplicação de Apoio à Docência - Teoria de grafos" name="description">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{asset("css/app.css")}}">
 
