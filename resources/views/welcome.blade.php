@@ -171,7 +171,11 @@
                         }
                     });
             });
-            $('html, body').animate({scrollTop:$(document).height()}, 'slow');
+            jQuery(window).load(function() {
+                /mobile/i.test(navigator.userAgent) && document.documentElement.scrollTop === 0 && !pageYOffset && !location.hash && setTimeout(function () {
+                    window.scrollTo(0, 1);
+                }, 1000);
+            });
         });  
     </script>
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
