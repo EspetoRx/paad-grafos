@@ -9,7 +9,7 @@
     <meta content="Projeto de Aplicação de Apoio à Docência - Teoria de grafos" name="description">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{asset("css/app.css")}}">
-
+  <link rel="manifest" href="{{asset('mix-manifest.json')}}">
     <!-- FAVICON -->
     <link rel="shortcut icon" href="{{asset("images/paad_logo.ico")}}" type="image/x-icon"/>
 
@@ -172,39 +172,7 @@
                     });
             });
         });  
-        (function( window ){
-            var doc = window.document;
-            
-            // If there's a hash, or addEventListener is undefined, stop here
-            if( !location.hash && window.addEventListener ){
-                
-                //scroll to 1
-                window.scrollTo( 0, 1 );
-                var scrollTop = 1,
-                    getScrollTop = function(){
-                        return window.pageYOffset || doc.compatMode === "CSS1Compat" && doc.documentElement.scrollTop || doc.body.scrollTop || 0;
-                    },
-                
-                    //reset to 0 on bodyready, if needed
-                    bodycheck = setInterval(function(){
-                        if( doc.body ){
-                            clearInterval( bodycheck );
-                            scrollTop = getScrollTop();
-                            window.scrollTo( 0, scrollTop === 1 ? 0 : 1 );
-                        }	
-                    }, 15 );
-                
-                window.addEventListener( "load", function(){
-                    setTimeout(function(){
-                        //at load, if user hasn't scrolled more than 20 or so...
-                        if( getScrollTop() < 20 ){
-                            //reset to hide addr bar at onload
-                            window.scrollTo( 0, scrollTop === 1 ? 0 : 1 );
-                        }
-                    }, 0);
-                }, false );
-            }
-        })( this );
+        
     </script>
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
         <div class="modal-dialog modal-sm">
