@@ -171,7 +171,7 @@
                         }
                     });
             });
-            window.scrollTo(0,1);
+            $(window).scrollTop(0, 100);
         });  
         
     </script>
