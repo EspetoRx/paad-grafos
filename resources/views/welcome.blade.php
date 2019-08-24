@@ -171,6 +171,7 @@
                         }
                     });
             });
+            window.scrollTo(0,1);
         });
     </script>
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
