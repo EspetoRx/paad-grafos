@@ -170,18 +170,9 @@
                             console.log(data);
                         }
                     });
-            });            
-        });
-        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
-            // When ready, auto-scroll 1px to hide URL bar
-            window.addEventListener("load", function () {
-                // Set a timeout...
-                setTimeout(function () {
-                    // Hide the address bar!
-                    window.scrollTo(0, 1);
-                }, 0);
             });
-        }
+            $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });           
+        });  
     </script>
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
         <div class="modal-dialog modal-sm">
