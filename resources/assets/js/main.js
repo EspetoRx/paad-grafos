@@ -1021,6 +1021,8 @@ window.vizinhacaInversa =function(){
 /*GRAUS DOS VÉRTICES*/
 window.grausSimples = function (){
     var graus = [];
+    console.log(nodes._data);
+    console.log(edges._data);
     for(var n in nodes._data){
         graus[nodes._data[n].id] = 0;
         for(var e in edges._data){
@@ -1032,13 +1034,20 @@ window.grausSimples = function (){
             }
         }
     }
+    console.log(graus);
     var string = '';
     string += "<table class='table'>";
     string += "<thead class='text-center'>";
     string += "<tr>";
     string += "<td>Vértice</td>";
-    var maiorgrau = graus[1], menorgrau = graus[1];
+    var maiorgrau, menorgrau;
     for(var k in graus){
+        if((typeof(maiorgrau) == 'undefined' ||
+        typeof(menorgrau) == 'undefined') &&
+        typeof(graus[k]) != 'undefined' ){
+            maiorgrau = graus[k];
+            menorgrau = graus[k];
+        }
         string += "<td>"+nodes._data[k].label+"</td>"
         if(graus[k] >= maiorgrau){
             maiorgrau = graus[k];
@@ -1081,8 +1090,19 @@ window.grausOrientados = function (){
     string += "<thead class='text-center'>";
     string += "<tr>";
     string += "<td>Vértice</td>";
-    var maiorgrauentrada = graus[1][0], menorgrauentrada = graus[1][0], maiorgrausaida = graus[1][1], menorgrausaida = graus[1][1];
+    var maiorgrauentrada, menorgrauentrada, maiorgrausaida, menorgrausaida;
     for(var k in graus){
+        if((typeof(maiorgrauentrada) == 'undefined' ||
+        typeof(menorgrauentrada) == 'undefined' || 
+        typeof(maiorgrausaida) == 'undefined' ||
+        typeof(menorgrausaida) == 'undefined') &&
+        typeof(graus[k][0]) != 'undefined' &&
+        typeof(graus[k][1]) != 'undefined'){
+            maiorgrauentrada = graus[k][0];
+            menorgrauentrada = graus[k][0];
+            maiorgrausaida = graus[k][1];
+            menorgrausaida = graus[k][1];
+        }
         string += "<td>"+nodes._data[k].label+"</td>"
         if(graus[k][0] >= maiorgrauentrada){
             maiorgrauentrada = graus[k][0];
@@ -1412,7 +1432,7 @@ window.TabMIO = function (){
 /*   NUMERO DE WIENER                                                     */
 /*------------------------------------------------------------------------*/
 window.Wiener = function(){
-    
+
 }
 
 /*GRAFO SUBJACENTE*/
@@ -2811,6 +2831,8 @@ window.GeraDerivaDistancia = function (inicial, final){
     }
     $('#pai').append(lista_pais);
     $('#dists').append(lista_distancia);
+    $('#volta_um').attr('disabled', 'disabled');
+    $('#volta_primeiro').attr('disabled', 'disabled');
     $('#passa_um').on('click', () => {
         var valor = distanciaDerivada[2][$('#atual').html()];
         if(valor.acao == 'IN'){
@@ -2934,6 +2956,14 @@ window.GeraDerivaDistancia = function (inicial, final){
         let newatual = $('#atual').html();
         newatual++;
         $('#atual').html(newatual);
+        if($('#atual').html() != 0){
+            $('#volta_um').removeAttr('disabled', 'disabled');
+            $('#volta_primeiro').removeAttr('disabled', 'disabled');
+        }
+        if($('#atual').html() == $('#total').html()){
+            $('#passa_um').attr('disabled', 'disabled');
+            $('#passa_todos').attr('disabled', 'disabled');
+        }
     });
     $('#volta_um').on('click', ()=>{
         var atual = $('#atual').html();
@@ -2942,12 +2972,28 @@ window.GeraDerivaDistancia = function (inicial, final){
         for(let i=0; i<parseInt(atual)-1; i++){
             $('#passa_um').click();
         }
+        if($('#atual').html() != 0){
+            $('#volta_um').removeAttr('disabled', 'disabled');
+            $('#volta_primeiro').removeAttr('disabled', 'disabled');
+        }
+        if($('#atual').html() == 1){
+            $('#volta_um').attr('disabled', 'disabled');
+            $('#volta_primeiro').attr('disabled', 'disabled');
+        }
+        if($('#atual').html() == parseInt($('#total').html())-1){
+            $('#passa_um').removeAttr('disabled', 'disabled');
+            $('#passa_todos').removeAttr('disabled', 'disabled');
+        }
     });
     $('#volta_primeiro').on('click', () => {
         var atual = $('#atual').html();
         $('#atual').html('0');
         limpaTudo();
         NormalizaCompleto(newnodes, newedges);
+        if($('#atual').html() != 0){
+            $('#volta_um').removeAttr('disabled', 'disabled');
+            $('#volta_primeiro').removeAttr('disabled', 'disabled');
+        }
     });
     $('#play').on('click',() => {
         var sentinel = false;
@@ -2962,15 +3008,6 @@ window.GeraDerivaDistancia = function (inicial, final){
             $('#passa_um').click();
         }
     });
-    /* $('#atual').on('update', () =>{
-        let atual = $('#atual').html();
-        console.log(atual);
-        if(atual == 3){
-            $('#volta_primeiro').attr('disabled', 'disabled');
-        }else{
-            $('#volta_primeiro').removeAttr('disabled');
-        }
-    }) */
 }
 
 window.NormalizaDesenho = function (newnodes, newedges){
