@@ -2143,7 +2143,6 @@ window.colorePasseio = function (list_nodes, p_network, p_data){
     let colors_nodes = [];
     let color_edges = [];
     let comprimento = 0;
-    var edges_on_data = p_data.edges._data;
     for(var n in list_nodes){
         for(var k in nodes._data){
             if(nodes._data[k].label == list_nodes[n]){ 
@@ -2246,14 +2245,26 @@ window.colorePasseio = function (list_nodes, p_network, p_data){
     }
     passeio += '</p><p><b>Comprimento: </b>' + comprimento + '</p>';
     passeio += '<p><b>É ciclo ou circuito:</b> ';
+    let ciclo;
     if(max(nodes_visit) == 2 && howMany2(nodes_visit) == 1 && fechado && howMany2(edges_visit)==0){
         passeio += 'Sim';
+        ciclo = true;
     }else{
         passeio += 'Não';
+        ciclo = false;
     }
     passeio += '</p>';
     $('#passeio-response').append(passeio);
+    return ciclo;
 }
+
+/*-------------------------*/
+/* ACHANDO CILCO EM GRAFOS */
+/*-------------------------*/
+
+window.ECiclo = function(){
+    
+};
 
 $(document).on('hidden.bs.modal', '#DerivacaoDePasseio', () => {
     $('#collapseTwo').removeClass('show');
