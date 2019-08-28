@@ -183,6 +183,10 @@ window.enableGraphContext = function(){
                         "<div class=\"dropdown-divider\"></div>"+
                         "<button class=\"dropdown-item\" onClick=\"ShowLimparGrafo()\"><i class=\"fas fa-skull\"></i> Limpar Grafo</button>"+
                         "<div class=\"dropdown-divider\"></div>"+
+                        "<button class='dropdown-item' onClick='GeraGrafoTrivial()'><i class='far fa-dot-circle'></i> Gerar Grafo Trivial</button>"+
+                        "<button class='dropdown-item' onClick='GeraGrafoCiclo()'><i class='fas fa-spinner'></i> Gerar Grafo Ciclo</button>"+
+                        "<button class='dropdown-item' onClick='GeraGrafoCompleto()'><i class='fas fa-atom'></i> Gerar Grafo Completo</button>"+
+                        "<div class=\"dropdown-divider\"></div>"+
                         "<button class=\"dropdown-item\" onClick=\"exportNetwork()\"><i class=\"far fa-save\"></i> Salvar</button>"+
                         "<button class=\"dropdown-item\" onClick=\"abrirModalImportacao()\"><i class=\"far fa-file\"></i> Abrir</button>"+
                     "</div>"+
@@ -436,7 +440,6 @@ window.editEdgeLabel = function(id){
 
 window.InverterAresta = function(id){
     var aux;
-    console.log(id, edges._data[id]);
     aux = edges._data[id].from;
     edges.update([{id:id, from: edges._data[id].to, to: aux}]);
     $('#editArestaModal').modal('hide');
@@ -714,7 +717,8 @@ window.habilitarPropriedades = function(){
         $('#propriedades2').append('<div id="MatrizIncidenciaOrientado" class="table-responsive" style="display:none;"></div>');
         $('#MatrizIncidenciaOrientado').append(MatrizIncidenciaOrientado());
     }
-    
+    let wiener = Wiener();
+    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + "</br>");
     $('#minigrafo').html(GrafoCompleto);
     $('#mynetwork').removeClass('mynetwork');
     $('#mynetwork').addClass('propriedades');
@@ -1021,8 +1025,6 @@ window.vizinhacaInversa =function(){
 /*GRAUS DOS VÉRTICES*/
 window.grausSimples = function (){
     var graus = [];
-    console.log(nodes._data);
-    console.log(edges._data);
     for(var n in nodes._data){
         graus[nodes._data[n].id] = 0;
         for(var e in edges._data){
@@ -1034,7 +1036,6 @@ window.grausSimples = function (){
             }
         }
     }
-    console.log(graus);
     var string = '';
     string += "<table class='table'>";
     string += "<thead class='text-center'>";
@@ -1432,8 +1433,111 @@ window.TabMIO = function (){
 /*   NUMERO DE WIENER                                                     */
 /*------------------------------------------------------------------------*/
 window.Wiener = function(){
-
+    let wiener = 0;
+    for(let k in nodes._data){
+        for(let j in nodes._data){
+            if(k != j){
+                let dd = DerivaDistancia(k, j); //dd é Distância Derivada
+                wiener += dd[0][j];
+            }
+        }
+    }
+    wiener *= 0.5;
+    return wiener;
 }
+
+/*------------------------------------------------------------------------*/
+/*   GERAÇÃO DE GRAFO TRIVIAL                                             */
+/*------------------------------------------------------------------------*/
+window.GeraGrafoTrivial = () => {
+    $.fn.confirm.defaults = {
+        title: 'Apagar o Grafo atual e Criar Grafo Trivial?',
+        message: 'Deseja apagar o grafo atual para desenhar um grafo trivial?',
+        confirm: 'Sim',
+        dismiss: 'Não'
+    };
+    $('#confirm').confirm().on({
+        confirm: function () {
+            let et = $('#TamanhoCiclo').val();
+            Limpar();
+            nodes.add([{id: 1}]);
+            network.fit();
+            network.stabilize();
+        },
+        dismiss: function () {
+        }
+    })
+};
+
+/*------------------------------------------------------------------------*/
+/*   GERAÇÃO DE GRAFO CICLO                                               */
+/*------------------------------------------------------------------------*/
+window.GeraGrafoCiclo = () => {
+    $.fn.confirm.defaults = {
+        title: 'Apagar o Grafo atual e Criar Grafo Ciclo?',
+        message: 'Deseja apagar o grafo atual para desenhar um grafo ciclo? Qual o tamanho do ciclo?<br><input type="number" min=3 id="TamanhoCiclo" class="form-control mt-2" value="3" />',
+        confirm: 'Sim',
+        dismiss: 'Não'
+    };
+    $('#confirm').confirm().on({
+        confirm: function () {
+            let et = $('#TamanhoCiclo').val();
+            Limpar();
+            for(let i=1; i<=et; i++){
+                nodes.add([{id: i}]);
+            }
+            for(let i=1; i<=et; i++){
+                if(i != et){
+                    edges.add([{id:i, from:i, to:i+1}]);
+                }else{
+                    edges.add([{id:i, from:i, to:1}]);
+                }
+            }
+            network.fit();
+            network.stabilize();
+        },
+        dismiss: function () {
+        }
+    })
+};
+
+/*------------------------------------------------------------------------*/
+/*   GERAÇÃO DE GRAFO COMPLETO                                            */
+/*------------------------------------------------------------------------*/
+window.GeraGrafoCompleto = () => {
+    $.fn.confirm.defaults = {
+        title: 'Apagar o Grafo atual e Criar Grafo Completo?',
+        message: 'Deseja apagar o grafo atual para desenhar um grafo completo? Qual o tamanho de K?<br><input type="number" min=3 id="TamanhoCompleto" class="form-control mt-2" value="3" />',
+        confirm: 'Sim',
+        dismiss: 'Não'
+    };
+    $('#confirm').confirm().on({
+        confirm: function () {
+            let et = $('#TamanhoCompleto').val();
+            Limpar();
+            let idedge = 1;
+            for(let i=1; i<=et; i++){
+                nodes.add([{id: i}]);
+            }
+            for(let i=1; i<=et; i++){
+                for(let j=i+1; j<=et; j++){
+                    if(i!=j){
+                        edges.add([{id: idedge, from: i, to:j}]);
+                        idedge++;
+                    }
+                }
+            }
+            network.fit();
+            network.stabilize();
+        },
+        dismiss: function () {
+        }
+    })
+};
+
+/*------------------------------------------------------------------------*/
+/*   CICLOS DO GRAFO                                                      */
+/*------------------------------------------------------------------------*/
 
 /*GRAFO SUBJACENTE*/
 window.grafoSubjacente = function  (){
@@ -1802,9 +1906,9 @@ window.RemoveItem = function (item){
     var father = element.parentNode;
     element.parentNode.removeChild(element);
     if (father.hasChildNodes()){
-        escolha = father.lastElementChild.innerText.substr(0,father.lastElementChild.innerText.length);
+        let escolha = father.lastElementChild.innerText.substr(0,father.lastElementChild.innerText.length);
         father.lastElementChild.innerHTML += ' <span class="remove_item" onclick="RemoveItem(this)">&nbsp;x&nbsp;</span>';
-        list2 = RetornaListaNodesPasseio(escolha);
+        let list2 = RetornaListaNodesPasseio(escolha);
         if(!list2.length){
             list2 = "<span>Não existem vértices alcançáveis a partir da última escolha.</span>";
         }
@@ -1817,7 +1921,7 @@ window.RemoveItem = function (item){
             cancel: '.draggable_item',
         });
     }else{
-        list = '';
+        let list = '';
         for(var k in nodes._data){
             list += '<li class="draggable_item"><b>'+nodes._data[k].label+'</b></li>';
         }
