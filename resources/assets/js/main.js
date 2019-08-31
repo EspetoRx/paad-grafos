@@ -720,6 +720,7 @@ window.habilitarPropriedades = function(){
     let wiener = Wiener();
     $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + "</br>");
     $('#minigrafo').html(GrafoCompleto);
+    
     $('#mynetwork').removeClass('mynetwork');
     $('#mynetwork').addClass('propriedades');
     $('#mynetwork').removeAttr('style');
@@ -1538,6 +1539,8 @@ window.GeraGrafoCompleto = () => {
 /*------------------------------------------------------------------------*/
 /*   CICLOS DO GRAFO                                                      */
 /*------------------------------------------------------------------------*/
+
+
 
 /*GRAFO SUBJACENTE*/
 window.grafoSubjacente = function  (){
@@ -3095,7 +3098,7 @@ window.GeraDerivaDistancia = function (inicial, final){
             $('#volta_um').attr('disabled', 'disabled');
             $('#volta_primeiro').attr('disabled', 'disabled');
         }
-        if($('#atual').html() == parseInt($('#total').html())-1){
+        if($('#atual').html() <= parseInt($('#total').html())-1){
             $('#passa_um').removeAttr('disabled', 'disabled');
             $('#passa_todos').removeAttr('disabled', 'disabled');
         }
@@ -3105,10 +3108,10 @@ window.GeraDerivaDistancia = function (inicial, final){
         $('#atual').html('0');
         limpaTudo();
         NormalizaCompleto(newnodes, newedges);
-        if($('#atual').html() != 0){
-            $('#volta_um').removeAttr('disabled', 'disabled');
-            $('#volta_primeiro').removeAttr('disabled', 'disabled');
-        }
+        $('#volta_um').attr('disabled', 'disabled');
+        $('#volta_primeiro').attr('disabled', 'disabled');
+        $('#passa_um').removeAttr('disabled', 'disabled');
+        $('#passa_todos').removeAttr('disabled', 'disabled');
     });
     $('#play').on('click',() => {
         var sentinel = false;
