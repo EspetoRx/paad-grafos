@@ -63,7 +63,7 @@
             <span>Propriedades</span>
             </a>
             <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-            <i class="far fa-circle"></i>
+            <i class="fab fa-creative-commons-nd"></i>
             <span>Derivações</span>
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
