@@ -611,6 +611,10 @@ window.ShowLimparGrafo = function(){
 window.Limpar = function(){
     nodes = new vis.DataSet([]);
     edges = new vis.DataSet([]);
+    data = {
+        nodes: nodes,
+        edges: edges
+    }
     network.setData({nodes, edges});
     id = 1;
     edgeid = 1;
@@ -719,6 +723,12 @@ window.habilitarPropriedades = function(){
     }
     let wiener = Wiener();
     $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + "</br>");
+    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos presentes no Grafo.\">(?)</button> <b>Ciclos:</b>");
+    
+    if(!ordenado){
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='TabCIU()' value='0'>Mostrar Tabela</button></br>")
+        $('#propriedades2').append(UndirectedCycles());
+    }
     $('#minigrafo').html(GrafoCompleto);
     
     $('#mynetwork').removeClass('mynetwork');
@@ -1537,10 +1547,124 @@ window.GeraGrafoCompleto = () => {
 };
 
 /*------------------------------------------------------------------------*/
-/*   CICLOS DO GRAFO                                                      */
+/*   CICLOS DO GRAFO NÃO DIRECIONADO                                      */
+/*------------------------------------------------------------------------*/
+window.UndirectedCycles = () => {
+    let graph = Array();
+    let cycles = Array();
+    for(let edge in edges._data){
+        let aux = Array();
+        aux.push(edges._data[edge].from);
+        aux.push(edges._data[edge].to);
+        graph.push(aux);
+    }
+    for(let newedge in graph){
+        for(let newnode in graph[newedge]){
+            let newpath = Array();
+            newpath.push(graph[newedge][newnode]);
+            findNewCycles(newpath);
+        }
+    }
+    function findNewCycles(path){
+        let start_node = path[0];
+        let next_node = undefined;
+        for (let edge in graph){
+            let node1 = graph[edge][0],
+                node2 = graph[edge][1];
+                if(graph[edge].includes(start_node)){
+                    if(node1 == start_node){
+                        next_node = node2;
+                    }else{
+                        next_node = node1;
+                    }
+                    if (!visited(next_node, path)){
+                        let sub = new Array();
+                        sub.push(next_node);
+                        sub = sub.concat(path);
+                        findNewCycles(sub);
+                    }else if(path.length > 2 && next_node == path[path.length-1]){
+                        let p = rotate_to_smallest(path);
+                        let inv = invert(p);
+
+                        if (isNew(p) && isNew(inv)){
+                            cycles.push(p);
+                        }
+                    }
+                }
+        }
+    }
+    function invert(path){
+        let aux2 = Array();
+        for(let k in path){
+            aux2.push(path[k]);
+        }
+        aux2.reverse();
+        let aux = rotate_to_smallest(aux2);
+        return aux;
+    }
+    function rotate_to_smallest(path){
+        let aux = Array(), n;
+        n = path.lastIndexOf(Math.min(...path));
+        aux = aux.concat(path.slice(n,path.length));
+        aux = aux.concat(path.slice(0,n));
+        return aux;
+    }
+    function isNew(path){
+        let jc = JSON.stringify(cycles);
+        let jp = JSON.stringify(path);
+        let c = jc.indexOf(jp);
+        if(c != -1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    function visited(node, path){
+        return path.includes(node);
+    }
+    function print(){
+        let palavra = '';
+        palavra += '<div id="ciclos" class="table-responsive" style="display: none; text-align: center;">';
+        if(cycles.length == 0){
+            palavra += '<p>Não existem ciclos neste grafo.</p>';
+        }else{
+            palavra += '<table class="table">';
+            palavra += '<thead><tr><td><b>Ciclos encontrados</b></td></tr></thead>';
+            for(let cy in cycles){
+                palavra += '<tr><td>';
+                for(let node in cycles[cy]){
+                    if(node != cycles[cy].length-1){
+                        palavra += nodes._data[cycles[cy][node]].label + '&rarr;';
+                    }else{
+                        palavra += nodes._data[cycles[cy][node]].label + '&rarr;' + nodes._data[cycles[cy][0]].label;
+                    }
+                }
+                palavra += '</tr></td>';
+            }
+            palavra += '</table>';
+        }
+        palavra += '</div>';
+        return palavra;
+    }
+    return print();
+}
+
+/*------------------------------------------------------------------------*/
+/*   BOTÃO DE SHOW/HIDE TABELA CICLOS NÃO ORIENTADO                       */
 /*------------------------------------------------------------------------*/
 
 
+window.TabCIU = function (){
+    if($('#TabCIU').val() == 0){
+        $('#ciclos').css('display', 'block');
+        $('#TabCIU').val('1');
+        $('#TabCIU').html('Esconder Tabela');
+    }else{
+        $('#ciclos').css('display', 'none');
+        $('#TabCIU').val('0');
+        $('#TabCIU').html('Mostrar Tabela');
+    }
+}
 
 /*GRAFO SUBJACENTE*/
 window.grafoSubjacente = function  (){
