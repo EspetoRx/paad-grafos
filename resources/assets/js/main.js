@@ -726,9 +726,15 @@ window.habilitarPropriedades = function(){
     
     
     if(!ordenado){
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo. Outros ciclos se formam por derivações dos mostrados abaixo.\">(?)</button> <b>Ciclos:</b>");
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='TabCIU()' value='0'>Mostrar Tabela</button></br>");
+        let uc = UndirectedCycles();
+        $('#propriedades2').append(uc[0]);
+    }else{
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo.\">(?)</button> <b>Ciclos:</b>");
         $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='TabCIU()' value='0'>Mostrar Tabela</button></br>")
-        $('#propriedades2').append(UndirectedCycles());
+        let sc = simple_cycles();
+        $('#propriedades2').append(sc[0]);
     }
     $('#minigrafo').html(GrafoCompleto);
     
@@ -1539,6 +1545,7 @@ window.GeraGrafoCompleto = () => {
                     }
                 }
             }
+            edges.update([{id: et-1, from:parseInt(et), to:1}]);
             network.fit();
             network.stabilize();
         },
@@ -1677,46 +1684,200 @@ window.UndirectedCycles = () => {
         palavra += '</div>';
         return palavra;
     }
-    return print();
+    return [print(), cycles];
 }
 
 /*------------------------------------------------------------------------*/
 /*   CICLOS DO GRAFO DIRECIONADO                                          */
+/* https://gist.github.com/m-mujica/1d1f25579a49bee300813aa1dc76da2a      */
 /*------------------------------------------------------------------------*/
-window.DirectdCycles = () => {
-    let A = listaAdjacencia(), 
-        marked = [], 
-        stack = [], 
-        current_stack = [], 
-        marked_stack = [];
 
-    function Initialize(){
-        for(let node in nodes._data){
-            marked[nodes._data[node].id] = false;
+window.simple_cycles = () => {
+    class Graph{
+        constructor(){
+            this.nodes = [];
+            this.arrows = new Map();
         }
-    }
-    function Print_Cycles(){
-        for(let i in current_stack){
-            console.log(current_stack[i]);
-        }
-    }
-    function Backtrack(k){
-        let flag = false;
-        current_stack.push(k);
-        marked_stack.push(k);
-        marked[n]
-    }
-}
 
-window.ListaAdjacencia = () => {
-    let list = new Array();
+    }
+    
+    // Tarjan's strongly connected components algorithm
+    Graph.prototype.stronglyConnectedComponents = function tarjan() {
+        var index = 0;
+        var stack = [];
+        var result = [];
+        var meta = new Map();
+    
+        var graph = this;
+        var connect = function connect(node) {
+            var entry = {
+            onStack: true,
+            index: index,
+            lowLink: index
+            };
+    
+            meta.set(node, entry);
+            stack.push(node);
+            index += 1;
+            graph.arrows.get(node).forEach(function(adj) {
+            if (!meta.has(adj)) {
+                // adjacent node has not yet been visited, do it
+                connect(adj);
+                entry.lowLink = Math.min(entry.lowLink, meta.get(adj).lowLink);
+            } else if (meta.get(adj).onStack) {
+                entry.lowLink = Math.min(entry.lowLink, meta.get(adj).index);
+            }
+            });
+    
+            // check if node is a root node, pop the stack and generated an SCC
+            if (entry.lowLink === entry.index) {
+            var scc = [];
+            var adj = null;
+    
+            do {
+                adj = stack.pop();
+                meta.get(adj).onStack = false;
+                scc.push(adj);
+            } while (node !== adj);
+    
+            result.push(scc);
+            }
+        };
+        
+        graph.nodes.forEach(function(node) {
+            if (!meta.has(node)) {
+                connect(node);
+            }
+        });
+    
+        return result;
+    };
+    
+    // Based on Donald B. Johnson 1975 paper
+    // Finding all the elementary circuits of a directed graph
+    Graph.prototype.findCircuits = function findCircuits() {
+        var startNode;
+        var stack = [];
+        var circuits = [];
+        var blocked = new Map();
+    
+        // book keeping to prevent Tarjan's algorithm fruitless searches
+        var b = new Map();
+    
+        var graph = this;
+    
+        function addCircuit(start, stack) {
+            var orders = [start.order].concat(
+            stack.map(function(n) {
+                return n.order;
+            })
+            );
+    
+            // prevent duplicated cycles
+            // TODO: figure out why this is needed, this is most likely related to
+            // startNode being the "least" vertex in Vk
+            if (Math.min.apply(null, orders) !== start.order) {
+            circuits.push([].concat(stack).concat(start));
+            }
+        }
+    
+        function unblock(u) {
+            blocked.set(u, false);
+    
+            if (b.has(u)) {
+            b.get(u).forEach(function(w) {
+                b.get(u).delete(w);
+                if (blocked.get(w)) {
+                unblock(w);
+                }
+            });
+            }
+        }
+    
+        function circuit(node) {
+            var found = false;
+    
+            stack.push(node);
+            blocked.set(node, true);
+    
+            graph.arrows.get(node).forEach(function(w) {
+            if (w === startNode) {
+                found = true;
+                addCircuit(startNode, stack);
+            } else if (!blocked.get(w)) {
+                if (circuit(w)) {
+                found = true;
+                }
+            }
+            });
+    
+            if (found) {
+            unblock(node);
+            } else {
+            graph.arrows.get(node).forEach(function(w) {
+                var entry = b.get(w);
+    
+                if (!entry) {
+                entry = new Set();
+                b.set(w, entry);
+                }
+    
+                entry.add(node);
+            });
+            }
+    
+            stack.pop();
+            return found;
+        }
+    
+        graph.nodes.forEach(function(node) {
+            startNode = node;
+            graph.arrows.get(node).forEach(circuit);
+        });
+    
+        return circuits;
+    };
+    
+    let graph = new Graph();
     for(let node in nodes._data){
-        list[nodes._data[node].id] = new Array();
+        graph.nodes.push(nodes._data[node].id);
+        graph.arrows.set(nodes._data[node].id, new Array());
     }
     for(let edge in edges._data){
-        list[edges._data[edge].from].push(edges._data[edge].to);
+        graph.arrows.get(edges._data[edge].from).push(edges._data[edge].to);
     }
-    return list;
+    let cycles = graph.findCircuits();
+
+    function print(){
+        let palavra = '';
+        palavra += '<div id="ciclos" class="table-responsive" style="display: none; text-align: center;">';
+        if(cycles.length == 0){
+            palavra += '<p>Não existem ciclos neste grafo.</p>';
+        }else{
+            palavra += '<table class="table">';
+            palavra += '<thead><tr><td><b>Ciclos encontrados</b></td></tr></thead>';
+            for(let cy in cycles){
+                palavra += '<tr><td>';
+                if(cycles[cy].length >= 2 && cycles[cy][0] != cycles[cy][1]){
+                    for(let node in cycles[cy]){
+                        if(node != cycles[cy].length-1){
+                            palavra += nodes._data[cycles[cy][node]].label + '&rarr;';
+                        }else{
+                            palavra += nodes._data[cycles[cy][node]].label + '&rarr;' + nodes._data[cycles[cy][0]].label;
+                        }
+                    }
+                }else{
+                    palavra += nodes._data[cycles[cy][0]].label + '&rarr;' + nodes._data[cycles[cy][1]].label;
+                }
+                palavra += '</tr></td>';
+            }
+            palavra += '</table>';
+        }
+        palavra += '</div>';
+        return palavra;
+    }
+
+    return [print(), cycles];
 }
 
 /*------------------------------------------------------------------------*/
