@@ -1559,6 +1559,7 @@ window.UndirectedCycles = () => {
         aux.push(edges._data[edge].to);
         graph.push(aux);
     }
+    findLacos();
     for(let newedge in graph){
         for(let newnode in graph[newedge]){
             let newpath = Array();
@@ -1566,7 +1567,6 @@ window.UndirectedCycles = () => {
             findNewCycles(newpath);
         }
     }
-    findLacos();
     function findNewCycles(path){
         let start_node = path[0];
         let next_node = undefined;
@@ -1627,13 +1627,11 @@ window.UndirectedCycles = () => {
     function CyclesHas(n1, n2){
         for(let cy in cycles){
             if(cycles[cy].length == 2){
-                console.log(cycles[cy], n1, n2);
                 if(cycles[cy][0] == n2 && cycles[cy][1] == n1){
                     return true;
                 }
             }
         }
-        console.log("passei por aqui");
         return false;
     }
     function findLacos(){
@@ -1647,7 +1645,7 @@ window.UndirectedCycles = () => {
                         (edges._data[edge].from == edges._data[edges2].from &&
                             edges._data[edge].to == edges._data[edges2].to &&
                             edges._data[edge].id != edges._data[edges2].id)){
-                                if(!CyclesHas(edges._data[edge].from,edges._data[edge].to)){
+                                if(!CyclesHas(edges._data[edge].from, edges._data[edge].to)){
                                     cycles.push([edges._data[edge].from, edges._data[edge].to]);
                                 }
                         }
@@ -1715,7 +1713,6 @@ window.ListaAdjacencia = () => {
     for(let node in nodes._data){
         list[nodes._data[node].id] = new Array();
     }
-    console.log(list);
     for(let edge in edges._data){
         list[edges._data[edge].from].push(edges._data[edge].to);
     }
