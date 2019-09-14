@@ -723,9 +723,10 @@ window.habilitarPropriedades = function(){
     }
     let wiener = Wiener();
     $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + "</br>");
-    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos presentes no Grafo.\">(?)</button> <b>Ciclos:</b>");
+    
     
     if(!ordenado){
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo.\">(?)</button> <b>Ciclos:</b>");
         $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='TabCIU()' value='0'>Mostrar Tabela</button></br>")
         $('#propriedades2').append(UndirectedCycles());
     }
@@ -1565,6 +1566,7 @@ window.UndirectedCycles = () => {
             findNewCycles(newpath);
         }
     }
+    findLacos();
     function findNewCycles(path){
         let start_node = path[0];
         let next_node = undefined;
@@ -1582,7 +1584,7 @@ window.UndirectedCycles = () => {
                         sub.push(next_node);
                         sub = sub.concat(path);
                         findNewCycles(sub);
-                    }else if(path.length > 2 && next_node == path[path.length-1]){
+                    }else if((path.length > 2 && next_node == path[path.length-1])){
                         let p = rotate_to_smallest(path);
                         let inv = invert(p);
 
@@ -1622,6 +1624,37 @@ window.UndirectedCycles = () => {
     function visited(node, path){
         return path.includes(node);
     }
+    function CyclesHas(n1, n2){
+        for(let cy in cycles){
+            if(cycles[cy].length == 2){
+                console.log(cycles[cy], n1, n2);
+                if(cycles[cy][0] == n2 && cycles[cy][1] == n1){
+                    return true;
+                }
+            }
+        }
+        console.log("passei por aqui");
+        return false;
+    }
+    function findLacos(){
+        for(let edge in edges._data){
+            if(edges._data[edge].from == edges._data[edge].to){
+                cycles.push([edges._data[edge].from]);
+            }else{
+                for(let edges2 in edges._data){
+                    if((edges._data[edge].from == edges._data[edges2].to &&
+                        edges._data[edge].to == edges._data[edges2].from)||
+                        (edges._data[edge].from == edges._data[edges2].from &&
+                            edges._data[edge].to == edges._data[edges2].to &&
+                            edges._data[edge].id != edges._data[edges2].id)){
+                                if(!CyclesHas(edges._data[edge].from,edges._data[edge].to)){
+                                    cycles.push([edges._data[edge].from, edges._data[edge].to]);
+                                }
+                        }
+                }
+            }
+        }
+    }
     function print(){
         let palavra = '';
         palavra += '<div id="ciclos" class="table-responsive" style="display: none; text-align: center;">';
@@ -1647,6 +1680,46 @@ window.UndirectedCycles = () => {
         return palavra;
     }
     return print();
+}
+
+/*------------------------------------------------------------------------*/
+/*   CICLOS DO GRAFO DIRECIONADO                                          */
+/*------------------------------------------------------------------------*/
+window.DirectdCycles = () => {
+    let A = listaAdjacencia(), 
+        marked = [], 
+        stack = [], 
+        current_stack = [], 
+        marked_stack = [];
+
+    function Initialize(){
+        for(let node in nodes._data){
+            marked[nodes._data[node].id] = false;
+        }
+    }
+    function Print_Cycles(){
+        for(let i in current_stack){
+            console.log(current_stack[i]);
+        }
+    }
+    function Backtrack(k){
+        let flag = false;
+        current_stack.push(k);
+        marked_stack.push(k);
+        marked[n]
+    }
+}
+
+window.ListaAdjacencia = () => {
+    let list = new Array();
+    for(let node in nodes._data){
+        list[nodes._data[node].id] = new Array();
+    }
+    console.log(list);
+    for(let edge in edges._data){
+        list[edges._data[edge].from].push(edges._data[edge].to);
+    }
+    return list;
 }
 
 /*------------------------------------------------------------------------*/
@@ -2384,14 +2457,6 @@ window.colorePasseio = function (list_nodes, p_network, p_data){
     $('#passeio-response').append(passeio);
     return ciclo;
 }
-
-/*-------------------------*/
-/* ACHANDO CILCO EM GRAFOS */
-/*-------------------------*/
-
-window.ECiclo = function(){
-    
-};
 
 $(document).on('hidden.bs.modal', '#DerivacaoDePasseio', () => {
     $('#collapseTwo').removeClass('show');

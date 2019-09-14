@@ -9,7 +9,7 @@
     <meta content="Projeto de Aplicação de Apoio à Docência - Teoria de grafos" name="description">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{asset("css/app.css")}}">
-  <link rel="manifest" href="{{asset('manifest.json')}}">
+    <link rel="manifest" href="{{asset('manifest.json')}}">
     <!-- FAVICON -->
     <link rel="shortcut icon" href="{{asset("images/paad_logo.ico")}}" type="image/x-icon"/>
 
