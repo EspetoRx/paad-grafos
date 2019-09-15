@@ -724,9 +724,9 @@ window.habilitarPropriedades = function(){
     }
     let wiener = Wiener();
     if(wiener != Infinity)
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + "</br>");
+        $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + "</br>");
     else
-    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + 'Infinito' + "</br>");
+    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + 'Infinito' + "</br>");
     
     if(!ordenado){
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo. Outros ciclos se formam por derivações dos mostrados abaixo.\">(?)</button> <b>Ciclos:</b>");
@@ -737,6 +737,12 @@ window.habilitarPropriedades = function(){
         $('#propriedades2').append("<button class='btn btn-sm' id='TabCordasU' onClick='TabCordasU()' value='0'>Mostrar Tabela</button></br>");
         let cordas = UndirectedCordas(uc[1]);
         $('#propriedades2').append(cordas[0]);
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
+        let cintura = Cinturas(uc[1]);
+        $('#propriedades2').append(cintura+'<br>');
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
+        let circunferencia = Circunferencia(uc[1]);
+        $('#propriedades2').append(circunferencia);
     }else{
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo.\">(?)</button> <b>Ciclos:</b>");
         $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='TabCIU()' value='0'>Mostrar Tabela</button></br>")
@@ -746,6 +752,12 @@ window.habilitarPropriedades = function(){
         $('#propriedades2').append("<button class='btn btn-sm' id='TabCordasU' onClick='TabCordasU()' value='0'>Mostrar Tabela</button></br>");
         let cordas = UndirectedCordas(sc[1]);
         $('#propriedades2').append(cordas[0]);
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
+        let cintura = Cinturas(sc[1]);
+        $('#propriedades2').append(cintura+"<br>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
+        let circunferencia = Circunferencia(sc[1]);
+        $('#propriedades2').append(circunferencia);
     }
     $('#minigrafo').html(GrafoCompleto);
     
@@ -1941,6 +1953,63 @@ window.UndirectedCordas = (cycles) => {
         return palavra;
     }
     return[print(), cordas];
+}
+
+/* ---------------------------------------------------------------------- */
+/*              IDENTIFICANDO AS CINTURAS DOS GRAFOS                      */
+/* ---------------------------------------------------------------------- */
+
+window.Cinturas = (cycles) => {
+    if(cycles.length == 0){
+        return "Não possui cintura.<br>";
+    }
+    let cintura = cycles[0].length;
+    if(!ordenado){
+        for(let c in cycles){
+            if(cycles[c].length<cintura){
+                cintura = cycles[c].length;
+            }
+        }
+    }else{
+        for(let c in cycles){
+            if(cycles[c].length == 2 &&
+                cycles[c][0] == cycles[c][1]){
+                    cintura = 1;
+                }
+            if(cycles[c].length<cintura){
+                cintura = cycles[c].length;
+            }
+        }
+    }
+    return cintura;
+}
+/*------------------------------------------------------------------------*/
+/*        IDENTIFICANDO AS CIRCUNFERENCIAS DE UM GRAFO                    */
+/*------------------------------------------------------------------------*/
+
+window.Circunferencia = (cycles) => {
+    if(cycles.length == 0){
+        return "Não possui circunferência.<br>";
+    }
+    let cintura = cycles[0].length;
+    if(!ordenado){
+        for(let c in cycles){
+            if(cycles[c].length>cintura){
+                cintura = cycles[c].length;
+            }
+        }
+    }else{
+        for(let c in cycles){
+            if(cycles[c].length == 2 &&
+                cycles[c][0] == cycles[c][1]){
+                    cintura = 1;
+                }
+            if(cycles[c].length>cintura){
+                cintura = cycles[c].length;
+            }
+        }
+    }
+    return cintura;
 }
 
 /*------------------------------------------------------------------------*/
