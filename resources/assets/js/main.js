@@ -1,4 +1,5 @@
 import vis from 'vis-network';
+import { parse } from 'querystring';
 $('.nav a').on('click', function(){
     $('.btn-navbar').click(); //bootstrap 2.x
     $('.navbar-toggle').click(); //bootstrap 3.x by Richard
@@ -722,19 +723,29 @@ window.habilitarPropriedades = function(){
         $('#MatrizIncidenciaOrientado').append(MatrizIncidenciaOrientado());
     }
     let wiener = Wiener();
-    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + "</br>");
-    
+    if(wiener != Infinity)
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + "</br>");
+    else
+    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + 'Infinito' + "</br>");
     
     if(!ordenado){
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo. Outros ciclos se formam por derivações dos mostrados abaixo.\">(?)</button> <b>Ciclos:</b>");
         $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='TabCIU()' value='0'>Mostrar Tabela</button></br>");
         let uc = UndirectedCycles();
         $('#propriedades2').append(uc[0]);
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra as cordas presentes nos ciclos.\">(?)</button> <b>Cordas:</b>");
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabCordasU' onClick='TabCordasU()' value='0'>Mostrar Tabela</button></br>");
+        let cordas = UndirectedCordas(uc[1]);
+        $('#propriedades2').append(cordas[0]);
     }else{
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo.\">(?)</button> <b>Ciclos:</b>");
         $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='TabCIU()' value='0'>Mostrar Tabela</button></br>")
         let sc = simple_cycles();
         $('#propriedades2').append(sc[0]);
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra as cordas presentes nos ciclos.\">(?)</button> <b>Cordas:</b>");
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabCordasU' onClick='TabCordasU()' value='0'>Mostrar Tabela</button></br>");
+        let cordas = UndirectedCordas(sc[1]);
+        $('#propriedades2').append(cordas[0]);
     }
     $('#minigrafo').html(GrafoCompleto);
     
@@ -1881,10 +1892,60 @@ window.simple_cycles = () => {
 }
 
 /*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE TABELA CICLOS NÃO ORIENTADO                       */
+/*   detecção de cordas em ciclos simples                                 */
 /*------------------------------------------------------------------------*/
 
+window.UndirectedCordas = (cycles) => {
+    let cordas = [];
+    for(let cy in cycles){
+        let tamanho = cycles[cy].length;
+        if(tamanho >= 4){
+            for(let i in cycles[cy]){
+                //console.log(cycles[cy], cycles[cy][i], cycles[cy][(parseInt(i)+2)%tamanho]);
+                for(let edge in edges._data){
+                    if(edges._data[edge].from == cycles[cy][i] &&
+                        edges._data[edge].to == cycles[cy][(parseInt(i)+2)%tamanho]){
+                            cordas.push({ciclo: cycles[cy], corda:edges._data[edge]});
+                        }
+                }
+            }
+        }
+    }
 
+    function print(){
+        let palavra = '';
+        palavra += '<div id="cordas" class="table-responsive" style="display: none; text-align: center;">';
+        if(cordas.length == 0){
+            palavra += '<p>Não existem cordas neste grafo.</p>';
+        }else{
+            palavra += '<table class="table">';
+            palavra += '<thead><tr><td><b>Ciclo</b></td><td><b>Corda</b></td></tr></thead>'
+            for(let c in cordas){
+                palavra += '<tr>';
+                palavra += '<td>'
+                for(let f in cordas[c].ciclo){
+                    if(f != cordas[c].ciclo.length-1){
+                        palavra += nodes._data[cordas[c].ciclo[f]].label + '&rarr;';
+                    }else{
+                        palavra += nodes._data[cordas[c].ciclo[f]].label + '&rarr;' + nodes._data[cordas[c].ciclo[0]].label;
+                    }
+                }
+                palavra += '</td>';
+                palavra += '<td>{'+cordas[c].corda.from+', ';
+                palavra += cordas[c].corda.to+'}</td>';
+                palavra += '</tr>';
+            }
+            palavra += '</table>';
+        }
+        palavra += '</div>';
+        return palavra;
+    }
+    return[print(), cordas];
+}
+
+/*------------------------------------------------------------------------*/
+/*   BOTÃO DE SHOW/HIDE TABELA CICLOS NÃO ORIENTADO                       */
+/*------------------------------------------------------------------------*/
 window.TabCIU = function (){
     if($('#TabCIU').val() == 0){
         $('#ciclos').css('display', 'block');
@@ -1894,6 +1955,21 @@ window.TabCIU = function (){
         $('#ciclos').css('display', 'none');
         $('#TabCIU').val('0');
         $('#TabCIU').html('Mostrar Tabela');
+    }
+}
+
+/*------------------------------------------------------------------------*/
+/*   BOTÃO DE SHOW/HIDE TABELA CORDAS NÃO ORIENTADO                       */
+/*------------------------------------------------------------------------*/
+window.TabCordasU = function (){
+    if($('#TabCordasU').val() == 0){
+        $('#cordas').css('display', 'block');
+        $('#TabCordasU').val('1');
+        $('#TabCordasU').html('Esconder Tabela');
+    }else{
+        $('#cordas').css('display', 'none');
+        $('#TabCordasU').val('0');
+        $('#TabCordasU').html('Mostrar Tabela');
     }
 }
 
