@@ -76,6 +76,16 @@
                     <a class="collapse-item" data-toggle="modal" data-target="#DerivarDistancias">Derivar Distância</a>
                 </div>
             </div>
+            <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fas fa-cookie-bite"></i>
+                <span>Grafos especiais</span>
+                </a>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" onClick="konigsberg(); $('#collapseThree').removeClass('show');">Grafo de Königsberg</a>
+                        <a class="collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</a>
+                    </div>
+                </div>
         </li>
 
         <!-- Divider -->

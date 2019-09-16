@@ -3707,3 +3707,82 @@ window.NormalizeAlgorithm = function (){
     $('#algL10').removeAttr('style');
 }
 
+/*------------------------------------------------------------------------*/
+/*   GERAÇÃO DE GRAFO DE KONIGSBERG                                       */
+/*------------------------------------------------------------------------*/
+window.konigsberg = () => {
+    $.fn.confirm.defaults = {
+        title: 'Apagar o Grafo atual e Criar Grafo de Königsberg?',
+        message: 'Deseja apagar o grafo atual para desenhar um grafo de Königsberg?',
+        confirm: 'Sim',
+        dismiss: 'Não'
+    };
+    $('#confirm').confirm().on({
+        confirm: function () {
+            Limpar();
+            for(let i=1; i<=4; i++){
+                nodes.add([{id: i}]);
+            }
+            edges.add([
+                {from:1, to:2},
+                {from:2, to:3},
+                {from:3, to:2},
+                {from:2, to:1},
+                {from:1, to:4},
+                {from:2, to:4},
+                {from:3, to:4}
+            ]);
+            network.fit(); 
+            network.stabilize();
+        },
+        dismiss: function () {
+        }
+    })
+};
+
+/*------------------------------------------------------------------------*/
+/*   GERAÇÃO DE GRAFO DE HEAWOOD                                          */
+/*------------------------------------------------------------------------*/
+window.heawood = () => {
+    $.fn.confirm.defaults = {
+        title: 'Apagar o Grafo atual e Criar Grafo de Heawood?',
+        message: 'Deseja apagar o grafo atual para desenhar um grafo de Heawood?',
+        confirm: 'Sim',
+        dismiss: 'Não'
+    };
+    $('#confirm').confirm().on({
+        confirm: function () {
+            Limpar();
+            for(let i=1; i<=14; i++){
+                nodes.add([{id: i}]);
+            }
+            edges.add([
+                {from:1, to:2},
+                {from:2, to:3},
+                {from:3, to:4},
+                {from:4, to:5},
+                {from:5, to:6},
+                {from:6, to:7},
+                {from:7, to:8},
+                {from:8, to:9},
+                {from:9, to:10},
+                {from:10, to:11},
+                {from: 11, to:12},
+                {from:12, to:13},
+                {from: 13, to:14},
+                {from:14, to:1},
+                {from:1, to:6},
+                {from:2, to:11},
+                {from:3, to:8},
+                {from:4, to:13},
+                {from:5, to:10},
+                {from:7, to:12},
+                {from:9, to:14}
+            ]);
+            network.fit(); 
+            network.stabilize();
+        },
+        dismiss: function () {
+        }
+    })
+};
