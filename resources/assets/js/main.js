@@ -714,7 +714,7 @@ window.habilitarPropriedades = function(){
         $('#propriedades2').append("<div id='grausOrientados' class='table-responsive' style='display: none;'></div>");
         $('#grausOrientados').append(grado[0]);
         $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Adjacência do grafo.\">(?)</button> <b>Matriz de Adjacência M = [m<sub>i,j</sub>]:</b>");
-        $('#propriedades3').append("<button class='btn btn-sm' id='TabMA' onClick='TabMAO()' value='0'>Mostrar Tabela</button></br>")
+        $('#propriedades3').append("<button class='btn btn-sm' id='TabMA' onClick='TabMAO()' value='0'>Mostrar Tabela</button>")
         $('#propriedades3').append('<div id="MatrizAdjacenciaOrientado" class="table-responsive" style="display:none;"></div>');
         $('#MatrizAdjacenciaOrientado').append(MatrizAdjacenciaOrientado());
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Incidência do grafo.\">(?)</button> <b>Matriz de Incidência B = [b<sub>i,j</sub>]:</b>");
@@ -724,9 +724,9 @@ window.habilitarPropriedades = function(){
     }
     let wiener = Wiener();
     if(wiener != Infinity)
-        $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + "</br>");
+        $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener);
     else
-    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + 'Infinito' + "</br>");
+    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + 'Infinito');
     
     if(!ordenado){
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo. Outros ciclos se formam por derivações dos mostrados abaixo.\">(?)</button> <b>Ciclos:</b>");
@@ -739,7 +739,7 @@ window.habilitarPropriedades = function(){
         $('#propriedades2').append(cordas[0]);
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
         let cintura = Cinturas(uc[1]);
-        $('#propriedades2').append(cintura+'<br>');
+        $('#propriedades2').append(cintura);
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
         let circunferencia = Circunferencia(uc[1]);
         $('#propriedades2').append(circunferencia);
@@ -754,13 +754,19 @@ window.habilitarPropriedades = function(){
         $('#propriedades2').append(cordas[0]);
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
         let cintura = Cinturas(sc[1]);
-        $('#propriedades2').append(cintura+"<br>");
+        $('#propriedades2').append(cintura);
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
         let circunferencia = Circunferencia(sc[1]);
         $('#propriedades2').append(circunferencia);
     }
+    let excAndRad = ExcentricidadeERaio();
+    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior distância entre dois vértices v e w, para todo w &isin; V(G).\">(?)</button> <b>Excentricidades: </b> ");
+    $('#propriedades3').append("<button class='btn btn-sm' id='TabE' onClick='TabE()' value='0'>Mostrar Tabela</button>");
+    $('#propriedades3').append(excAndRad[0]);
+    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor valor dentre todas as excentricidades.\">(?)</button> <b>Raio: </b> "+excAndRad[2]);
+    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior valor dentre todas as excentricidades.\">(?)</button> <b>Diâmetro: </b> "+excAndRad[3]);
+    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Subconjunto dos vértices de excentricidade mínima.\">(?)</button> <b>Centro: </b> "+excAndRad[4]);
     $('#minigrafo').html(GrafoCompleto);
-    
     $('#mynetwork').removeClass('mynetwork');
     $('#mynetwork').addClass('propriedades');
     $('#mynetwork').removeAttr('style');
@@ -1454,9 +1460,8 @@ window.TabMISH = function (){
 }
 
 /*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE MATRIZ DE INCIDÊNCIA      PARA GRAFOS ORIENTADOS     */
+/*   BOTÃO DE SHOW/HIDE MATRIZ DE INCIDÊNCIA      PARA GRAFOS ORIENTADOS  */
 /*------------------------------------------------------------------------*/
-
 
 window.TabMIO = function (){
     if($('#TabMI').val() == 0){
@@ -1467,6 +1472,22 @@ window.TabMIO = function (){
         $('#MatrizIncidenciaOrientado').css('display', 'none');
         $('#TabMI').val('0');
         $('#TabMI').html('Mostrar Tabela');
+    }
+}
+
+/*------------------------------------------------------------------------*/
+/*   BOTÃO DE SHOW/HIDE TABELA DE EXCENTRICIDADES                         */
+/*------------------------------------------------------------------------*/
+
+window.TabE = function (){
+    if($('#TabE').val() == 0){
+        $('#excentricidades').css('display', 'block');
+        $('#TabE').val('1');
+        $('#TabE').html('Esconder Tabela');
+    }else{
+        $('#excentricidades').css('display', 'none');
+        $('#TabE').val('0');
+        $('#TabE').html('Mostrar Tabela');
     }
 }
 
@@ -2010,6 +2031,186 @@ window.Circunferencia = (cycles) => {
         }
     }
     return cintura;
+}
+
+/*------------------------------------------------------------------------*/
+/*                    EXCENTRICIDADE E RAIO DO GRAFO                      */
+/*              https://gist.github.com/jpillora/7382441                  */
+/*------------------------------------------------------------------------*/
+
+window.djikstra = () => {
+    //dijkstra solve graph starting at s
+    function solve(graph, s) {
+        var solutions = {};
+        solutions[s] = [];
+        solutions[s].dist = 0;
+        
+        while(true) {
+        var parent = null;
+        var nearest = null;
+        var dist = Infinity;
+        
+        //for each existing solution
+        for(var n in solutions) {
+            if(!solutions[n])
+            continue
+            var ndist = solutions[n].dist;
+            var adj = graph[n];
+            //for each of its adjacent nodes...
+            for(var a in adj) {
+            //without a solution already...
+            if(solutions[a])
+                continue;
+            //choose nearest node with lowest *total* cost
+            var d = adj[a] + ndist;
+            if(d < dist) {
+                //reference parent
+                parent = solutions[n];
+                nearest = a;
+                dist = d;
+            }
+            }
+        }
+        
+        //no more solutions
+        if(dist === Infinity) {
+            break;
+        }
+        
+        //extend parent's solution path
+        solutions[nearest] = parent.concat(nearest);
+        //extend parent's cost
+        solutions[nearest].dist = dist;
+        }
+        
+        return solutions;
+    }
+
+    function retornaPeso(from, to){
+        if(!ordenado){
+            for(let edge in edges._data){
+                if((edges._data[edge].from == from &&
+                    edges._data[edge].to == to) || 
+                    (edges._data[edge].from == to &&
+                        edges._data[edge].to == from)){
+                        return parseFloat(edges._data[edge].label);
+                    }
+            }
+        }else{
+            for(let edge in edges._data){
+                if((edges._data[edge].from == from &&
+                    edges._data[edge].to == to)){
+                        return parseFloat(edges._data[edge].label);
+                    }
+            }
+        }
+        
+    }
+
+    //create graph
+    var graph = {};
+    var layout = {}
+    /* console.log(layout); */
+    for(let node in nodes._data){
+        layout[nodes._data[node].id] = new Array();
+    }
+    if(ordenado){
+        for(let edge in edges._data)    {
+            layout[edges._data[edge].from].push(edges._data[edge].to);
+        }
+    }else{
+        for(let edge in edges._data)    {
+            layout[edges._data[edge].from].push(edges._data[edge].to);
+            layout[edges._data[edge].to].push(edges._data[edge].from);
+        } 
+    }
+    if(!ponderado){
+        for(var id in layout) {
+            if(!graph[id])
+            graph[id] = {};
+            layout[id].forEach(function(aid) {
+                graph[id][aid] = 1;
+                if(!graph[aid])
+                    graph[aid] = {};
+                graph[aid][id] = 1;
+            });
+        }
+    }else{
+        for(var id in layout) {
+            if(!graph[id])
+            graph[id] = {};
+            layout[id].forEach(function(aid) {
+                let peso = retornaPeso(id, aid);
+                graph[id][aid] = peso;
+                if(!graph[aid])
+                    graph[aid] = {};
+                graph[aid][id] = peso;
+            });
+        }
+    }
+    let allSolutions = [];
+    for(let node in nodes._data){
+        //choose start node
+        var start = nodes._data[node].id;
+        //get all solutions
+        var solutions = solve(graph, start);
+        
+        /* console.log("From '"+start+"' to"); */
+        //display solutions
+        /* for(var s in solutions) {
+            if(!solutions[s]) continue;
+            console.log(" -> " + s + ": [" + solutions[s].join(", ") + "]   (dist:" + solutions[s].dist + ")");
+        } */
+
+        allSolutions.push(solutions);
+    }
+    return allSolutions; 
+}
+
+window.ExcentricidadeERaio = () => {
+    let solutions = djikstra();
+    let excentricidade = [], raio, diametro, palavra="", centro = [], palavra2="";
+    
+    for(let list in solutions){
+        for(let obj in solutions[list]){
+            if(obj == 1){
+                excentricidade[list] = solutions[list][obj].dist;
+            }else if(solutions[list][obj].dist > excentricidade[list]){
+                excentricidade[list] = solutions[list][obj].dist;
+            }
+        }
+    }
+    palavra += "<div class='table-responsive' id='excentricidades' style='display: none'>";
+    palavra += "<table class='table'>";
+    palavra += "<thead>";
+    palavra += "<tr>";
+    for(let node in nodes._data){
+        palavra += "<td>"+nodes._data[node].label+"</td>";
+    }
+    palavra += "</tr>";
+    palavra += "</thead>";
+    palavra += "<tbody>";
+    palavra += "<tr>";
+    raio = Math.min( ...excentricidade );
+    diametro = Math.max( ...excentricidade );
+    for(let item in excentricidade){
+        if(excentricidade[item] == raio){
+            centro.push(parseInt(item)+1);
+        }
+        palavra += "<td>"+excentricidade[item]+"</td>";
+    }
+    palavra += "</tr>"
+    palavra += "</tbody>";
+    palavra += "</table>"
+    palavra += "</div>";
+    for(let i in centro){
+        if(i==centro.length-1){
+            palavra2 += nodes._data[centro[i]].label;
+        }else{
+            palavra2 += nodes._data[centro[i]].label + ', ';
+        }
+    }
+    return[palavra, excentricidade, raio, diametro, palavra2, centro];
 }
 
 /*------------------------------------------------------------------------*/
@@ -2969,7 +3170,7 @@ window.DerivaDistancia = function (node_inicial, node_final){
                     target: adjacentes[k]
                 });
                 let escolha;
-                for(e in edges._data){
+                for(let e in edges._data){
                     if(edges._data[e].from == adjacentes[k] && edges._data[e].to == v || 
                         edges._data[e].from == v && edges._data[e].to == adjacentes[k]){
                             escolha = parseInt(edges._data[e].label);
@@ -3187,7 +3388,7 @@ window.DerivaDistancia = function (node_inicial, node_final){
                     target: adjacentes[k]
                 });
                 let escolha;
-                for(e in edges._data){
+                for(let e in edges._data){
                     if(edges._data[e].to == adjacentes[k] && edges._data[e].from == v ){
                         escolha = parseInt(edges._data[e].label);
                     }
