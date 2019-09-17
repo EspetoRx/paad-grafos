@@ -191,7 +191,7 @@
             });  
             if(mobilecheck){
               document.documentElement.requestFullscreen();
-            s}
+            }
     </script>
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
         <div class="modal-dialog modal-sm">
