@@ -643,7 +643,7 @@ window.habilitarPropriedades = function(){
         "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantas arestas ou arcos existem entre cada par ordenado de vértices.\">(?)</button>"+
         "<b> Multiplicidade de arestas:</b> "+
         "<button id='btnMultAresta' value=0 class='btn btn-sm' onclick='TabelaMultiplicidadeArestas()'>Mostrar Tabela</button> "+
-        "<div id='multiplicidadeTable' style='display: none; padding-top: 5px; margin-bottom: 5px;'>"+multiplicidadeGeral()+
+        "<div id='multiplicidadeTable' style='display: none; padding-top: 5px; margin-bottom: 5px;' calss='table-responsive'>"+multiplicidadeGeral()+
         "</div></div>"+
         "<div class='col-md-6' id='propriedades2'>"+
         "</div>"+
@@ -668,10 +668,14 @@ window.habilitarPropriedades = function(){
     }else{
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Não ponderado<br>");
     }
-
-
-    if ((tipo == "Simples" || tipo == "Pseudografo" || tipo == "Multigrafo") && !ordenado){
+    var grado;
+    if(!ordenado){
         var grado = grausSimples();
+    }else{
+        var grado = grausOrientados();
+    }
+    if ((tipo == "Simples" || tipo == "Pseudografo" || tipo == "Multigrafo") && !ordenado){
+        
         $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quais vértices são vizinhos de quais vértices.\">(?)</button> <b>Vizinhança <i>&tau;</i>(<i>v</i>): </b> ");
         $('#propriedades3').append("<button id='TabViz' class='btn btn-sm' onClick='TabVizSH()'>Mostrar Tabela</button><br>")
         $('#propriedades3').append("<div id='vizinhancasimples' style='display:none; padding-top: 5px; margin-bottom: 5px;'></div>");
@@ -737,10 +741,10 @@ window.habilitarPropriedades = function(){
         $('#propriedades2').append("<button class='btn btn-sm' id='TabCordasU' onClick='TabCordasU()' value='0'>Mostrar Tabela</button></br>");
         let cordas = UndirectedCordas(uc[1]);
         $('#propriedades2').append(cordas[0]);
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
         let cintura = Cinturas(uc[1]);
         $('#propriedades2').append(cintura);
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
         let circunferencia = Circunferencia(uc[1]);
         $('#propriedades2').append(circunferencia);
     }else{
@@ -752,13 +756,14 @@ window.habilitarPropriedades = function(){
         $('#propriedades2').append("<button class='btn btn-sm' id='TabCordasU' onClick='TabCordasU()' value='0'>Mostrar Tabela</button></br>");
         let cordas = UndirectedCordas(sc[1]);
         $('#propriedades2').append(cordas[0]);
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
         let cintura = Cinturas(sc[1]);
         $('#propriedades2').append(cintura);
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
         let circunferencia = Circunferencia(sc[1]);
         $('#propriedades2').append(circunferencia);
     }
+
     let excAndRad = ExcentricidadeERaio();
     $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior distância entre dois vértices v e w, para todo w &isin; V(G).\">(?)</button> <b>Excentricidades: </b> ");
     $('#propriedades3').append("<button class='btn btn-sm' id='TabE' onClick='TabE()' value='0'>Mostrar Tabela</button>");
@@ -766,15 +771,29 @@ window.habilitarPropriedades = function(){
     $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor valor dentre todas as excentricidades.\">(?)</button> <b>Raio: </b> "+excAndRad[2]);
     $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior valor dentre todas as excentricidades.\">(?)</button> <b>Diâmetro: </b> "+excAndRad[3]);
     $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Subconjunto dos vértices de excentricidade mínima.\">(?)</button> <b>Centro: </b> "+excAndRad[4]);
+    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Razão entre o número de arestas e vértices.\">(?)</button> <b>Densidade &epsilon;(G): </b> "+(edges.length/nodes.length));
+    let par;
+    if(!ordenado){
+        par = EhPar(grado[3]);
+        $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se os graus de todos os vértices do grafo forem pares, o grafo é par. Não existe grafo ímpar.\">(?)</button> <b>Grafo par: </b> ");
+        (par)?$('#propriedades3').append(" Sim"):$('#propriedades3').append(" Não");
+    }else{
+        par = EhPar(grado[5]);
+        $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se os graus de todos os vértices do grafo forem pares, o grafo é par. Não existe grafo ímpar.\">(?)</button> <b>Grafo par: </b> ");
+        (par)?$('#propriedades3').append(" Sim"):$('#propriedades3').append(" Não");
+    }
+    let conexo = EhConexo(excAndRad[6]);
+    $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Um grafo é conexo se para todo par de vértices i e j existe pelo menos um camnho entre i e j.\">(?)</button> <b>Conexo: </b> ");
+    (conexo)?$('#propriedades1').append(" Sim"):$('#propriedades1').append(" Não");
     $('#minigrafo').html(GrafoCompleto);
     $('#mynetwork').removeClass('mynetwork');
     $('#mynetwork').addClass('propriedades');
     $('#mynetwork').removeAttr('style');
+
     if($('#collapseTwo').hasClass('show')){
         $('#collapseTwo').removeClass('show');
     }
 
-    
     $(".show-tt").on('click', function(){
         $(this).tooltip("show");
     });
@@ -1115,7 +1134,7 @@ window.grausSimples = function (){
     string += "</tr>"
     string += "</tbody>";
     string += "</table>";
-    return [string, maiorgrau, menorgrau];
+    return [string, maiorgrau, menorgrau, graus];
 }
 
 window.grausOrientados = function (){
@@ -1181,7 +1200,7 @@ window.grausOrientados = function (){
     string += "</tr>";
     string += "</tbody>";
     string += "</table>";
-    return [string, maiorgrauentrada, menorgrauentrada, maiorgrausaida, menorgrausaida];
+    return [string, maiorgrauentrada, menorgrauentrada, maiorgrausaida, menorgrausaida, graus];
 }
 
 /*-----------------------------------------------------------*/
@@ -1569,7 +1588,7 @@ window.GeraGrafoCiclo = () => {
 window.GeraGrafoCompleto = () => {
     $.fn.confirm.defaults = {
         title: 'Apagar o Grafo atual e Criar Grafo Completo?',
-        message: 'Deseja apagar o grafo atual para desenhar um grafo completo? Qual o tamanho de K?<br><input type="number" min=3 id="TamanhoCompleto" class="form-control mt-2" value="3" />',
+        message: 'Deseja apagar o grafo atual para desenhar um grafo completo? Qual o tamanho de K?<br><input type="number" min=1 id="TamanhoCompleto" class="form-control mt-2" value="1" />',
         confirm: 'Sim',
         dismiss: 'Não'
     };
@@ -1934,7 +1953,6 @@ window.UndirectedCordas = (cycles) => {
         let tamanho = cycles[cy].length;
         if(tamanho >= 4){
             for(let i in cycles[cy]){
-                //console.log(cycles[cy], cycles[cy][i], cycles[cy][(parseInt(i)+2)%tamanho]);
                 for(let edge in edges._data){
                     if(edges._data[edge].from == cycles[cy][i] &&
                         edges._data[edge].to == cycles[cy][(parseInt(i)+2)%tamanho]){
@@ -2002,7 +2020,7 @@ window.Cinturas = (cycles) => {
             }
         }
     }
-    return cintura;
+    return cintura+"<br>";
 }
 /*------------------------------------------------------------------------*/
 /*        IDENTIFICANDO AS CIRCUNFERENCIAS DE UM GRAFO                    */
@@ -2110,7 +2128,6 @@ window.djikstra = () => {
     //create graph
     var graph = {};
     var layout = {}
-    /* console.log(layout); */
     for(let node in nodes._data){
         layout[nodes._data[node].id] = new Array();
     }
@@ -2150,18 +2167,8 @@ window.djikstra = () => {
     }
     let allSolutions = [];
     for(let node in nodes._data){
-        //choose start node
         var start = nodes._data[node].id;
-        //get all solutions
         var solutions = solve(graph, start);
-        
-        /* console.log("From '"+start+"' to"); */
-        //display solutions
-        /* for(var s in solutions) {
-            if(!solutions[s]) continue;
-            console.log(" -> " + s + ": [" + solutions[s].join(", ") + "]   (dist:" + solutions[s].dist + ")");
-        } */
-
         allSolutions.push(solutions);
     }
     return allSolutions; 
@@ -2210,7 +2217,51 @@ window.ExcentricidadeERaio = () => {
             palavra2 += nodes._data[centro[i]].label + ', ';
         }
     }
-    return[palavra, excentricidade, raio, diametro, palavra2, centro];
+    return[palavra, excentricidade, raio, diametro, palavra2, centro, solutions];
+}
+/* ----------------------------------------------------------------------- */
+/*                     GRAFO PAR                                           */
+/* ----------------------------------------------------------------------- */
+
+window.EhPar = (graus) => {
+    if(!ordenado){
+        for(let grado in graus){
+            if(graus[grado]%2!=0){
+                return false;
+            }
+        }
+    }else{
+        for(let grado in graus){
+            if((graus[grado][0] + graus[grado][1])%2!=0){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+/* ----------------------------------------------------------------------- */
+/*                CONEXIDADE DO GRAFO                                      */
+/* ----------------------------------------------------------------------- */
+
+window.EhConexo = (solutions) =>{
+    for(let list in solutions){
+        if(Object.keys(solutions[list]).length < nodes.length)
+            return false;
+    }
+    return true;
+}
+
+/* ----------------------------------------------------------------------- */
+/*                COMPONENETES CONEXAS                                     */
+/* ----------------------------------------------------------------------- */
+window.ComponentesConexas = (solutions) => {
+    let componentes = new Set();
+    for(let list in solutions){
+        componentes.add(Object.keys(solutions[list]).length);
+    }
+    let value = componentes.size;
+    return value;
 }
 
 /*------------------------------------------------------------------------*/
@@ -3930,11 +3981,16 @@ window.konigsberg = () => {
                 {from:3, to:2},
                 {from:2, to:1},
                 {from:1, to:4},
-                {from:2, to:4},
+                {from:4, to:2},
                 {from:3, to:4}
             ]);
+            id = 5;
+            edgeid = 8;
             network.fit(); 
             network.stabilize();
+            if(Propriedades){
+                habilitarPropriedades();
+            }
         },
         dismiss: function () {
         }
@@ -3980,8 +4036,13 @@ window.heawood = () => {
                 {from:7, to:12},
                 {from:9, to:14}
             ]);
+            id = 15;
+            edgeid = 22;
             network.fit(); 
             network.stabilize();
+            if(Propriedades){
+                habilitarPropriedades();
+            }
         },
         dismiss: function () {
         }
