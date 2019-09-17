@@ -12,7 +12,9 @@
     <link rel="manifest" href="{{asset('manifest.json')}}">
     <!-- FAVICON -->
     <link rel="shortcut icon" href="{{asset("images/paad_logo.ico")}}" type="image/x-icon"/>
-
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    
     @csrf
 
     <title>PAAD - Grafos</title>
