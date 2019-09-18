@@ -183,13 +183,10 @@
                         }
                     });
             });
-            if ('serviceWorker' in navigator) {
-                console.log("Will the service worker register?");    
+            if ('serviceWorker' in navigator) { 
                 navigator.serviceWorker.register('service-worker.js')
-                    .then(function(reg){        
-                        console.log("Yes, it did.");     
-                    }).catch(function(err){        
-                        console.log("No it didn't. This happened:", err)    
+                    .then(function(reg){           
+                    }).catch(function(err){         
                     });
             }
         });
