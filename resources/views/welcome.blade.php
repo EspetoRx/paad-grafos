@@ -84,8 +84,8 @@
                 </a>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" onClick="konigsberg(); $('#collapseThree').removeClass('show');">Grafo de Königsberg</a>
-                        <a class="collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</a>
+                        <a href="#" class="collapse-item" onClick="konigsberg(); $('#collapseThree').removeClass('show');">Grafo de Königsberg</a>
+                        <a href="#" class="collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</a>
                     </div>
                 </div>
         </li>
@@ -183,13 +183,8 @@
                         }
                     });
             });
-            if ('serviceWorker' in navigator) { 
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(function(reg){           
-                    }).catch(function(err){         
-                    });
-            }
         });
+        
     </script>
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
         <div class="modal-dialog modal-sm">
