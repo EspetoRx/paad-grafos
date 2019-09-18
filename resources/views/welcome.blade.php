@@ -84,8 +84,8 @@
                 </a>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a href="#" class="collapse-item" onClick="konigsberg(); $('#collapseThree').removeClass('show');">Grafo de Königsberg</a>
-                        <a href="#" class="collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</a>
+                        <button class="btn collapse-item" onClick="konigsberg(); $('#collapseThree').removeClass('show');">Grafo de Königsberg</button>
+                        <button class=" btn collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</button>
                     </div>
                 </div>
         </li>
