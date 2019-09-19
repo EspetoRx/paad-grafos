@@ -3,7 +3,7 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="paad grafos graphs grafo graph teory apoio docencia" name="keywords">
     <meta content="Projeto de Aplicação de Apoio à Docência - Teoria de grafos" name="description">
@@ -12,9 +12,19 @@
     <link rel="manifest" href="{{asset('manifest.json')}}">
     <!-- FAVICON -->
     <link rel="shortcut icon" href="{{asset("images/paad_logo.ico")}}" type="image/x-icon"/>
+    <meta name="theme-color" content="white">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="PAAD Grafos">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+
+    <link rel="apple-touch-icon" sizes="152x152" href="{{asset('images/icons/152.png')}}" type="image/png">
+    <link rel="apple-touch-icon" sizes="167x167" href="{{asset('images/icons/167.png')}}" type="image/png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{asset('images/icons/180.png')}}" type="image/png">
     
+    <meta name="msapplication-TileImage" content="{{asset('images/icons/144.png')}}">
+    <meta name="msapplication-TileColor" content="white">
+
     @csrf
 
     <title>PAAD - Grafos</title>
@@ -88,10 +98,10 @@
                     <button class=" btn collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</button>
                 </div>
             </div>
-            {{-- <a class="nav-link add-button">
+            <a class="nav-link" style="color: white">
             <i class="fas fa-home"></i>
-            <span>Adicionar à Tela Inicial</span>
-            </a> --}}
+            <span>Instalar</span>
+            </a>
         </li>
 
         <!-- Divider -->
@@ -154,7 +164,7 @@
         <!-- End of Content Wrapper -->
 
     </div>
-    
+
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -438,6 +448,24 @@
                         }
                     });
             });
+        });
+        if ('serviceWorker' in navigator) {
+            console.log("Will the service worker register?");
+            navigator.serviceWorker.register('service-worker.js')
+            .then(function(reg){
+                console.log("Yes, it did.");
+            }).catch(function(err) {
+                console.log("No it didn't. This happened:", err)
+            });
+        }
+        window.addEventListener("beforeinstallprompt", ev => { 
+            // Stop Chrome from asking _now_
+            ev.preventDefault();
+            console.log("passei por aqui...");
+            // Create your custom "add to home screen" button here if needed.
+            // Keep in mind that this event may be called multiple times, 
+            // so avoid creating multiple buttons!
+            $('#install').onclick = () => ev.prompt();
         });
     </script>
   </body>
