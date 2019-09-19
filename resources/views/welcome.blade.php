@@ -458,15 +458,6 @@
                 console.log("No it didn't. This happened:", err)
             });
         }
-        window.addEventListener("beforeinstallprompt", ev => { 
-            // Stop Chrome from asking _now_
-            ev.preventDefault();
-            console.log("passei por aqui...");
-            // Create your custom "add to home screen" button here if needed.
-            // Keep in mind that this event may be called multiple times, 
-            // so avoid creating multiple buttons!
-            $('#install').onclick = () => ev.prompt();
-        });
     </script>
   </body>
 </html>
