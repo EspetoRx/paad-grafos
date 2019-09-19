@@ -189,7 +189,8 @@
             });
             setTimeout(function(){
                 // This hides the address bar:
-                window.scrollTo(0, 1);
+                var scrollingElement = (document.scrollingElement || document.body);
+                scrollingElement.scrollTop = scrollingElement.scrollHeight;
             }, 0);
         });
         if ('serviceWorker' in navigator) {
