@@ -98,10 +98,10 @@
                     <button class=" btn collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</button>
                 </div>
             </div>
-            <a class="nav-link" style="color: white">
+            {{-- <a class="nav-link" style="color: white">
             <i class="fas fa-home"></i>
             <span>Instalar</span>
-            </a>
+            </a> --}}
         </li>
 
         <!-- Divider -->
