@@ -88,10 +88,10 @@
                     <button class=" btn collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</button>
                 </div>
             </div>
-            <a class="nav-link add-button">
+            {{-- <a class="nav-link add-button">
             <i class="fas fa-home"></i>
             <span>Adicionar à Tela Inicial</span>
-            </a>
+            </a> --}}
         </li>
 
         <!-- Divider -->
@@ -187,17 +187,17 @@
                         }
                     });
             });
+            setTimeout(function(){
+                // This hides the address bar:
+                window.scrollTo(0, 1);
+            }, 0);
         });
         if ('serviceWorker' in navigator) {
-            console.log("Will the service worker register?");
             navigator.serviceWorker.register('service-worker.js')
             .then(function(reg){
-                console.log("Yes, it did.");
             }).catch(function(err) {
-                console.log("No it didn't. This happened: ", err)
             });
         }
-        window.scrollTo(0,1);
     </script>
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
         <div class="modal-dialog modal-sm">
