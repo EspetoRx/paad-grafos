@@ -1,9 +1,9 @@
 {
     "short_name": "PAAD Grafos",
-    "name": "Projeto de Aplicação de Apoio a Docência em Teoria dos Grafos",
+    "name": "Projeto de Aplicação de Apoio a Docência\n em Teoria dos Grafos",
     "background_color" : "white",
     "theme_color" : "white",
-    "display": "fullscreen",
+    "display": "standalone",
     "icons": [
       {
         "src": "images/icons/48.png",

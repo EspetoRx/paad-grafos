@@ -79,15 +79,19 @@
                 </div>
             </div>
             <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-cookie-bite"></i>
-                <span>Grafos especiais</span>
-                </a>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <button class="btn collapse-item" onClick="konigsberg(); $('#collapseThree').removeClass('show');">Grafo de Königsberg</button>
-                        <button class=" btn collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</button>
-                    </div>
+            <i class="fas fa-cookie-bite"></i>
+            <span>Grafos especiais</span>
+            </a>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <button class="btn collapse-item" onClick="konigsberg(); $('#collapseThree').removeClass('show');">Grafo de Königsberg</button>
+                    <button class=" btn collapse-item" onClick="heawood(); $('#collapseThree').removeClass('show');">Grafo de Heawood</button>
                 </div>
+            </div>
+            <a class="nav-link add-button">
+            <i class="fas fa-home"></i>
+            <span>Adicionar à Tela Inicial</span>
+            </a>
         </li>
 
         <!-- Divider -->
@@ -184,7 +188,16 @@
                     });
             });
         });
-        
+        if ('serviceWorker' in navigator) {
+            console.log("Will the service worker register?");
+            navigator.serviceWorker.register('service-worker.js')
+            .then(function(reg){
+                console.log("Yes, it did.");
+            }).catch(function(err) {
+                console.log("No it didn't. This happened: ", err)
+            });
+        }
+        window.scrollTo(0,1);
     </script>
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
         <div class="modal-dialog modal-sm">
