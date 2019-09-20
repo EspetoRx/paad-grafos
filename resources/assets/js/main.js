@@ -88,6 +88,12 @@ var options = {
         enabled: false,
         addEdge: function (data, callback) {
             if (data.from == data.to) {
+                $.fn.confirm.defaults = {
+                    title: 'Confirmação de laço',
+                    message: 'Deseja conectar o vértice a ele mesmo?',
+                    confirm: 'Sim',
+                    dismiss: 'Não'
+                };
                 $('#confirm').confirm().on({
                     confirm: function () {
                         if(ponderado) data.label = '1';
@@ -142,6 +148,29 @@ var options = {
         font: {
             color: 'white',
         }
+    },
+    physics:{
+        enabled: true,
+        forceAtlas2Based: {
+          gravitationalConstant: -50,
+          centralGravity: 0.01,
+          springConstant: 0.02,
+          springLength: 100,
+          damping: 0.4,
+          avoidOverlap: 0
+        },
+        maxVelocity: 50,
+        minVelocity: 0.1,
+        solver: 'forceAtlas2Based',
+        stabilization: {
+          enabled: true,
+          iterations: 1000,
+          updateInterval: 100,
+          onlyDynamicEdges: false,
+          fit: true
+        },
+        timestep: 0.5,
+        adaptiveTimestep: true
     }
 };
 
@@ -624,6 +653,8 @@ window.Limpar = function(){
 /*PROPRIEDADES DO GRAFO*/
 
 window.habilitarPropriedades = function(){
+    $('#preloader').show();
+    setTimeout(function() {
     if(GraphContext){
         disableGraphContext();    
     }
@@ -640,7 +671,7 @@ window.habilitarPropriedades = function(){
 
     $('#conteudo').html("<div class=\"row\">"+
         "<div class=\"col-md-6\" id=\"minigrafo\"></div>"+
-        "<div class=\"col-md-6 mt-1\" id=\"propriedades1\">"+
+        "<div class=\"col-md-6 mt-2\" id=\"propriedades1\">"+
         "</div>"+
         "<div class='col-md-6' id='propriedades2'>"+
         "</div>"+
@@ -806,6 +837,8 @@ window.habilitarPropriedades = function(){
     $(".show-tt").on('mouseout', function(){
         $(this).tooltip("hide");
     });
+    $('#preloader').hide();
+    }, 0);
 }
 
 window.desabilitarPropriedades = function(){
@@ -1393,7 +1426,7 @@ window.GeraGrafoTrivial = () => {
 window.GeraGrafoCiclo = () => {
     $.fn.confirm.defaults = {
         title: 'Apagar o Grafo atual e Criar Grafo Ciclo?',
-        message: 'Deseja apagar o grafo atual para desenhar um grafo ciclo? Qual o tamanho do ciclo?<br><input type="number" min=3 id="TamanhoCiclo" class="form-control mt-2" value="3" />',
+        message: 'Deseja apagar o grafo atual para desenhar um grafo ciclo? Qual o tamanho do ciclo?<br><input type="number" min=1 id="TamanhoCiclo" class="form-control mt-2" value="3" />',
         confirm: 'Sim',
         dismiss: 'Não'
     };
@@ -1412,7 +1445,8 @@ window.GeraGrafoCiclo = () => {
                 }
             }
             network.fit();
-            network.stabilize();
+            id = nodes.length;
+            edgeid = edges.length;
         },
         dismiss: function () {
         }
@@ -1446,8 +1480,9 @@ window.GeraGrafoCompleto = () => {
                 }
             }
             edges.update([{id: et-1, from:parseInt(et), to:1}]);
+            id = nodes.length;
+            edgeid = edges.length;
             network.fit();
-            network.stabilize();
         },
         dismiss: function () {
         }
@@ -2139,6 +2174,29 @@ window.grafoSubjacente = function  (){
                 color: 'white',
             }
         },
+        physics:{
+            enabled: true,
+            forceAtlas2Based: {
+              gravitationalConstant: -50,
+              centralGravity: 0.01,
+              springConstant: 0.08,
+              springLength: 100,
+              damping: 0.4,
+              avoidOverlap: 0
+            },
+            maxVelocity: 50,
+            minVelocity: 0.1,
+            solver: 'forceAtlas2Based',
+            stabilization: {
+              enabled: true,
+              iterations: 1000,
+              updateInterval: 100,
+              onlyDynamicEdges: false,
+              fit: true
+            },
+            timestep: 0.5,
+            adaptiveTimestep: true
+        }
     };
     var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
     return [newedges, newnodes];
@@ -2174,6 +2232,29 @@ $(document).on('shown.bs.modal','#SubgrafoEspalhamento', function () {
         },
         font:{
             color: 'white',
+        },
+        physics:{
+            enabled: true,
+            forceAtlas2Based: {
+              gravitationalConstant: -50,
+              centralGravity: 0.01,
+              springConstant: 0.08,
+              springLength: 100,
+              damping: 0.4,
+              avoidOverlap: 0
+            },
+            maxVelocity: 50,
+            minVelocity: 0.1,
+            solver: 'forceAtlas2Based',
+            stabilization: {
+              enabled: true,
+              iterations: 1000,
+              updateInterval: 100,
+              onlyDynamicEdges: false,
+              fit: true
+            },
+            timestep: 0.5,
+            adaptiveTimestep: true
         }
     },
     };
@@ -2215,6 +2296,30 @@ $(document).on('shown.bs.modal','#SubgrafoEspalhamento', function () {
                     color: 'white',
                 }
             },
+            physics:{
+                enabled: true,
+                forceAtlas2Based: {
+                  gravitationalConstant: -50,
+                  centralGravity: 0.01,
+                  springConstant: 0.08,
+                  springLength: 100,
+                  damping: 0.4,
+                  avoidOverlap: 0
+                },
+                maxVelocity: 50,
+                minVelocity: 0.1,
+                solver: 'forceAtlas2Based',
+                stabilization: {
+                  enabled: true,
+                  iterations: 1000,
+                  updateInterval: 100,
+                  onlyDynamicEdges: false,
+                  fit: true
+                },
+                timestep: 0.5,
+                adaptiveTimestep: true
+            }
+
         };
         var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
         for(var k in newedges._data){
@@ -2277,6 +2382,30 @@ window.subIndVertice = function (){
             font: {
                 color: 'white',
             },
+        },
+        physics:{
+            enabled: true,
+            forceAtlas2Based: {
+              gravitationalConstant: -50,
+              centralGravity: 0.01,
+              springConstant: 0.08,
+              springLength: 100,
+              damping: 0.4,
+              avoidOverlap: 0
+            },
+            
+            maxVelocity: 50,
+            minVelocity: 0.1,
+            solver: 'forceAtlas2Based',
+            stabilization: {
+              enabled: true,
+              iterations: 1000,
+              updateInterval: 100,
+              onlyDynamicEdges: false,
+              fit: true
+            },
+            timestep: 0.5,
+            adaptiveTimestep: true
         }
     };
     var newdata = {
@@ -2349,6 +2478,30 @@ window.subIndAresta = function (){
             font: {
                 color: 'white',
             }
+        },
+        physics:{
+            enabled: true,
+            forceAtlas2Based: {
+              gravitationalConstant: -50,
+              centralGravity: 0.01,
+              springConstant: 0.08,
+              springLength: 100,
+              damping: 0.4,
+              avoidOverlap: 0
+            },
+            
+            maxVelocity: 50,
+            minVelocity: 0.1,
+            solver: 'forceAtlas2Based',
+            stabilization: {
+              enabled: true,
+              iterations: 1000,
+              updateInterval: 100,
+              onlyDynamicEdges: false,
+              fit: true
+            },
+            timestep: 0.5,
+            adaptiveTimestep: true
         }
     };
     var newdata = {
@@ -3795,12 +3948,13 @@ window.konigsberg = () => {
             network.fit(); 
             network.stabilize();
             if(Propriedades){
-                habilitarPropriedades();
+                $('#proprerties').click();
             }
         },
         dismiss: function () {
         }
-    })
+    });
+    
 };
 
 /*------------------------------------------------------------------------*/
@@ -3847,10 +4001,11 @@ window.heawood = () => {
             network.fit(); 
             network.stabilize();
             if(Propriedades){
-                habilitarPropriedades();
+                $('#proprerties').click();
             }
         },
         dismiss: function () {
         }
-    })
+    });
+    
 };

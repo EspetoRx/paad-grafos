@@ -30,7 +30,33 @@
     <title>PAAD - Grafos</title>
   </head>
   <body>
-        
+    <!-- início do preloader -->
+    <div id="preloader">
+            
+        <div class="inner">
+            <!-- HTML DA ANIMAÇÃO MUITO LOUCA DO SEU PRELOADER! -->  
+            <div class="text-center">
+                <img src="images/paad_logo.png" class="logo_img">
+                <p>Carregando</p>
+            </div>
+            <br>
+            <div class="text-center">
+                <div class="spinner-border text-dark" role="status">
+                </div>
+                <div class="spinner-border text-warning" role="status">
+                </div>
+                <div class="spinner-border text-danger" role="status">
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="spinner-border text-secondary" role="status">
+                </div>
+                <div class="spinner-border text-success" role="status">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- fim do preloader --> 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -70,7 +96,7 @@
             <i class="far fa-circle"></i>
             <span>Grafo</span>
             </a>
-            <a class="nav-link" onClick="habilitarPropriedades()">
+            <a class="nav-link" onClick="habilitarPropriedades();" id="proprerties">
             <i class="fas fa-ellipsis-v"></i>
             <span>Propriedades</span>
             </a>
@@ -90,7 +116,7 @@
             </div>
             <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-cookie-bite"></i>
-            <span>Grafos especiais</span>
+            <span>Grafos notáveis</span>
             </a>
             <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
@@ -164,6 +190,7 @@
         <!-- End of Content Wrapper -->
 
     </div>
+
 
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirm-label" aria-hidden="true">
         <div class="modal-dialog modal-sm">

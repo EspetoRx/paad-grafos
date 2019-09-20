@@ -20,6 +20,7 @@
 @import "../css/sb-admin-2.min.css";
 @import "../css/vis.min.css";
 
+
 #GrafoSubjacenteModal,
 #SubgrafoEspalhamento,
 #SubgrafoInducaoVertice,
@@ -29,6 +30,9 @@
   overflow: scroll;  
 }
 
+.text-success{
+  color: #458B74;
+}
 
 .navbar-laravel {
   background-color: #fff;
@@ -229,3 +233,24 @@ clear: left;
   left: 100%;
   margin-top: -1px;
 }
+
+/* ini: Preloader */
+ 
+#preloader {
+  display: none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background-color: white; /* cor do background que vai ocupar o body */
+  z-index:999; /* z-index para jogar para frente e sobrepor tudo */
+}
+#preloader .inner {
+  position: absolute;
+  top: 50%; /* centralizar a parte interna do preload (onde fica a animação)*/
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  width: 50vw;
+}
+/* end: Preloader */
