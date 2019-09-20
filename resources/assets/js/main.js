@@ -3409,7 +3409,7 @@ window.GeraDerivaDistancia = function (inicial, final){
         edges: newedges
     };
     var newcontainer = document.getElementById('modal-distancia');
-    $('#modal-distancia').attr('style', 'height: 270px; background-color: #a0a0a0; padding: 0 !important; width: 100%;');
+    $('#modal-distancia').attr('style', 'height: 300px; background-color: #a0a0a0; padding: 0 !important; width: 100%;');
     var newnetwork = new vis.Network(newcontainer, newdata, newoptions);
     var palavra = '<div class="container" id="distancia_def">';
     palavra += '<div class="row mt-1">';
