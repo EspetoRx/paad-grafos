@@ -1,5 +1,5 @@
 let mix = require('laravel-mix');
-
+require('laravel-mix-purgecss');
 
 
 /*
@@ -22,4 +22,5 @@ mix.js('resources/assets/js/app.js', 'public/js')
             vis: "vis-network/dis/vis-network"
          }
       }
-   });
+   })
+   .purgeCss();;

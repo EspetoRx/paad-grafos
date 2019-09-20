@@ -629,156 +629,163 @@ window.habilitarPropriedades = function(){
     }
     $('#accordionSidebar').addClass("toggled");
     Propriedades = true;
+    Nomeie();
     var tipo = tipoDoGrafo();
+    let wiener = Wiener();
+    let excAndRad = ExcentricidadeERaio();
+    var grado;
     $('#conteudo').removeClass('mynetwork');
     $('#conteudo').addClass('mynetwork2');
     GrafoCompleto = $('#mynetwork');
+
     $('#conteudo').html("<div class=\"row\">"+
         "<div class=\"col-md-6\" id=\"minigrafo\"></div>"+
         "<div class=\"col-md-6\" id=\"propriedades1\">"+
-        "<p><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se simples: Não possui laços nem arestas múltiplas;\nSe multígrafo: não possui laços mas possui arestas múltiplas;\nSe pseudografo: possui laço e pode possuir arestas múltiplas.\">(?)</button> <b>Tipo do grafo:</b> "+tipo+"<br>"+
-        "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantidade de vértices.\">(?)</button> <b>Número de vértices (Ordem - |V|):</b> "+nodes.length+"<br>"+
-        "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantidade de arestas.\">(?)</button> <b>Número de arestas (Tamanho - |A|):</b> "+edges.length+"</br>"+
-        "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantas arestas ou arcos existem entre cada par ordenado de vértices.\">(?)</button>"+
-        "<b> Multiplicidade de arestas:</b> "+
-        "<button id='btnMultAresta' value=0 class='btn btn-sm' onclick='TabelaMultiplicidadeArestas()'>Mostrar Tabela</button> "+
-        "<div id='multiplicidadeTable' style='display: none; padding-top: 5px; margin-bottom: 5px;' calss='table-responsive'>"+multiplicidadeGeral()+
-        "</div></div>"+
+        "</div>"+
         "<div class='col-md-6' id='propriedades2'>"+
         "</div>"+
         "<div class='col-md-6' id='propriedades3'>"+
         "</div>"
         +"</div>");
-    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se o grafo é orientado (direcionado) ou não.\">(?)</button> <b>Orientação:</b> ");
+
+    $('#propriedades1').append(
+        "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se simples: Não possui laços nem arestas múltiplas;\nSe multígrafo: não possui laços mas possui arestas múltiplas;\nSe pseudografo: possui laço e pode possuir arestas múltiplas.\">(?)</button> <b>Tipo do grafo:</b> "+tipo+"<br>"+
+        "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantidade de vértices.\">(?)</button> <b>Número de vértices (Ordem - |V|):</b> "+nodes.length+"<br>"+
+        "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantidade de arestas.\">(?)</button> <b>Número de arestas (Tamanho - |A|):</b> "+edges.length+"</br>" +
+        "<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se o grafo é orientado (direcionado) ou não.\">(?)</button> <b>Orientação:</b> "
+    );
+    
     if(ordenado){
         if(tipo == "Simples"){
-            $('#propriedades2').append("Dígrafo simples<br>");
+            $('#propriedades1').append("Dígrafo simples<br>");
         }else if(tipo == "Pseudografo"){
-            $('#propriedades2').append("Pseudografo direcionado<br>");
+            $('#propriedades1').append("Pseudografo direcionado<br>");
         }else{
-            $('#propriedades2').append("Multidígrafo direcionado<br>");
+            $('#propriedades1').append("Multidígrafo direcionado<br>");
         }
-
-    }else{
-        $('#propriedades2').append("Não direcionado<br>");
-    }
-    if(ponderado){
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Ponderado<br>");
-    }else{
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Não ponderado<br>");
-    }
-    var grado;
-    if(!ordenado){
-        var grado = grausSimples();
-    }else{
         var grado = grausOrientados();
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Razão entre o número de arestas e vértices.\">(?)</button> <b>Densidade &epsilon;(G): </b> "+(edges.length/nodes.length)+'<br>');
+    }else{
+        $('#propriedades1').append("Não direcionado<br>");
+        var grado = grausSimples();
     }
+
+    if(ponderado){
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Ponderado<br>");
+    }else{
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Não ponderado<br>");
+    }
+
+    
+    if(wiener != Infinity)
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + '<br>');
+    else
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + 'Infinito <br>');
+
+    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Quantas arestas ou arcos existem entre cada par ordenado de vértices.\">(?)</button>"+
+    "<b> Multiplicidade de arestas:</b> "+
+    "<button id='btnMultAresta' value=0 class='btn btn-sm' onclick='Tab(\"btnMultAresta\", \"multiplicidadeTable\")'>Mostrar Tabela</button> <br>"+
+    "<div id='multiplicidadeTable' style='display: none; padding-top: 5px; margin-bottom: 5px;' calss='table-responsive'>"+multiplicidadeGeral()+
+    "</div>");
+    
     if ((tipo == "Simples" || tipo == "Pseudografo" || tipo == "Multigrafo") && !ordenado){
-        
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quais vértices são vizinhos de quais vértices.\">(?)</button> <b>Vizinhança <i>&tau;</i>(<i>v</i>): </b> ");
-        $('#propriedades3').append("<button id='TabViz' class='btn btn-sm' onClick='TabVizSH()'>Mostrar Tabela</button><br>")
-        $('#propriedades3').append("<div id='vizinhancasimples' style='display:none; padding-top: 5px; margin-bottom: 5px;'></div>");
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Maior Grau: </b>"+grado[1]+"<br/>");
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Menor Grau: </b>"+grado[2]+"<br/>");
+
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quais vértices são vizinhos de quais vértices.\">(?)</button> <b>Vizinhança <i>&tau;</i>(<i>v</i>): </b> ");
+        $('#propriedades2').append("<button id='TabViz' class='btn btn-sm' onClick='Tab(\"TabViz\", \"vizinhancasimples\")'>Mostrar Tabela</button><br>")
+        $('#propriedades2').append("<div id='vizinhancasimples' class='table-responsive' style='display:none; padding-top: 5px; margin-bottom: 5px;'></div>");
         $('#vizinhancasimples').append(vizinhacaSimples());
-        $('#vizinhancasimples').addClass('table-responsive');
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quantas conexões incidem em cada vértice.\">(?)</button> <b>Graus dos vértices:</b> ");
-        $('#propriedades3').append("<button class='btn btn-sm' id='btnTabGS' value='0' onClick='TabGSSH()'>Mostrar Tabela</button>");
-        $('#propriedades3').append("<div id='grausSimples' style='display:none; padding-top: 5px; margin-bottom: 5px;'></div><br>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra quantas conexões incidem em cada vértice.\">(?)</button> <b>Graus dos vértices:</b> ");
+        $('#propriedades2').append("<button class='btn btn-sm' id='btnTabGS' value='0' onClick='Tab(\"btnTabGS\", \"grausSimples\")'>Mostrar Tabela</button>");
+        $('#propriedades2').append("<div id='grausSimples' class='table-responsive' style='display:none; padding-top: 5px; margin-bottom: 5px;'></div><br>");
         $('#grausSimples').append(grado[0]);
-        $('#grausSimples').addClass("table-responsive");
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Maior Grau: </b>"+grado[1]+"<br/>");
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arestas que incidem em um vértice.\">(?)</button> <b>Menor Grau: </b>"+grado[2]+"<br/>");
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Adjacência do grafo.\">(?)</button> <b>Matriz de Adjacência M = [m<sub>i,j</sub>]:</b> ");
-        $('#propriedades2').append("<button class='btn btn-sm' id='TabMA' onClick='TabMASH()' value='0'>Mostrar Tabela</button></br>")
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabMA' onClick='Tab(\"TabMA\", \"MatrizAdjacenciaSimples\")' value='0'>Mostrar Tabela</button></br>")
         $('#propriedades2').append('<div id="MatrizAdjacenciaSimples" class="table-responsive" style=\"display:none; padding-top: 5px; margin-bottom:5px\"></div>');
         $('#MatrizAdjacenciaSimples').append(MatrizAdjacenciaSimples());
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Incidência do grafo.\">(?)</button> <b>Matriz de Incidência B = [b<sub>i,j</sub>]:</b>");
-        $('#propriedades3').append("<button class='btn btn-sm' id='TabMI' onClick='TabMISH()' value='0'>Mostrar Tabela</button>")
-        $('#propriedades3').append('<div id="MatrizIncidenciaSimples" class="table-responsive" style="display:none; padding-top: 5px; margin-bottom: 5px;"></div>');
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Incidência do grafo.\">(?)</button> <b>Matriz de Incidência B = [b<sub>i,j</sub>]:</b>");
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabMI' onClick='Tab(\"TabMI\", \"MatrizIncidenciaSimples\")' value='0'>Mostrar Tabela</button><br>")
+        $('#propriedades2').append('<div id="MatrizIncidenciaSimples" class="table-responsive" style="display:none; padding-top: 5px; margin-bottom: 5px;"></div>');
         $('#MatrizIncidenciaSimples').append(MatrizIncidenciaSimples());
     }
     if ((tipo=="Simples" || tipo == "Multigrafo" || tipo == "Pseudografo") && ordenado){
         var grado = grausOrientados();
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra em quais vértices incidem as arestas que saem do vértice em destaque.\">(?)</button> <b>Vizinhança Direta <i>&tau;</i><SUP>+</SUP>(<i>v</i>):</b>");
-        $('#propriedades3').append("<button id='TabVizD' class='btn btn-sm' onClick='TabVizSD()'>Mostrar Tabela</button><br>");
-        $('#propriedades3').append("<div id='vizinhancadireta' style='display: none'></div>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra em quais vértices incidem as arestas que saem do vértice em destaque.\">(?)</button> <b>Vizinhança Direta <i>&tau;</i><SUP>+</SUP>(<i>v</i>):</b>");
+        $('#propriedades2').append("<button id='TabVizD' class='btn btn-sm' onClick='Tab(\"TabVizD\", \"vizinhancadireta\")'>Mostrar Tabela</button><br>");
+        $('#propriedades2').append("<div id='vizinhancadireta' class='table-responsive' style='display: none'></div>");
         $('#vizinhancadireta').append(vizinhacaDireta());
-        $('#vizinhancadireta').addClass('table-responsive');
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os vértices nos quais existem arcos que incidam sobre o vértice em destaque.\">(?)</button> <b>Vizinhança Inversa <i>&tau;</i><SUP>-</SUP>(<i>v</i>):</b> ");
-        $('#propriedades3').append("<button id='TabVizI' class='btn btn-sm' onClick='TabVizSI()'>Mostrar Tabela</button><br>");
-        $('#propriedades3').append("<div id='vizinhancainversa' style='display:none;'></div>");
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os vértices nos quais existem arcos que incidam sobre o vértice em destaque.\">(?)</button> <b>Vizinhança Inversa <i>&tau;</i><SUP>-</SUP>(<i>v</i>):</b> ");
+        $('#propriedades2').append("<button id='TabVizI' class='btn btn-sm' onClick='Tab(\"TabVizI\", \"vizinhancainversa\")'>Mostrar Tabela</button><br>");
+        $('#propriedades2').append("<div id='vizinhancainversa' style='display:none;'></div>");
         $('#vizinhancainversa').append(vizinhacaInversa());
         $('#vizinhancainversa').addClass("table-responsive");
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arcos que chegam a um vértice.\">(?)</button> <b>Maior Grau de Entrada: </b>"+grado[1]+"<br/>");
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arcos que chegam a um vértice.\">(?)</button> <b>Menor Grau de Entrada: </b>"+grado[2]+"<br/>");
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arcos que saem de um vértice.\">(?)</button> <b>Maior Grau de Saída: </b>"+grado[3]+"<br/>");
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arcos que saem de um vértice.\">(?)</button> <b>Menor Grau de Saída: </b>"+grado[4]+"<br/>");
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arcos que chegam a um vértice.\">(?)</button> <b>Maior Grau de Entrada: </b>"+grado[1]+"<br/>");
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arcos que chegam a um vértice.\">(?)</button> <b>Menor Grau de Entrada: </b>"+grado[2]+"<br/>");
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior quantidade de arcos que saem de um vértice.\">(?)</button> <b>Maior Grau de Saída: </b>"+grado[3]+"<br/>");
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor quantidade de arcos que saem de um vértice.\">(?)</button> <b>Menor Grau de Saída: </b>"+grado[4]+"<br/>");
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra a quantidade de arcos incidentes em cada vértice.\">(?)</button> <b>Graus dos vértices:</b>");
-        $('#propriedades2').append("<button class='btn btn-sm' id='btnTabGS' value='0' onClick='TabGSO()'>Mostrar Tabela</button><br/>");
+        $('#propriedades2').append("<button class='btn btn-sm' id='btnTabGS' value='0' onClick='Tab(\"btnTabGS\", \"grausOrientados\")'>Mostrar Tabela</button><br/>");
         $('#propriedades2').append("<div id='grausOrientados' class='table-responsive' style='display: none;'></div>");
         $('#grausOrientados').append(grado[0]);
-        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Adjacência do grafo.\">(?)</button> <b>Matriz de Adjacência M = [m<sub>i,j</sub>]:</b>");
-        $('#propriedades3').append("<button class='btn btn-sm' id='TabMA' onClick='TabMAO()' value='0'>Mostrar Tabela</button>")
-        $('#propriedades3').append('<div id="MatrizAdjacenciaOrientado" class="table-responsive" style="display:none;"></div>');
+        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Adjacência do grafo.\">(?)</button> <b>Matriz de Adjacência M = [m<sub>i,j</sub>]:</b>");
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabMA' onClick='Tab(\"TabMA\", \"MatrizAdjacenciaOrientado\")' value='0'>Mostrar Tabela</button><br>")
+        $('#propriedades2').append('<div id="MatrizAdjacenciaOrientado" class="table-responsive" style="display:none;"></div>');
         $('#MatrizAdjacenciaOrientado').append(MatrizAdjacenciaOrientado());
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Matriz de Incidência do grafo.\">(?)</button> <b>Matriz de Incidência B = [b<sub>i,j</sub>]:</b>");
-        $('#propriedades2').append("<button class='btn btn-sm' id='TabMI' onClick='TabMIO()' value='0'>Mostrar Tabela</button></br>")
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabMI' onClick='Tab(\"TabMI\", \"MatrizIncidenciaOrientado\")' value='0'>Mostrar Tabela</button></br>")
         $('#propriedades2').append('<div id="MatrizIncidenciaOrientado" class="table-responsive" style="display:none;"></div>');
         $('#MatrizIncidenciaOrientado').append(MatrizIncidenciaOrientado());
     }
-    let wiener = Wiener();
-    if(wiener != Infinity)
-        $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener);
-    else
-    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + 'Infinito');
-    
     if(!ordenado){
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Razão entre o número de arestas e vértices.\">(?)</button> <b>Densidade &epsilon;(G): </b> "+(edges.length/nodes.length)+'<br>');
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo. Outros ciclos se formam por derivações dos mostrados abaixo.\">(?)</button> <b>Ciclos:</b>");
-        $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='TabCIU()' value='0'>Mostrar Tabela</button></br>");
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='Tab(\"TabCIU\", \"ciclos\")' value='0'>Mostrar Tabela</button></br>");
         let uc = UndirectedCycles();
         $('#propriedades2').append(uc[0]);
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra as cordas presentes nos ciclos.\">(?)</button> <b>Cordas:</b>");
-        $('#propriedades2').append("<button class='btn btn-sm' id='TabCordasU' onClick='TabCordasU()' value='0'>Mostrar Tabela</button></br>");
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabCordasU' onClick='Tab(\"TabCordasU\", \"cordas\")' value='0'>Mostrar Tabela</button></br>");
         let cordas = UndirectedCordas(uc[1]);
         $('#propriedades2').append(cordas[0]);
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
         let cintura = Cinturas(uc[1]);
-        $('#propriedades2').append(cintura);
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
+        $('#propriedades3').append(cintura);
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
         let circunferencia = Circunferencia(uc[1]);
-        $('#propriedades2').append(circunferencia);
+        $('#propriedades3').append(circunferencia + "<br>");
     }else{
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra os ciclos simples presentes no Grafo.\">(?)</button> <b>Ciclos:</b>");
-        $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='TabCIU()' value='0'>Mostrar Tabela</button></br>")
+        $('#propriedades2').append("<button class='btn btn-sm' id='TabCIU' onClick='Tab(\"TabCIU\", \"ciclos\")' value='0'>Mostrar Tabela</button></br>")
         let sc = simple_cycles();
         $('#propriedades2').append(sc[0]);
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra as cordas presentes nos ciclos.\">(?)</button> <b>Cordas:</b>");
-        $('#propriedades2').append("<button class='btn btn-sm' id='TabCordasU' onClick='TabCordasU()' value='0'>Mostrar Tabela</button></br>");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra as cordas presentes nos ciclos.\">(?)</button> <b>Cordas:</b>");
+        $('#propriedades3').append("<button class='btn btn-sm' id='TabCordasU' onClick='Tab(\"TabCordasU\", \"cordas\")' value='0'>Mostrar Tabela</button></br>");
         let cordas = UndirectedCordas(sc[1]);
-        $('#propriedades2').append(cordas[0]);
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
+        $('#propriedades3').append(cordas[0]);
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de menor cumprimento no grafo.\">(?)</button> <b>Cintura:</b> ");
         let cintura = Cinturas(sc[1]);
-        $('#propriedades2').append(cintura);
-        $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
+        $('#propriedades3').append(cintura);
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Mostra o tamanho do ciclo de maior cumprimento no grafo.\">(?)</button> <b>Circunferência:</b> ");
         let circunferencia = Circunferencia(sc[1]);
-        $('#propriedades2').append(circunferencia);
+        $('#propriedades3').append(circunferencia + "<br>");
     }
 
-    let excAndRad = ExcentricidadeERaio();
-    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior distância entre dois vértices v e w, para todo w &isin; V(G).\">(?)</button> <b>Excentricidades: </b> ");
-    $('#propriedades3').append("<button class='btn btn-sm' id='TabE' onClick='TabE()' value='0'>Mostrar Tabela</button>");
-    $('#propriedades3').append(excAndRad[0]);
-    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor valor dentre todas as excentricidades.\">(?)</button> <b>Raio: </b> "+excAndRad[2]);
-    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior valor dentre todas as excentricidades.\">(?)</button> <b>Diâmetro: </b> "+excAndRad[3]);
-    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Subconjunto dos vértices de excentricidade mínima.\">(?)</button> <b>Centro: </b> "+excAndRad[4]);
-    $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Razão entre o número de arestas e vértices.\">(?)</button> <b>Densidade &epsilon;(G): </b> "+(edges.length/nodes.length));
+    
+    $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior distância entre dois vértices v e w, para todo w &isin; V(G).\">(?)</button> <b>Excentricidades: </b> ");
+    $('#propriedades2').append("<button class='btn btn-sm' id='TabE' onClick='Tab(\"TabE\", \"excentricidades\")' value='0'>Mostrar Tabela</button>");
+    $('#propriedades2').append(excAndRad[0]);
+    $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Menor valor dentre todas as excentricidades.\">(?)</button> <b>Raio: </b> "+excAndRad[2]+'<br>');
+    $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Maior valor dentre todas as excentricidades.\">(?)</button> <b>Diâmetro: </b> "+excAndRad[3]+'<br>');
+    $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Subconjunto dos vértices de excentricidade mínima.\">(?)</button> <b>Centro: </b> "+excAndRad[4]+'<br>');
+    
     let par;
     if(!ordenado){
         par = EhPar(grado[3]);
-        $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se os graus de todos os vértices do grafo forem pares, o grafo é par. Não existe grafo ímpar.\">(?)</button> <b>Grafo par: </b> ");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se os graus de todos os vértices do grafo forem pares, o grafo é par. Não existe grafo ímpar.\">(?)</button> <b>Grafo par: </b> ");
         (par)?$('#propriedades3').append(" Sim"):$('#propriedades3').append(" Não");
     }else{
         par = EhPar(grado[5]);
-        $('#propriedades3').append("<br><button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se os graus de todos os vértices do grafo forem pares, o grafo é par. Não existe grafo ímpar.\">(?)</button> <b>Grafo par: </b> ");
+        $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Se os graus de todos os vértices do grafo forem pares, o grafo é par. Não existe grafo ímpar.\">(?)</button> <b>Grafo par: </b> ");
         (par)?$('#propriedades3').append(" Sim"):$('#propriedades3').append(" Não");
     }
     let conexo = EhConexo(excAndRad[6]);
@@ -842,6 +849,15 @@ window.tipoDoGrafo = function(){
     }
 }
 
+/* NOMEAÇÃO DE VÉRTICES */
+window.Nomeie = () => {
+    for(var k in nodes._data){
+        if(nodes._data[k].label == undefined || nodes._data[k].label == '' || nodes._data[k].label == ' '){
+            nodes.update([{id: nodes._data[k].id, label: ""+nodes._data[k].id}]);
+        }
+    }
+}
+
 /*MULTIPLICIDADE DE ARESTAS*/
 
 window.multiplicidade = function(id1, id2){
@@ -871,11 +887,6 @@ window.multStartNOrientado = function() {
     var multi = [];
     var i = 1;
     var string = "";
-    for(var k in nodes._data){
-        if(nodes._data[k].label == undefined || nodes._data[k].label == '' || nodes._data[k].label == ' '){
-            nodes.update([{id: nodes._data[k].id, label: ""+nodes._data[k].id}]);
-        }
-    }
     for(var k in nodes._data){
         for(var l in nodes._data){
             if(nodes._data[k].id<=nodes._data[l].id){
@@ -913,11 +924,6 @@ window.multStartOrientado = function() {
     var multi = [];
     var i = 1;
     var string = "";
-    for(var k in nodes._data){
-        if(nodes._data[k].label == undefined || nodes._data[k].label == '' || nodes._data[k].label == ' '){
-            nodes.update([{id: nodes._data[k].id, label: ""+nodes._data[k].id}]);
-        }
-    }
     for(var k in nodes._data){
         for(var l in nodes._data){
             multi[i] = [nodes._data[k].id, nodes._data[l].id, multiplicidadeOr(nodes._data[k].id, nodes._data[l].id)];
@@ -1324,188 +1330,20 @@ window.MatrizIncidenciaOrientado = function (){
     return matriz;
 }
 
-/*-----------------------------------------------------------*/
-/*      BOTÃO DE SHOW/HIDE DA MULTIPLICIDADE DE ARESTAS      */
-/*-----------------------------------------------------------*/
 
+/*------------------------------------------------------------------------*/
+/*      BOTÃO DE SHOW/HIDE PARA TABELAS                                   */
+/*------------------------------------------------------------------------*/
 
-window.TabelaMultiplicidadeArestas = function (){
-    if($('#btnMultAresta').val() == 0){
-        $('#multiplicidadeTable').css('display', 'block');
-        $('#btnMultAresta').val('1');
-        $('#btnMultAresta').html('Esconder Tabela');
+window.Tab = function (botao, tabela){
+    if($('#'+botao).val() == 0){
+        $('#'+tabela).css('display', 'block');
+        $('#'+botao).val('1');
+        $('#'+botao).html('Esconder Tabela');
     }else{
-        $('#multiplicidadeTable').css('display', 'none');
-        $('#btnMultAresta').val('0');
-        $('#btnMultAresta').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*      BOTÃO DE SHOW/HIDE DOS GRAUS DOS VÉRTICES PARA GRAFOS SIMPLES     */
-/*------------------------------------------------------------------------*/
-
-
-window.TabGSSH = function (){
-    if($('#btnTabGS').val() == 0){
-        $('#grausSimples').css('display', 'block');
-        $('#btnTabGS').val('1');
-        $('#btnTabGS').html('Esconder Tabela');
-    }else{
-        $('#grausSimples').css('display', 'none');
-        $('#btnTabGS').val('0');
-        $('#btnTabGS').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*      BOTÃO DE SHOW/HIDE DOS GRAUS DOS VÉRTICES PARA GRAFOS ORIENTADOS  */
-/*------------------------------------------------------------------------*/
-
-
-window.TabGSO = function (){
-    if($('#btnTabGS').val() == 0){
-        $('#grausOrientados').css('display', 'block');
-        $('#btnTabGS').val('1');
-        $('#btnTabGS').html('Esconder Tabela');
-    }else{
-        $('#grausOrientados').css('display', 'none');
-        $('#btnTabGS').val('0');
-        $('#btnTabGS').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE DOS VIZINHOS DOS VÉRTICES PARA GRAFOS SIMPLES     */
-/*------------------------------------------------------------------------*/
-
-
-window.TabVizSH = function (){
-    if($('#TabViz').val() == 0){
-        $('#vizinhancasimples').css('display', 'block');
-        $('#TabViz').val('1');
-        $('#TabViz').html('Esconder Tabela');
-    }else{
-        $('#vizinhancasimples').css('display', 'none');
-        $('#TabViz').val('0');
-        $('#TabViz').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE DOS VIZINHOS DIRETOS DOS GRAFOS ORIENTADOS        */
-/*------------------------------------------------------------------------*/
-
-
-window.TabVizSD = function (){
-    if($('#TabVizD').val() == 0){
-        $('#vizinhancadireta').css('display', 'block');
-        $('#TabVizD').val('1');
-        $('#TabVizD').html('Esconder Tabela');
-    }else{
-        $('#vizinhancadireta').css('display', 'none');
-        $('#TabVizD').val('0');
-        $('#TabVizD').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE DOS VIZINHOS INVERSOS DOS GRAFOS ORIENTADOS       */
-/*------------------------------------------------------------------------*/
-
-
-window.TabVizSI = function (){
-    if($('#TabVizI').val() == 0){
-        $('#vizinhancainversa').css('display', 'block');
-        $('#TabVizI').val('1');
-        $('#TabVizI').html('Esconder Tabela');
-    }else{
-        $('#vizinhancainversa').css('display', 'none');
-        $('#TabVizI').val('0');
-        $('#TabVizI').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE MATRIZ DE ADJACÊNCIA      PARA GRAFOS SIMPLES     */
-/*------------------------------------------------------------------------*/
-
-
-window.TabMASH = function (){
-    if($('#TabMA').val() == 0){
-        $('#MatrizAdjacenciaSimples').css('display', 'block');
-        $('#TabMA').val('1');
-        $('#TabMA').html('Esconder Tabela');
-    }else{
-        $('#MatrizAdjacenciaSimples').css('display', 'none');
-        $('#TabMA').val('0');
-        $('#TabMA').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE MATRIZ DE ADJACÊNCIA      PARA GRAFOS ORIENTADOS  */
-/*------------------------------------------------------------------------*/
-
-
-window.TabMAO = function (){
-    if($('#TabMA').val() == 0){
-        $('#MatrizAdjacenciaOrientado').css('display', 'block');
-        $('#TabMA').val('1');
-        $('#TabMA').html('Esconder Tabela');
-    }else{
-        $('#MatrizAdjacenciaOrientado').css('display', 'none');
-        $('#TabMA').val('0');
-        $('#TabMA').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE MATRIZ DE INCIDÊNCIA      PARA GRAFOS SIMPLES     */
-/*------------------------------------------------------------------------*/
-
-
-window.TabMISH = function (){
-    if($('#TabMI').val() == 0){
-        $('#MatrizIncidenciaSimples').css('display', 'block');
-        $('#TabMI').val('1');
-        $('#TabMI').html('Esconder Tabela');
-    }else{
-        $('#MatrizIncidenciaSimples').css('display', 'none');
-        $('#TabMI').val('0');
-        $('#TabMI').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE MATRIZ DE INCIDÊNCIA      PARA GRAFOS ORIENTADOS  */
-/*------------------------------------------------------------------------*/
-
-window.TabMIO = function (){
-    if($('#TabMI').val() == 0){
-        $('#MatrizIncidenciaOrientado').css('display', 'block');
-        $('#TabMI').val('1');
-        $('#TabMI').html('Esconder Tabela');
-    }else{
-        $('#MatrizIncidenciaOrientado').css('display', 'none');
-        $('#TabMI').val('0');
-        $('#TabMI').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE TABELA DE EXCENTRICIDADES                         */
-/*------------------------------------------------------------------------*/
-
-window.TabE = function (){
-    if($('#TabE').val() == 0){
-        $('#excentricidades').css('display', 'block');
-        $('#TabE').val('1');
-        $('#TabE').html('Esconder Tabela');
-    }else{
-        $('#excentricidades').css('display', 'none');
-        $('#TabE').val('0');
-        $('#TabE').html('Mostrar Tabela');
+        $('#'+tabela).css('display', 'none');
+        $('#'+botao).val('0');
+        $('#'+botao).html('Mostrar Tabela');
     }
 }
 
@@ -2027,7 +1865,7 @@ window.Cinturas = (cycles) => {
 
 window.Circunferencia = (cycles) => {
     if(cycles.length == 0){
-        return "Não possui circunferência.<br>";
+        return "Não possui circunferência.";
     }
     let cintura = cycles[0].length;
     if(!ordenado){
@@ -2061,6 +1899,8 @@ window.djikstra = () => {
         var solutions = {};
         solutions[s] = [];
         solutions[s].dist = 0;
+
+        var cc = 0;
         
         while(true) {
         var parent = null;
@@ -2186,6 +2026,7 @@ window.ExcentricidadeERaio = () => {
             }
         }
     }
+
     palavra += "<div class='table-responsive' id='excentricidades' style='display: none'>";
     palavra += "<table class='table'>";
     palavra += "<thead>";
@@ -2244,53 +2085,14 @@ window.EhPar = (graus) => {
 /* ----------------------------------------------------------------------- */
 
 window.EhConexo = (solutions) =>{
-    for(let list in solutions){
-        if(Object.keys(solutions[list]).length < nodes.length)
-            return false;
+    if(!ordenado){
+        for(let list in solutions){
+            if(Object.keys(solutions[list]).length < nodes.length)
+                return false;
+        }
+        return true;
     }
-    return true;
-}
-
-/* ----------------------------------------------------------------------- */
-/*                COMPONENETES CONEXAS                                     */
-/* ----------------------------------------------------------------------- */
-window.ComponentesConexas = (solutions) => {
-    let componentes = new Set();
-    for(let list in solutions){
-        componentes.add(Object.keys(solutions[list]).length);
-    }
-    let value = componentes.size;
-    return value;
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE TABELA CICLOS NÃO ORIENTADO                       */
-/*------------------------------------------------------------------------*/
-window.TabCIU = function (){
-    if($('#TabCIU').val() == 0){
-        $('#ciclos').css('display', 'block');
-        $('#TabCIU').val('1');
-        $('#TabCIU').html('Esconder Tabela');
-    }else{
-        $('#ciclos').css('display', 'none');
-        $('#TabCIU').val('0');
-        $('#TabCIU').html('Mostrar Tabela');
-    }
-}
-
-/*------------------------------------------------------------------------*/
-/*   BOTÃO DE SHOW/HIDE TABELA CORDAS NÃO ORIENTADO                       */
-/*------------------------------------------------------------------------*/
-window.TabCordasU = function (){
-    if($('#TabCordasU').val() == 0){
-        $('#cordas').css('display', 'block');
-        $('#TabCordasU').val('1');
-        $('#TabCordasU').html('Esconder Tabela');
-    }else{
-        $('#cordas').css('display', 'none');
-        $('#TabCordasU').val('0');
-        $('#TabCordasU').html('Mostrar Tabela');
-    }
+    return "Em construção";
 }
 
 /*GRAFO SUBJACENTE*/
@@ -2598,6 +2400,9 @@ $(document).on('shown.bs.modal','#SubgrafoInducaoAresta', function () {
     subIndAresta();
     
 });
+
+
+/* DERIVAÇÃO DE PASSEIO */
 
 $(document).on('shown.bs.modal','#DerivacaoDePasseio', function () {
     $('#modal-passeio').attr('style', 'background-color: #ffffff');
@@ -3016,6 +2821,8 @@ $(document).on('hidden.bs.modal', '#DerivacaoDePasseio', () => {
     $('#collapseTwo').removeClass('show');
 });
 
+
+/* DERIVAÇÃO DE DISTANCIAS */
 $(document).on('shown.bs.modal','#DerivarDistancias', function () {
     $('#modal-distancia').html('');
     $('#modal-distancia').removeAttr("style");
