@@ -23,4 +23,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
          }
       }
    })
-   .purgeCss();;
+   .purgeCss({
+      whitelistPatterns: [/^mceu/]
+   });

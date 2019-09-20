@@ -423,7 +423,15 @@
         /*------------------------------------------------------------------------*/
         $(document).ready(function(){
             $(function () {
-                $('[data-toggle="tooltip"]').tooltip();
+                $('[data-toggle="tooltip"]').tooltip({
+                    container: 'body',
+                    delay: { "show": 500, "hide": 100 },
+                    placement: 'right',
+                    trigger: 'click',
+                    boundary: 'viewport',
+                    offset: 10,
+                    template: "'<div class=\"tooltip\" style=\"background-color: white; color: black\" role=\"tooltip\"><div class=\"arrow\" style=\"background-color: white; color: black\"></div><div class=\"tooltip-inner\"></div></div>'"
+                });
             });
             $("#filegrafo").change(function(event){
                 event.preventDefault();
