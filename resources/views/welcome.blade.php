@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{asset("css/app.css")}}">
     <link rel="manifest" href="{{asset('manifest.json')}}">
     <!-- FAVICON -->
-    <link rel="shortcut icon" href="{{asset("images/paad_logo.ico")}}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{{asset("images/paad_logo.png")}}" type="image/x-icon"/>
     <meta name="theme-color" content="white">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="PAAD Grafos">
@@ -36,7 +36,7 @@
         <div class="inner">
             <!-- HTML DA ANIMAÇÃO MUITO LOUCA DO SEU PRELOADER! -->  
             <div class="text-center">
-                <img src="images/paad_logo.png" class="logo_img">
+                <img src="{{asset('images/paad_logo.png')}}" class="logo_img">
                 <p>Carregando</p>
             </div>
             <br>
@@ -66,7 +66,7 @@
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
             <div class="sidebar-brand-icon">
-                <img src="images/paad_logo.png" class="logo_img">
+                <img src="{{asset('images/paad_logo.png')}}" class="logo_img" alt="Logo">
             </div>
             <div class="sidebar-brand-text">PAAD Grafos</div>
         </a>

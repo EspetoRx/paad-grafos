@@ -653,6 +653,7 @@ window.Limpar = function(){
 /*PROPRIEDADES DO GRAFO*/
 
 window.habilitarPropriedades = function(){
+    console.log("Parte 1");
     $('#preloader').show();
     setTimeout(function() {
     if(GraphContext){
@@ -685,7 +686,7 @@ window.habilitarPropriedades = function(){
         "<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\" title=\"Quantidade de arestas.\">(?)</button> <b>Número de arestas (Tamanho - |A|):</b> "+edges.length+"</br>" +
         "<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\" title=\"Mostra se o grafo é orientado (direcionado) ou não.\">(?)</button> <b>Orientação:</b> "
     );
-    
+    console.log("Parte 2");
     if(ordenado){
         if(tipo == "Simples"){
             $('#propriedades1').append("Dígrafo simples<br>");
@@ -707,7 +708,7 @@ window.habilitarPropriedades = function(){
         $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\"  title=\"Mostra se um grafo é ponderado ou não.\">(?)</button> <b>Ponderação:</b> Não ponderado<br>");
     }
 
-    
+    console.log("Parte 3");
     if(wiener != Infinity)
         $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\"  title=\"Metade da soma das distâncias de cada vértice aos demais.\">(?)</button> <b>Índice ou Número de Wiener: </b> " + wiener + '<br>');
     else
@@ -768,6 +769,7 @@ window.habilitarPropriedades = function(){
         $('#propriedades2').append('<div id="MatrizIncidenciaOrientado" class="table-responsive" style="display:none;"></div>');
         $('#MatrizIncidenciaOrientado').append(MatrizIncidenciaOrientado());
     }
+    console.log("Parte 4");
     if(!ordenado){
         $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\"  title=\"Razão entre o número de arestas e vértices.\">(?)</button> <b>Densidade &epsilon;(G): </b> "+(edges.length/nodes.length)+'<br>');
         $('#propriedades2').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\"  title=\"Mostra os ciclos simples presentes no Grafo. Outros ciclos se formam por derivações dos mostrados abaixo.\">(?)</button> <b>Ciclos:</b>");
@@ -808,7 +810,7 @@ window.habilitarPropriedades = function(){
     $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\"  title=\"Menor valor dentre todas as excentricidades.\">(?)</button> <b>Raio: </b> "+excAndRad[2]+'<br>');
     $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\"  title=\"Maior valor dentre todas as excentricidades.\">(?)</button> <b>Diâmetro: </b> "+excAndRad[3]+'<br>');
     $('#propriedades3').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\"  title=\"Subconjunto dos vértices de excentricidade mínima.\">(?)</button> <b>Centro: </b> "+excAndRad[4]+'<br>');
-    
+    console.log("Parte 5");
     let par;
     if(!ordenado){
         par = EhPar(grado[3]);
@@ -821,7 +823,10 @@ window.habilitarPropriedades = function(){
     }
     let conexo = EhConexo(excAndRad[6]);
     $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\"  title=\"Um grafo é conexo se para todo par de vértices i e j existe pelo menos um camnho entre i e j.\">(?)</button> <b>Conexo: </b> ");
-    (conexo)?$('#propriedades1').append(" Sim"):$('#propriedades1').append(" Não");
+    (conexo==1)?$('#propriedades1').append(" Sim<br>"):$('#propriedades1').append(" Não<br>");
+    if(!ordenado){
+        $('#propriedades1').append("<button class=\"btn btn-secondary btn-sm padding-0 show-tt ml-1\" data-toggle=\"tooltip\"  title=\"Mostra quantas componentes conexas tem o grafo.\">(?)</button> <b>Componentes conexas: </b>" + conexo);
+    }
     $('#minigrafo').html(GrafoCompleto);
     $('#mynetwork').removeClass('mynetwork');
     $('#mynetwork').addClass('propriedades');
@@ -1445,8 +1450,8 @@ window.GeraGrafoCiclo = () => {
                 }
             }
             network.fit();
-            id = nodes.length;
-            edgeid = edges.length;
+            id = nodes.length+1;
+            edgeid = edges.length+1;
         },
         dismiss: function () {
         }
@@ -1480,8 +1485,8 @@ window.GeraGrafoCompleto = () => {
                 }
             }
             edges.update([{id: et-1, from:parseInt(et), to:1}]);
-            id = nodes.length;
-            edgeid = edges.length;
+            id = nodes.length+1;
+            edgeid = edges.length+1;
             network.fit();
         },
         dismiss: function () {
@@ -1493,133 +1498,7 @@ window.GeraGrafoCompleto = () => {
 /*   CICLOS DO GRAFO NÃO DIRECIONADO                                      */
 /*------------------------------------------------------------------------*/
 window.UndirectedCycles = () => {
-    let graph = Array();
-    let cycles = Array();
-    for(let edge in edges._data){
-        let aux = Array();
-        aux.push(edges._data[edge].from);
-        aux.push(edges._data[edge].to);
-        graph.push(aux);
-    }
-    findLacos();
-    for(let newedge in graph){
-        for(let newnode in graph[newedge]){
-            let newpath = Array();
-            newpath.push(graph[newedge][newnode]);
-            findNewCycles(newpath);
-        }
-    }
-    function findNewCycles(path){
-        let start_node = path[0];
-        let next_node = undefined;
-        for (let edge in graph){
-            let node1 = graph[edge][0],
-                node2 = graph[edge][1];
-                if(graph[edge].includes(start_node)){
-                    if(node1 == start_node){
-                        next_node = node2;
-                    }else{
-                        next_node = node1;
-                    }
-                    if (!visited(next_node, path)){
-                        let sub = new Array();
-                        sub.push(next_node);
-                        sub = sub.concat(path);
-                        findNewCycles(sub);
-                    }else if((path.length > 2 && next_node == path[path.length-1])){
-                        let p = rotate_to_smallest(path);
-                        let inv = invert(p);
-
-                        if (isNew(p) && isNew(inv)){
-                            cycles.push(p);
-                        }
-                    }
-                }
-        }
-    }
-    function invert(path){
-        let aux2 = Array();
-        for(let k in path){
-            aux2.push(path[k]);
-        }
-        aux2.reverse();
-        let aux = rotate_to_smallest(aux2);
-        return aux;
-    }
-    function rotate_to_smallest(path){
-        let aux = Array(), n;
-        n = path.lastIndexOf(Math.min(...path));
-        aux = aux.concat(path.slice(n,path.length));
-        aux = aux.concat(path.slice(0,n));
-        return aux;
-    }
-    function isNew(path){
-        let jc = JSON.stringify(cycles);
-        let jp = JSON.stringify(path);
-        let c = jc.indexOf(jp);
-        if(c != -1){
-            return false;
-        }else{
-            return true;
-        }
-    }
-    function visited(node, path){
-        return path.includes(node);
-    }
-    function CyclesHas(n1, n2){
-        for(let cy in cycles){
-            if(cycles[cy].length == 2){
-                if(cycles[cy][0] == n2 && cycles[cy][1] == n1){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    function findLacos(){
-        for(let edge in edges._data){
-            if(edges._data[edge].from == edges._data[edge].to){
-                cycles.push([edges._data[edge].from]);
-            }else{
-                for(let edges2 in edges._data){
-                    if((edges._data[edge].from == edges._data[edges2].to &&
-                        edges._data[edge].to == edges._data[edges2].from)||
-                        (edges._data[edge].from == edges._data[edges2].from &&
-                            edges._data[edge].to == edges._data[edges2].to &&
-                            edges._data[edge].id != edges._data[edges2].id)){
-                                if(!CyclesHas(edges._data[edge].from, edges._data[edge].to)){
-                                    cycles.push([edges._data[edge].from, edges._data[edge].to]);
-                                }
-                        }
-                }
-            }
-        }
-    }
-    function print(){
-        let palavra = '';
-        palavra += '<div id="ciclos" class="table-responsive" style="display: none; text-align: center;">';
-        if(cycles.length == 0){
-            palavra += '<p>Não existem ciclos neste grafo.</p>';
-        }else{
-            palavra += '<table class="table">';
-            palavra += '<thead><tr><td><b>Ciclos encontrados</b></td></tr></thead>';
-            for(let cy in cycles){
-                palavra += '<tr><td>';
-                for(let node in cycles[cy]){
-                    if(node != cycles[cy].length-1){
-                        palavra += nodes._data[cycles[cy][node]].label + '&rarr;';
-                    }else{
-                        palavra += nodes._data[cycles[cy][node]].label + '&rarr;' + nodes._data[cycles[cy][0]].label;
-                    }
-                }
-                palavra += '</tr></td>';
-            }
-            palavra += '</table>';
-        }
-        palavra += '</div>';
-        return palavra;
-    }
-    return [print(), cycles];
+    return simple_cycles();
 }
 
 /*------------------------------------------------------------------------*/
@@ -1778,11 +1657,18 @@ window.simple_cycles = () => {
         graph.nodes.push(nodes._data[node].id);
         graph.arrows.set(nodes._data[node].id, new Array());
     }
-    for(let edge in edges._data){
-        graph.arrows.get(edges._data[edge].from).push(edges._data[edge].to);
+    if(!ordenado){
+        for(let edge in edges._data){
+            graph.arrows.get(edges._data[edge].from).push(edges._data[edge].to);
+        }
+    }else{
+        for(let edge in edges._data){
+            graph.arrows.get(edges._data[edge].from).push(edges._data[edge].to);
+        }
     }
+    
     let cycles = graph.findCircuits();
-
+    let scc = graph.stronglyConnectedComponents();
     function print(){
         let palavra = '';
         palavra += '<div id="ciclos" class="table-responsive" style="display: none; text-align: center;">';
@@ -1812,7 +1698,7 @@ window.simple_cycles = () => {
         return palavra;
     }
 
-    return [print(), cycles];
+    return [print(), cycles, scc];
 }
 
 /*------------------------------------------------------------------------*/
@@ -2120,12 +2006,39 @@ window.EhPar = (graus) => {
 /* ----------------------------------------------------------------------- */
 
 window.EhConexo = (solutions) =>{
+    let resposta = [];
+    let G = GetVerticesAdjacentes();
+    console.log(G);
     if(!ordenado){
-        for(let list in solutions){
-            if(Object.keys(solutions[list]).length < nodes.length)
-                return false;
+        function CC(){
+            let id = 0;
+            let visited = [];
+            for(let node in nodes._data){
+                visited[node] = false;
+            }
+            for(let node in nodes._data){
+                if(visited[node] == false){
+                    id++;
+                    DFSUtil(node, visited, id);
+                }
+            }
         }
-        return true;
+        function DFSUtil(v, visited, id){
+            visited[v] = true;
+            if(resposta.length < id){
+                resposta[id] = [];
+            }
+            resposta[id].push(v);
+            for(let node in G[v]){
+                if(!visited[G[v][node]]){
+                    DFSUtil(G[v][node], visited, id);
+                }
+            }
+        }
+        console.log(resposta);
+        return resposta;
+    }else{
+
     }
     return "Em construção";
 }
@@ -4009,3 +3922,116 @@ window.heawood = () => {
     });
     
 };
+
+window.djikstra2 = () => {
+    var FibonacciHeap = require('fibonacci-heap').FibonacciHeap,
+        deepEqual = require('deep-equal'),
+        stringify = require('json-stable-stringify');
+
+    /**
+     * @param {Graph} graph some graph.
+     * @param {Object} source node to search from.
+     */
+
+    function dijkstra(graph, source) {
+    var queue = new FibonacciHeap();
+    var dist = {},
+        prev = {};
+    dist[stringify(source)] = 0;
+    graph.vertices.forEach(function(vertex) {
+        var key = stringify(vertex);
+        if (!deepEqual(vertex, source)) {
+        dist[key] = Infinity;
+        prev[key] = null;
+        }
+
+        queue.insert({ value: vertex, priority: dist[key] });
+    });
+
+    while (queue.trees() !== 0) {
+        var next = queue.deleteMin().value;
+        var nextKey = stringify(next);
+        var neighbors = graph.neighbors(next);
+        neighbors.forEach(function(neighbor) {
+        var neighborKey = stringify(neighbor);
+        var alt = dist[nextKey] + graph.distance(next, neighbor);
+        if (alt < dist[neighborKey]) {
+            dist[neighborKey] = alt;
+            prev[neighborKey] = next;
+            queue.update({ value: neighbor, priority: alt });
+        }
+        });
+    }
+
+    return prev;
+    }
+
+    /**
+     * @constructor
+     */
+    function Graph() {
+    this.vertexToEdges = {};
+    }
+
+    Graph.prototype = {
+    vertexToEdges: null,
+
+    get vertices() {
+        return Object.keys(this.vertexToEdges).map(function(vertex) {
+        return JSON.parse(vertex);
+        });
+    },
+
+    addVertex: function(vertex) {
+        var key = stringify(vertex);
+        this.vertexToEdges[key] = {};
+    },
+
+    addEdge: function(u, v, distance) {
+        var ukey = stringify(u);
+        var vkey = stringify(v);
+        this.vertexToEdges[ukey][vkey] = distance;
+        this.vertexToEdges[vkey][ukey] = distance;
+    },
+
+    distance: function(u, v) {
+        var ukey = stringify(u);
+        var vkey = stringify(v);
+        return this.vertexToEdges[ukey][vkey];
+    },
+
+    neighbors: function(vertex) {
+        var key = stringify(vertex);
+        return Object.keys(this.vertexToEdges[key]).map(function(neighbor) {
+        return JSON.parse(neighbor);
+        });
+    }
+    };
+
+    var subject;
+      
+    subject = new Graph();
+    subject.addVertex(1);
+    subject.addVertex(2);
+    subject.addVertex(3);
+    subject.addVertex(4);
+    subject.addVertex(5);
+    subject.addVertex(6);
+    subject.addEdge(1, 1, 1);
+    subject.addEdge(1, 2, 1);
+    subject.addEdge(1, 4, 1);
+    subject.addEdge(1, 5, 1);
+    subject.addEdge(2, 3, 1);
+    subject.addEdge(3, 4, 1);
+    subject.addEdge(3, 6, 1);
+    subject.addEdge(4, 5, 1);
+    subject.addEdge(4, 6, 1);
+    subject.addEdge(5, 6, 1);
+
+    var result = dijkstra(subject, 1);
+    
+    console.log(result);
+    var result = dijkstra(subject, 2);
+    
+    console.log(result);
+}
